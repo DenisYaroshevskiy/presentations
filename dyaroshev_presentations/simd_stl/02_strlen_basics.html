@@ -1,0 +1,70 @@
+<!doctype html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
+		<title>02 strlen (basics)</title>
+
+		<link rel="stylesheet" href="../../dist/reset.css">
+		<link rel="stylesheet" href="../../dist/reveal.css">
+		<link rel="stylesheet" href="../../dist/theme/black.css">
+
+		<script src="https://cdn.plot.ly/plotly-2.5.0.min.js"></script>
+		<script> const UNSQ_EVE_COMMIT = '2cf6819dda923fc021629eda0cfba4113eb5f530'; </script>
+		<script type="text/javascript"
+			src="https://cdn.jsdelivr.net/gh/DenisYaroshevskiy/unsq_eve@2cf6819dda923fc021629eda0cfba4113eb5f530/scripts/bench.js"></script>
+
+		<script src="/dyaroshev_presentations/scripts/helper_scripts.js"></script>
+
+
+		<!-- Theme used for syntax highlighted code -->
+		<link rel="stylesheet" href="../../plugin/highlight/monokai.css">
+	</head>
+	<body>
+		<div class="reveal">
+			<div class="slides">
+				<section>strlen (basics)</section>
+        <section><a href="https://stackoverflow.com/questions/25566302/vectorized-strlen-getting-away-with-reading-unallocated-memory"> Stephen Canon, Stack Overflow </a></section>
+				<section id="02_pages"> <script> imagesSlideShow("02_pages", 4); </script> </section>
+				<section id="02_strlen"> <script> imagesSlideShow("02_strlen", 8); </script> </section>
+				<section><a href="https://godbolt.org/z/vd53Tderq"> godbolt </a></section>
+				<section><a href="https://opensource.apple.com/source/Libc/Libc-997.90.3/x86_64/string/strlen.s">MacOs strlen</a></section>
+				<section><a href="https://godbolt.org/z/j9x1jY8ej"> fixed-up godbolt </a></section>
+				<section id='vs glibc'>
+					<script>
+						allSizesBenchmark('vs glibc',
+							'Compare vs glibc',
+							{
+								name: 'find 0',
+								algorithm: 'selection',
+								type: 'char',
+								time: 'y',
+								padding: 'min',
+								group: 'intel_9700K',
+							},
+							['std::strlen', 'unsq_eve::find_unguarded<256, 1>', 'std_::find_unguarded'],
+							[]);
+					</script>
+				</section>
+				<section><a href="https://github.com/jfalcou/eve/blob/7929d2dd43e3fc08d2c569a85cdce7924106176f/examples/algorithms/writing_new/strlen__showing_basic_conepts.cpp#L1">code in eve/examples</a></section>
+			</div>
+		</div>
+
+		<script src="../../dist/reveal.js"></script>
+		<script src="../../plugin/notes/notes.js"></script>
+		<script src="../../plugin/markdown/markdown.js"></script>
+		<script src="../../plugin/highlight/highlight.js"></script>
+		<script>
+			// More info about initialization & config:
+			// - https://revealjs.com/initialization/
+			// - https://revealjs.com/config/
+			Reveal.initialize({
+				hash: true,
+
+				// Learn about plugins: https://revealjs.com/plugins/
+				plugins: [ RevealMarkdown, RevealHighlight, RevealNotes ]
+			});
+		</script>
+	</body>
+</html>
