@@ -40,8 +40,8 @@
 				<section>
 					<h2> headers </h2>
 					<ul>
-						<li>  immintrin.h </li>
-						<li>  arm_neon.h </li>
+						<li> <a href="https://godbolt.org/z/q3rvzdeaf"> immintrin.h </a> </li>
+						<li> <a href="https://godbolt.org/z/nxorconj5"> arm_neon.h </a> </li>
 					</ul>
 				</section>
 				<section>
@@ -58,14 +58,14 @@
 					<h2> set 0</h2>
 					<ul>
 						<li>_mm*_setzero_si*</li>
-				  	<li> vdupq_n_s8 </li>
+				  	<li> vdupq_n_u8 </li>
 				  </ul>
 				</section>
 				<section>
 					<h2> cur == zero </h2>
 					<ul>
 						<li> <a href="https://www.intel.com/content/www/us/en/docs/intrinsics-guide/index.html#ig_expand=4292,4293,6251&text=cmpeq_epi8"> _mm*_cmpeq_epi8</a></li>
-						<li> <a href="https://developer.arm.com/architectures/instruction-sets/intrinsics/#f:@navigationhierarchiessimdisa=[Neon]&q=vceqq_s8">vceqq_s8</a></li>
+						<li> <a href="https://developer.arm.com/architectures/instruction-sets/intrinsics/#f:@navigationhierarchiessimdisa=[Neon]&q=vceqq_u8">vceqq_u8</a></li>
 						<li> <a href="http://0x80.pl/articles/simd-strfind.html#algorithm-1-generic-simd"> 0x80 blog with avx512f </a></li>
 					</ul>
 				</section>
