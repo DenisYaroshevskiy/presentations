@@ -1,0 +1,103 @@
+<!doctype html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
+		<title>04 unrolling and simd</title>
+
+		<link rel="stylesheet" href="../../dist/reset.css">
+		<link rel="stylesheet" href="../../dist/reveal.css">
+		<link rel="stylesheet" href="../../dist/theme/black.css">
+
+		<script src="https://cdn.plot.ly/plotly-2.5.0.min.js"></script>
+		<script> const UNSQ_EVE_COMMIT = '83a0752a66e80fe97c24e7bbb5db70ddf12f8d98'; </script>
+		<script type="text/javascript"
+			src="https://cdn.jsdelivr.net/gh/DenisYaroshevskiy/unsq_eve@83a0752a66e80fe97c24e7bbb5db70ddf12f8d98/scripts/bench.js"></script>
+
+		<script src="../scripts/helper_scripts.js"></script>
+
+
+		<!-- Theme used for syntax highlighted code -->
+		<link rel="stylesheet" href="../../plugin/highlight/monokai.css">
+	</head>
+	<body>
+		<div class="reveal">
+			<div class="slides">
+				<section>unrolling and simd</section>
+				<section id='vs glibc'>
+					<script>
+						allSizesBenchmark('vs glibc',
+							'our strlen vs glibc strlen',
+							{
+								name: 'find 0',
+								algorithm: 'selection',
+								type: 'char',
+								time: 'y',
+								padding: 'min',
+								group: 'avx2+bmi',
+							},
+							['std::strlen', 'unsq_eve::find_unguarded<256, 1>', 'std_::find_unguarded'],
+							[]);
+					</script>
+				</section>
+        <section> <a href="https://gist.github.com/DenisYaroshevskiy/465787bf2480684f5df372e1fe4728e1#file-strlen_unroll_4-s-L39"> unroll 4</a> </section>
+        <section id='unroll 4 easy'>
+					<script>
+						allSizesBenchmark('unroll 4 easy',
+							'unrolling strlen',
+							{
+								name: 'find 0',
+								algorithm: 'selection',
+								type: 'char',
+								time: 'y',
+								padding: 'min',
+								group: 'avx2+bmi',
+							},
+							['std::strlen', 'unsq_eve::find_unguarded<256, 1>', 'unsq_eve::find_unguarded<256, 4>'],
+							[]);
+					</script>
+				</section>
+        <section id='04_using_multiple_registers'>
+          <script>
+            imagesSlideShow('04_using_multiple_registers', 6);
+          </script>
+        </section>
+        <section> <a href="https://code.woboq.org/userspace/glibc/sysdeps/x86_64/multiarch/strlen-avx2.S.html#179"> avx2 glibc strlen </a> </section>
+        <section> <a href="https://godbolt.org/z/WGfvGq9jW"> eve::algo::find </a></section>
+        <section id='strlen/find_unguarded/find'>
+					<script>
+						allSizesBenchmark('strlen/find_unguarded/find',
+							'all find 0s',
+							{
+								name: 'find 0',
+								algorithm: 'selection',
+								type: 'char',
+								time: 'y',
+								padding: 'min',
+								group: 'avx2+bmi',
+							},
+							['std::strlen', 'unsq_eve::find_unguarded<256, 4>', 'eve::algo::find'],
+							[]);
+					</script>
+				</section>
+			</div>
+		</div>
+
+		<script src="../../dist/reveal.js"></script>
+		<script src="../../plugin/notes/notes.js"></script>
+		<script src="../../plugin/markdown/markdown.js"></script>
+		<script src="../../plugin/highlight/highlight.js"></script>
+		<script>
+			// More info about initialization & config:
+			// - https://revealjs.com/initialization/
+			// - https://revealjs.com/config/
+			Reveal.initialize({
+				hash: true,
+
+				// Learn about plugins: https://revealjs.com/plugins/
+				plugins: [ RevealMarkdown, RevealHighlight, RevealNotes ]
+			});
+		</script>
+	</body>
+</html>
