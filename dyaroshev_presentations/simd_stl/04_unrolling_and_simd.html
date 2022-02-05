@@ -81,6 +81,33 @@
 							[]);
 					</script>
 				</section>
+        <section>
+          <h2> Clang Vs GCC unrolling</h2>
+          <ul>
+            <li> <a href="https://godbolt.org/z/f1cYxGnsx"> fill </a> </li>
+            <li> <a href="https://godbolt.org/z/1sEWdvPMK"> transform </a> </li>
+          </ul>
+        </section>
+        <section>
+          <a href="https://godbolt.org/z/s5MTvesGP"> eve::algo::transform_inplace </a>
+        </section>
+        <section id='transform unrolling'>
+           <script>addBenchmarkForSize('transform unrolling',
+             'transform unrolling',
+             10000,
+             {
+								name: 'inplace transform',
+								algorithm: 'selection',
+								type: 'int',
+								time: 'y',
+								padding: 'min',
+								group: 'avx2+bmi',
+							},
+              ['transform'],
+              []
+           );
+          </script>
+        </section>
 			</div>
 		</div>
 
