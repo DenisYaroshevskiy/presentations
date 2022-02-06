@@ -1,0 +1,60 @@
+<!doctype html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
+		<title>05 strlen in C++</title>
+
+		<link rel="stylesheet" href="../../dist/reset.css">
+		<link rel="stylesheet" href="../../dist/reveal.css">
+		<link rel="stylesheet" href="../../dist/theme/black.css">
+
+		<script src="https://cdn.plot.ly/plotly-2.5.0.min.js"></script>
+		<script> const UNSQ_EVE_COMMIT = '83a0752a66e80fe97c24e7bbb5db70ddf12f8d98'; </script>
+		<script type="text/javascript"
+			src="https://cdn.jsdelivr.net/gh/DenisYaroshevskiy/unsq_eve@83a0752a66e80fe97c24e7bbb5db70ddf12f8d98/scripts/bench.js"></script>
+
+		<script src="../scripts/helper_scripts.js"></script>
+
+
+		<!-- Theme used for syntax highlighted code -->
+		<link rel="stylesheet" href="../../plugin/highlight/monokai.css">
+	</head>
+	<body>
+		<div class="reveal">
+			<div class="slides">
+				<section>strlen in C++</section>
+        <section>
+          <h2> Sanitizers </h2>
+          <ul>
+            <li><a href="https://godbolt.org/z/Kf6K9cbEE"> strlen </a> </li>
+            <li><a href="https://godbolt.org/z/cbj8GM8qe"> strlen (asan on) </a> < </li>
+            <li><a href="https://godbolt.org/z/7M1P9n6W3"> strlen (unsafe) </a> < </li>
+          </ul>
+        </section>
+        <section> <a href="https://github.com/jfalcou/eve/blob/88e51b5d94f5cc7bb70930fe5afcda4712695491/include/eve/module/arithmetic/regular/impl/load.hpp#L112"> disable sanitizers</a> </section>
+        <section> <a href="https://godbolt.org/z/sqcnTdaEz"> What about find? </a></section>
+        <section> <a href="https://godbolt.org/z/ad9oP3E1r"> unseq? </a> </section>
+        <section> Is unsafe(load) UB? </section>
+        <section> write strlen </section>
+			</div>
+		</div>
+
+		<script src="../../dist/reveal.js"></script>
+		<script src="../../plugin/notes/notes.js"></script>
+		<script src="../../plugin/markdown/markdown.js"></script>
+		<script src="../../plugin/highlight/highlight.js"></script>
+		<script>
+			// More info about initialization & config:
+			// - https://revealjs.com/initialization/
+			// - https://revealjs.com/config/
+			Reveal.initialize({
+				hash: true,
+
+				// Learn about plugins: https://revealjs.com/plugins/
+				plugins: [ RevealMarkdown, RevealHighlight, RevealNotes ]
+			});
+		</script>
+	</body>
+</html>
