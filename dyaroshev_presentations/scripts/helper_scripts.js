@@ -71,9 +71,9 @@ function addBenchmarkForType(slide_id, title, type, parameters, filter, offByDef
   addBenchmarkForParameters(slide_id, title, parameters_copy, filter, offByDefault);
 }
 
-function allSizesBenchmark(slide_id, title, parameters, filter) {
+function allSizesBenchmark(slide_id, title, parameters, filter, offByDefault = []) {
   for (let size of [40, 1000, 10000]) {
-    addBenchmarkForSize(slide_id, title, size, parameters, filter);
+    addBenchmarkForSize(slide_id, title, size, parameters, filter, offByDefault);
   }
 }
 
