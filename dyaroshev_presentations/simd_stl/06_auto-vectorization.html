@@ -1,0 +1,122 @@
+<!doctype html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
+		<title>06 auto-vectorization</title>
+
+		<link rel="stylesheet" href="../../dist/reset.css">
+		<link rel="stylesheet" href="../../dist/reveal.css">
+		<link rel="stylesheet" href="../../dist/theme/black.css">
+
+		<script src="https://cdn.plot.ly/plotly-2.5.0.min.js"></script>
+		<script> const UNSQ_EVE_COMMIT = 'e5fde89a1492468a05257b434b7dbedd867ae13e'; </script>
+		<script type="text/javascript"
+			src="https://cdn.jsdelivr.net/gh/DenisYaroshevskiy/unsq_eve@e5fde89a1492468a05257b434b7dbedd867ae13e/scripts/bench.js"></script>
+
+		<script src="../scripts/helper_scripts.js"></script>
+
+
+		<!-- Theme used for syntax highlighted code -->
+		<link rel="stylesheet" href="../../plugin/highlight/monokai.css">
+	</head>
+	<body>
+		<div class="reveal">
+			<div class="slides">
+				<section>auto-vectorization</section>
+        <section> <a href="https://godbolt.org/z/1sEWdvPMK"> transform </a> </section>
+				<section> <a href="https://godbolt.org/z/PqcEWGxPb"> transform sse4.2 vs avx2 </a></section>
+        <section id='transform_arches'>
+					<script>addBenchmarkForSize('transform_arches',
+						'std::transform',
+						10000,
+						{
+							 name: 'inplace transform',
+							 algorithm: 'std::transform',
+							 type: 'x',
+							 time: 'y',
+							 padding: 'min',
+							 group: 'selection',
+						 },
+						 ['avx2+bmi', 'sse'],
+						 []
+					);
+				 </script>
+			 </section>
+				<section>
+					<h2> some lists </h2>
+					<ul>
+						<li> <a href="https://gcc.gnu.org/projects/tree-ssa/vectorization.html"> gcc </a> </li>
+						<li> <a href="https://llvm.org/docs/Vectorizers.html"> llvm </a> </li>
+						<li> <a href="http://0x80.pl/notesen/2019-02-02-autovectorization-gcc-clang.html"> 0x80 blog </a> </li>
+					</ul>
+				</section>
+				<section> <h2> pattern recognition </h2> </section>
+				<section>
+					<h2> transform like </h2>
+					<ul>
+						<li> <a href="https://godbolt.org/z/45d71voaG"> double elements </a> </li>
+						<li> <a href="https://godbolt.org/z/anWGrn99f"> add a, b => c</a></li>
+						<li> <a href="https://godbolt.org/z/K4sWsaaEx"> adjacent difference </a></li>
+						<li> <a href="https://godbolt.org/z/bbKbcKnq4"> adjacent difference as transform </a></li>
+						<li> <a href="https://godbolt.org/z/oeEWq13ja"> replace </a></li>
+						<li> <a href="https://godbolt.org/z/f3v9xjE6z"> convert </a></li>
+						<li> <a href="https://godbolt.org/z/13836YM58"> fill </a></li>
+						<li> <a href="https://godbolt.org/z/xnaf7855W"> swap ranges</a></li>
+						<li> <a href="https://godbolt.org/z/3nYhde57Y"> iota </a></li>
+						<li> <a href="https://godbolt.org/z/ndWzbcbaW"> multiply by index </a></li>
+					</ul>
+				</section>
+				<section>
+					<a href="https://godbolt.org/z/zdonT796j"> reduce (ffast-math)</a>
+				</section>
+				<section>
+					<h2> transform_reduce like</h2>
+				  <ul>
+						<li> <a href="https://godbolt.org/z/o8qMY6Kad"> inner product</a></li>
+						<li> <a href="https://godbolt.org/z/jb8Kn93qz"> count</a></li>
+						<li> <a href="https://godbolt.org/z/snd6PKsvo"> any (as count) </a></li>
+						<li> <a href="https://godbolt.org/z/Pqoq13G8z"> min value</a></li>
+					</ul>
+				</section>
+				<section>
+					<h2> Other </h2>
+					<ul>
+						<li> <a href="https://godbolt.org/z/Gqcofvj8M"> 4x4 matricies </a></li>
+						<li> <a href="https://godbolt.org/z/8YoqTsGdM"> img channel mixing </a></li>
+						<li> <a href="https://godbolt.org/z/PM1oE8fMW"> soa/aos ints (gcc) </a></li>
+						<li> <a href="https://godbolt.org/z/zYdrWjWG5"> reverse (gcc) </a></li>
+						<li> <a href="https://godbolt.org/z/TfP939bce"> clang channel shuffle avx512</a></li>
+					</ul>
+				</section>
+				<section>
+					<a href="https://www.openmp.org/spec-html/5.0/openmpsu42.html"> openmp simd </a>
+				</section>
+				<section>
+					<h2> Microsoft STL</h2>
+					<ul>
+						<li> <a href="https://godbolt.org/z/frva6Peab"> std::reduce </a> </li>
+						<li> <a href="https://github.com/microsoft/STL/blob/bbd5dbaa61f192b393d12ea75a2dae1b8a014e7a/stl/src/vector_algorithms.cpp#L1"> STL </a></li>
+					</ul>
+				</section>
+			</div>
+		</div>
+
+		<script src="../../dist/reveal.js"></script>
+		<script src="../../plugin/notes/notes.js"></script>
+		<script src="../../plugin/markdown/markdown.js"></script>
+		<script src="../../plugin/highlight/highlight.js"></script>
+		<script>
+			// More info about initialization & config:
+			// - https://revealjs.com/initialization/
+			// - https://revealjs.com/config/
+			Reveal.initialize({
+				hash: true,
+
+				// Learn about plugins: https://revealjs.com/plugins/
+				plugins: [ RevealMarkdown, RevealHighlight, RevealNotes ]
+			});
+		</script>
+	</body>
+</html>
