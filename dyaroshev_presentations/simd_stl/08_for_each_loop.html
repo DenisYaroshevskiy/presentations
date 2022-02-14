@@ -1,0 +1,97 @@
+<!doctype html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
+		<title>08 for each</title>
+
+		<link rel="stylesheet" href="../../dist/reset.css">
+		<link rel="stylesheet" href="../../dist/reveal.css">
+		<link rel="stylesheet" href="../../dist/theme/black.css">
+
+		<script src="https://cdn.plot.ly/plotly-2.5.0.min.js"></script>
+		<script> const UNSQ_EVE_COMMIT = 'e5fde89a1492468a05257b434b7dbedd867ae13e'; </script>
+		<script type="text/javascript"
+			src="https://cdn.jsdelivr.net/gh/DenisYaroshevskiy/unsq_eve@e5fde89a1492468a05257b434b7dbedd867ae13e/scripts/bench.js"></script>
+
+		<script src="../scripts/helper_scripts.js"></script>
+
+
+		<!-- Theme used for syntax highlighted code -->
+		<link rel="stylesheet" href="../../plugin/highlight/monokai.css">
+	</head>
+	<body>
+		<div class="reveal">
+			<div class="slides">
+				<section> leftovers </section>
+        <section id='transform by padding'>
+          <script>addBenchmarkForSize('transform by padding',
+            'transform by padding',
+            10000,
+            {
+              name: 'inplace transform',
+              algorithm: 'std::transform',
+              type: 'int',
+              time: 'y',
+              padding: 'x',
+              group: 'selection',
+              percentage: 100
+            },
+            ['sse', 'avx'],
+            []
+            );
+          </script>
+        </section>
+        <section> <a href="https://stackoverflow.com/questions/71090526/which-alignment-causes-this-performance-difference"> StackOverflow </a> </section>
+        <section> How to learn hardware? </section>
+        <section> for each loop </section>
+        <section>
+          <ul>
+            <li> aligning </li>
+            <li> tail handling </li>
+            <li> main loop </li>
+            <li> unrolling </li>
+          </ul>
+        </section>
+        <section>
+          <ul>
+            <li><a href="https://github.com/gcc-mirror/gcc/blob/0a1a3afb5fb36e2d10ad92bf788e16d837451571/libstdc%2B%2B-v3/include/bits/stl_algobase.h#L2065"> libstdc++: find  </li>
+            <li><a href="https://en.wikipedia.org/wiki/Duff%27s_device"> Duff's device </a></li>
+            <li><a href="https://godbolt.org/z/YKb6n45EK"> clang, transform </a></li>
+            <li><a href="https://code.woboq.org/userspace/glibc/sysdeps/x86_64/multiarch/strlen-avx2.S.html#169"> avx2 glibc strlen </a></li>
+            <li><a href="https://godbolt.org/z/zjcrK7eeK"> eve::algo::any_of </a></li>
+          </ul>
+        </section>
+        <section>
+          <ul>
+            <li><a href="https://godbolt.org/z/YKb6n45EK"> loop peling </a></li>
+            <li><a href="https://godbolt.org/z/x71o4edxM"> aligned ptr read </a> </li>
+            <li><a href="https://godbolt.org/z/E483cGvdj"> masked read/writes</a> </li>
+          </ul>
+        </section>
+        <section> <a href="https://godbolt.org/z/E8WMGEhKb"> no loop peeling in eve </a> </section>
+        <section> sin: <a href="https://godbolt.org/z/cKdjT54oG"> aligning </a> / <a href="https://godbolt.org/z/ETMn65r1K"> no-aligning </a> </section>
+        <section> relaxed_iterator => (preprocess_range) => iterator </section>
+        <section> <a href="https://godbolt.org/z/j1373xW4d"> simple for each </a></section>
+        <section> <a href="https://github.com/jfalcou/eve/blob/74e634d23befe6481dad38cf347e96e646a67187/include/eve/algo/find.hpp#L106"> eve::algo::find </a></section>
+			</div>
+		</div>
+
+		<script src="../../dist/reveal.js"></script>
+		<script src="../../plugin/notes/notes.js"></script>
+		<script src="../../plugin/markdown/markdown.js"></script>
+		<script src="../../plugin/highlight/highlight.js"></script>
+		<script>
+			// More info about initialization & config:
+			// - https://revealjs.com/initialization/
+			// - https://revealjs.com/config/
+			Reveal.initialize({
+				hash: true,
+
+				// Learn about plugins: https://revealjs.com/plugins/
+				plugins: [ RevealMarkdown, RevealHighlight, RevealNotes ]
+			});
+		</script>
+	</body>
+</html>
