@@ -1,0 +1,537 @@
+<!doctype html>
+<html>
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport"
+    content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
+  <title> My First SIMD </title>
+
+  <link rel="stylesheet" href="../../dist/reset.css">
+  <link rel="stylesheet" href="../../dist/reveal.css">
+  <link rel="stylesheet" href="../../dist/theme/moon.css">
+
+  <script src="https://cdn.plot.ly/plotly-2.5.0.min.js"></script>
+  <script> const UNSQ_EVE_COMMIT = 'fb271e27790e043adea973ec77ad54cc6d7303b8'; </script>
+  <script type="text/javascript"
+    src="https://cdn.jsdelivr.net/gh/DenisYaroshevskiy/unsq_eve@2cf6819dda923fc021629eda0cfba4113eb5f530/scripts/bench.js"></script>
+
+  <script src="../scripts/helper_scripts.js"></script>
+
+
+  <!-- Theme used for syntax highlighted code -->
+  <link rel="stylesheet" href="../../plugin/highlight/monokai.css">
+</head>
+
+<body>
+  <div class="reveal">
+    <div class="slides">
+      <section data-transition="none">
+        <h2>My first SIMD</h2>
+        <h4>Implementing STL Algorithms Using SIMD Extensions</h4>
+        <p>Denis Yaroshevskiy</p>
+      </section>
+      <section>
+        <p>So, what's this about? </p>
+        <p><a href="https://tinyurl.com/myfirstsimd2">
+            https://tinyurl.com/myfirstsimd2</a></p>
+      </section>
+      <section id='strlen vs scalar'>
+        <script>
+          allSizesBenchmark('strlen vs scalar',
+            'How good is std::strlen?',
+            {
+              name: 'find 0',
+              algorithm: 'selection',
+              type: 'char',
+              time: 'y',
+              padding: 'min',
+              group: 'avx2+bmi',
+            },
+            ['std::strlen', 'std_::find_unguarded'],
+            []);
+        </script>
+      </section>
+      <section>
+        <h3>Disclaimers</h3>
+        <ul>
+          <li class="fragment">Performance is tricky.</li>
+          <li class="fragment">No ARM measurements.</li>
+          <li class="fragment">Some of my statements are my opinions.</li>
+        </ul>
+      </section>
+      <section>
+        <h3>The Plan</h3>
+        <ul>
+          <li class="fragment">What's SIMD and how to get it?</li>
+          <li class="fragment">std::strlen</li>
+          <li class="fragment">Some other algorithms.</li>
+        </ul>
+      </section>
+      <section>
+        <h3>What's SIMD and how to get it?</h3>
+      </section>
+      <section>
+        <h2>Vector Processor Extensions</h2>
+        <ul>
+          <li>x86</li>
+          <ul>
+            <li>128 bits: SSE2, SSE3, SSSE3, SSE4.1, SSE4.2</li>
+            <li>256 bits: AVX, AVX2, XOP</li>
+            <li>512 bits: AVX512 and its myriad of sub-genre</li>
+          </ul>
+          <li>ARM</li>
+          <ul>
+            <li>128 bits: NEON, ASIMD</li>
+            <li> SVE (VLS/VLA)</li>
+          </ul>
+          <li>PowerPC</li>
+          <li>WASM</li>
+        </ul>
+      </section>
+      <section id='marching_orders'>
+        <script>
+          addBenchmarkForParameters(
+            'marching_orders',
+            'MARCHing orders: remove int, 10\'000',
+            {
+              group: 'selection',
+              algorithm: 'selection',
+              size: 10000,
+              type: 'int',
+              percentage: 'x',
+              time: 'y',
+              padding: 'min'
+            },
+            ['eve::algo::remove', 'avx2+bmi/std::remove'],
+            ['avx2', 'sse2', 'sse4.2']
+          );
+        </script>
+      </section>
+      <section>
+        <h3>Tell your compiler</h3>
+        <ul>
+          <li class="fragment">-march=native</li>
+          <li class="fragment">Compile for specific architectures</li>
+          <li class="fragment">Runtime selection (hard)</li>
+        </ul>
+      </section>
+      <section>
+        <h3>Now get some SIMD code</h3>
+        <ul>
+          <li class="fragment">auto-vectorization</li>
+          <li class="fragment">openmp</li>
+          <li class="fragment">by hand with intrinsics or Assembly</li>
+        </ul>
+      </section>
+      <section id="my_first_simd/programming_model">
+        <script> imagesSlideShow("my_first_simd/programming_model", 4); </script>
+      </section>
+      <section>
+        <h3>On using intrinsics</h3>
+        <ul>
+          <li class="fragment">#immintrin.h / #arm_neon.h</li>
+          <li class="fragment"> <a
+              href="https://software.intel.com/sites/landingpage/IntrinsicsGuide/">
+              Intel Intrinsics Guide </a> </li>
+          <li class="fragment"> <a
+              href="https://developer.arm.com/architectures/instruction-sets/intrinsics">
+              ARM Intrinsics Guide </a> </li>
+        </ul>
+      </section>
+      <section>
+        <h3>Wrap it!</h3>
+        eve library: <a href="https://github.com/jfalcou/eve"> GitHub </a>, <a
+          href="https://youtu.be/WZGNCPBMInI">CppCon</a>
+      </section>
+      <section>
+        <h3>strlen</h3>
+      </section>
+      <section id="02_pages">
+        <script> imagesSlideShow("02_pages", 4); </script>
+      </section>
+      <section id="02_strlen">
+        <script> imagesSlideShow("02_strlen", 8); </script>
+      </section>
+      <section>
+        <h3>strlen code (buggy)</h3>
+        <iframe width="1600px" height="550px" src="https://godbolt.org/e?hideEditorToolbars=true#g:!((g:!((g:!((h:codeEditor,i:(filename:'1',fontScale:16,fontUsePx:'0',j:1,lang:c%2B%2B,selection:(endColumn:1,endLineNumber:3,positionColumn:1,positionLineNumber:3,selectionStartColumn:1,selectionStartLineNumber:3,startColumn:1,startLineNumber:3),source:'%23include+%3Ceve/module/core.hpp%3E%0A%0Astd::size_t+strlen_(const+char*+s_)+%7B%0A++const+auto*+s+%3D+reinterpret_cast%3Cconst+std::uint8_t*%3E(s_)%3B%0A++using+wide+%3D+eve::wide%3Cstd::uint8_t%3E%3B%0A%0A++const+wide+zeroes%7B0%7D%3B%0A%0A++eve::aligned_ptr+aligned_s+%3D+eve::previous_aligned_address(s)%3B%0A++wide+cur+%3D+eve::load(aligned_s)%3B%0A%0A++eve::ignore_first+ignore%7Bs+-+aligned_s.get()%7D%3B%0A++std::optional+match+%3D+eve::first_true%5Bignore%5D(cur+%3D%3D+zeroes)%3B%0A%0A++while+(!!match)+%7B%0A++++aligned_s+%2B%3D+wide::size()%3B+++++++++++++++%0A++++cur+%3D+eve::load(aligned_s)%3B%0A++++match+%3D+eve::first_true(cur+%3D%3D+zeroes)%3B++%0A++%7D%0A%0A++return+static_cast%3Cstd::size_t%3E(aligned_s.get()+%2B+*match+-+s)%3B%0A%7D'),l:'5',n:'0',o:'C%2B%2B+source+%231',t:'0')),k:100,l:'4',m:84.81344898035205,n:'0',o:'',s:0,t:'0'),(g:!((h:compiler,i:(compiler:clang1300,filters:(b:'0',binary:'1',commentOnly:'0',demangle:'0',directives:'0',execute:'1',intel:'0',libraryCode:'0',trim:'1'),flagsViewOpen:'1',fontScale:16,fontUsePx:'0',j:3,lang:c%2B%2B,libs:!((name:eve,ver:trunk)),options:'--std%3Dc%2B%2B20++-mavx2+-O3+-DNDEBUG',selection:(endColumn:1,endLineNumber:1,positionColumn:1,positionLineNumber:1,selectionStartColumn:1,selectionStartLineNumber:1,startColumn:1,startLineNumber:1),source:1,tree:'1'),l:'5',n:'0',o:'x86-64+clang+13.0.0+(C%2B%2B,+Editor+%231,+Compiler+%233)',t:'0')),header:(),l:'4',m:15.186551019647954,n:'0',o:'',s:0,t:'0')),l:'3',n:'0',o:'',t:'0')),version:4"></iframe>
+      </section>
+      <section>
+        <h3>Dynamic analysis</h3>
+        <ul>
+          <li class="fragment">unsafe(load_unsafe)</li>
+          <li class="fragment">__attribute__((no_sanitize_address))</li>
+        </ul>
+      </section>
+      <section>
+        <h3>strlen code (correct)</h3>
+        <iframe width="1600px" height="550px" src="https://godbolt.org/e#g:!((g:!((g:!((h:codeEditor,i:(filename:'1',fontScale:16,fontUsePx:'0',j:1,lang:c%2B%2B,selection:(endColumn:1,endLineNumber:3,positionColumn:1,positionLineNumber:3,selectionStartColumn:1,selectionStartLineNumber:3,startColumn:1,startLineNumber:3),source:'%23include+%3Ceve/module/core.hpp%3E%0A%0Astd::size_t+strlen_(const+char*+s_)+%7B%0A++const+auto*+s+%3D+reinterpret_cast%3Cconst+std::uint8_t*%3E(s_)%3B%0A++using+wide+%3D+eve::wide%3Cstd::uint8_t%3E%3B%0A%0A++const+wide+zeroes%7B0%7D%3B%0A%0A++eve::aligned_ptr+aligned_s+%3D+eve::previous_aligned_address(s)%3B%0A++wide+cur+%3D+eve::unsafe(eve::load)(aligned_s)%3B%0A%0A++eve::ignore_first+ignore%7Bs+-+aligned_s.get()%7D%3B%0A++std::optional+match+%3D+eve::first_true%5Bignore%5D(cur+%3D%3D+zeroes)%3B%0A%0A++while+(!!match)+%7B%0A++++aligned_s+%2B%3D+wide::size()%3B+++++++++++++++%0A++++cur+%3D+eve::unsafe(eve::load)(aligned_s)%3B%0A++++match+%3D+eve::first_true(cur+%3D%3D+zeroes)%3B++%0A++%7D%0A%0A++return+static_cast%3Cstd::size_t%3E(aligned_s.get()+%2B+*match+-+s)%3B%0A%7D'),l:'5',n:'0',o:'C%2B%2B+source+%231',t:'0')),k:100,l:'4',m:90.40095360078855,n:'0',o:'',s:0,t:'0'),(g:!((h:compiler,i:(compiler:clang1300,filters:(b:'0',binary:'1',commentOnly:'0',demangle:'0',directives:'0',execute:'1',intel:'0',libraryCode:'0',trim:'1'),flagsViewOpen:'1',fontScale:16,fontUsePx:'0',j:3,lang:c%2B%2B,libs:!((name:eve,ver:trunk)),options:'--std%3Dc%2B%2B20++-mavx2+-O3+-DNDEBUG',selection:(endColumn:1,endLineNumber:1,positionColumn:1,positionLineNumber:1,selectionStartColumn:1,selectionStartLineNumber:1,startColumn:1,startLineNumber:1),source:1,tree:'1'),l:'5',n:'0',o:'x86-64+clang+13.0.0+(C%2B%2B,+Editor+%231,+Compiler+%233)',t:'0')),header:(),l:'4',m:9.599046399211442,n:'0',o:'',s:0,t:'0')),l:'3',n:'0',o:'',t:'0')),version:4"></iframe>
+      </section>
+      <section>
+        <h3>Measuring</h3>
+        <ul>
+          <li class="fragment">Google benchmark</li>
+          <li class="fragment">code alignment</li>
+          <li class="fragment">40, 1000, 10'000 bytes</li>
+          <li class="fragment">char, short, int</li>
+        </ul>
+      </section>
+      <section id='vs std::strlen'>
+        <script>
+          allSizesBenchmark('vs std::strlen',
+            'Are we there yet?',
+            {
+              name: 'find 0',
+              algorithm: 'selection',
+              type: 'char',
+              time: 'y',
+              padding: 'min',
+              group: 'avx2+bmi',
+            },
+            ['std::strlen', 'unsq_eve::find_unguarded<256, 1>'],
+            []);
+        </script>
+      </section>
+      <section id='unrolling'>
+        <script>
+          allSizesBenchmark('unrolling',
+            'What if we unroll?',
+            {
+              name: 'find 0',
+              algorithm: 'selection',
+              type: 'char',
+              time: 'y',
+              padding: 'min',
+              group: 'avx2+bmi',
+            },
+            ['std::strlen', 'unsq_eve::find_unguarded<256, 1>', 'unsq_eve::find_unguarded<256, 4>'],
+            []);
+        </script>
+      </section>
+      <section id='04_using_multiple_registers'>
+        <script>
+          imagesSlideShow('04_using_multiple_registers', 6);
+        </script>
+      </section>
+      <section id='find/find_unguarded/strlen'>
+        <script>
+          allSizesBenchmark('find/find_unguarded/strlen',
+            'All simd find 0s',
+            {
+              name: 'find 0',
+              algorithm: 'selection',
+              type: 'char',
+              time: 'y',
+              padding: 'min',
+              group: 'avx2+bmi',
+            },
+            ['std::strlen', 'unsq_eve::find_unguarded<256, 4>', 'eve::algo::find'],
+            []);
+        </script>
+      </section>
+      <section id='find unguarded against scalar'>
+        <script>
+          allSizesBenchmark('find unguarded against scalar',
+            'find unguarded vs scalar',
+            {
+              name: 'find 0',
+              algorithm: 'selection',
+              type: 'x',
+              time: 'y',
+              padding: 'min',
+              group: 'avx2+bmi',
+            },
+            ['unsq_eve::find_unguarded<256, 4>', 'std_::find_unguarded'],
+            []);
+        </script>
+      </section>
+      <section id='find against scalar'>
+        <script>
+          allSizesBenchmark('find against scalar',
+            'eve::find vs scalar',
+            {
+              name: 'find 0',
+              group: 'selection',
+              algorithm: 'selection',
+              type: 'x',
+              time: 'y',
+              padding: 'min',
+            },
+            ['avx2+bmi/std::find', 'sse2/eve::algo::find', 'avx2/eve::algo::find'],
+            []);
+        </script>
+      </section>
+      <section>
+        <h3> Notes on find/find_unguarded </h3>
+        <ul>
+          <li class="fragment"> <a
+              href="https://stackoverflow.com/questions/25566302/vectorized-strlen-getting-away-with-reading-unallocated-memory">
+              Stephen Canon (Stack Overflow)</a></li>
+          <li class="fragment">int* has to be aligned to alignof(int)</li>
+          <li class="fragment"> <a href="https://github.com/jfalcou/eve/blob/154a5ae77f2a28a9385b0da3032029be9530cdd3/examples/algorithms/writing_new/strlen__showing_basic_conepts.cpp#L9">strlen example in eve</a></li>
+        </ul>
+      </section>
+      <section>
+        <h3> reduce </h3>
+      </section>
+      <section>
+        <h3> reduce (same type)</h3>
+        <ul>
+          <li class="fragment">replace(wide, ignore, wide) </li>
+          <li class="fragment">reduce(wide, op) -> wide</li>
+        </ul>
+      </section>
+      <section id="my_first_simd/reduce">
+        <script> imagesSlideShow("my_first_simd/reduce", 9); </script>
+      </section>
+      <section id="my_first_simd/reduce_wide">
+        <script> imagesSlideShow("my_first_simd/reduce_wide", 6); </script>
+      </section>
+      <section>
+        <h3> reduce (different type) </h3>
+        <ul>
+          <li class="fragment">wide&lt;T, fixed&lt;N&gt;&gt;</li>
+          <li class="fragment">convert</li>
+        </ul>
+      </section>
+      <section id="my_first_simd/reduce_different_type">
+        <script> imagesSlideShow("my_first_simd/reduce_different_type", 6); </script>
+      </section>
+      <section id='reduce: char'>
+        <script>
+          allSizesBenchmark('reduce: char',
+            'reduce: char',
+            {
+              name: 'sum',
+              group: 'avx2+bmi',
+              algorithm: 'selection',
+              type: 'char',
+              sum_type: 'x',
+              time: 'y',
+              padding: 'min',
+            },
+            ['std::reduce','eve::algo::reduce']);
+        </script>
+      </section>
+      <section id='reduce: short'>
+        <script>
+          allSizesBenchmark('reduce: short',
+            'reduce: short',
+            {
+              name: 'sum',
+              group: 'avx2+bmi',
+              algorithm: 'selection',
+              type: 'short',
+              sum_type: 'x',
+              time: 'y',
+              padding: 'min',
+            },
+            ['std::reduce','eve::algo::reduce']);
+        </script>
+      </section>
+      <section id='reduce: int'>
+        <script>
+          allSizesBenchmark('reduce: int',
+            'reduce: int',
+            {
+              name: 'sum',
+              group: 'sse4.2',
+              algorithm: 'selection',
+              type: 'int',
+              sum_type: 'int',
+              time: 'y',
+              padding: 'min',
+            },
+            ['std::reduce','eve::algo::reduce']);
+        </script>
+      </section>
+      <section>
+      <h3> Notes on reduce </h3>
+      <ul>
+        <li class="fragment"> sse2-sse4.2 char -> int reduction </li>
+        <li class="fragment"> load[ignore.else_(x)]</li>
+      </ul>
+      </section>
+      <section>
+        <h3> inclusive_scan (inplace) </h3>
+      </section>
+      <section>
+        <h3> inclusive_scan (inplace) </h3>
+        <ul>
+          <li class="fragment"> store[ignore](wide, ptr) </li>
+          <li class="fragment"> scan(wide, op, zero)</li>
+        </ul>
+      </section>
+      <section id='my_first_simd/inclusive_scan'>
+        <script>
+          imagesSlideShow('my_first_simd/inclusive_scan', 9);
+        </script>
+      </section>
+      <section id='my_first_simd/inclusive_scan_wide'>
+        <script>
+          imagesSlideShow('my_first_simd/inclusive_scan_wide', 8);
+        </script>
+      </section>
+      <section id='inclusive_scan_bench'>
+        <script>
+          allSizesBenchmark('inclusive_scan_bench',
+            'inclusive scan',
+            {
+              name: 'inplace transform',
+              group: 'selection',
+              algorithm: 'selection',
+              type: 'x',
+              time: 'y',
+              padding: 'min',
+            },
+            ['sse4.2/eve::algo::inclusive_scan_inplace',
+             'avx2+bmi/eve::algo::inclusive_scan_inplace',
+             'avx2+bmi/std::inclusive_scan']);
+        </script>
+      </section>
+      <section>
+        <h3> Notes on inclusive_scan </h3>
+        <ul>
+          <li class="fragment"> <a
+              href="https://stackoverflow.com/a/19496697/5021064">
+              Z boson (Stack Overflow)</a></li>
+          <li class="fragment"> Avoid _mm_maskmoveu_si128</li>
+        </ul>
+      </section>
+      <section>
+        <h3> remove </h3>
+      </section>
+      <section id='my_first_simd/unsafe_compress_store'>
+        <script>
+          imagesSlideShow('my_first_simd/unsafe_compress_store', 5);
+        </script>
+      </section>
+      <section>
+        <h3> remove </h3>
+        <ul>
+          <li class="fragment"> safe/unsafe compress_store[ignore] </li>
+        </ul>
+      </section>
+      <section id='my_first_simd/remove_if'>
+        <script>
+          imagesSlideShow('my_first_simd/remove_if', 8);
+        </script>
+      </section>
+      <section id='remove_char_bench'>
+        <script>
+          allSizesBenchmark('remove_char_bench',
+            'remove char',
+            {
+              group: 'selection',
+              algorithm: 'selection',
+              type: 'char',
+              percentage: 'x',
+              time: 'y',
+              padding: 'min'
+            },
+            ['eve::algo::remove', 'avx2+bmi/std::remove'],
+            ['avx2', 'sse2', 'sse4.2']);
+        </script>
+      </section>
+      <section id='remove_short_bench'>
+        <script>
+          allSizesBenchmark('remove_short_bench',
+            'remove short',
+            {
+              group: 'selection',
+              algorithm: 'selection',
+              type: 'short',
+              percentage: 'x',
+              time: 'y',
+              padding: 'min'
+            },
+            ['eve::algo::remove', 'avx2+bmi/std::remove'],
+            ['avx2', 'sse2', 'sse4.2']);
+        </script>
+      </section>
+      <section id='remove_int_bench'>
+        <script>
+          allSizesBenchmark('remove_int_bench',
+            'remove int',
+            {
+              group: 'selection',
+              algorithm: 'selection',
+              type: 'int',
+              percentage: 'x',
+              time: 'y',
+              padding: 'min'
+            },
+            ['eve::algo::remove', 'avx2+bmi/std::remove'],
+            ['avx2', 'sse2', 'sse4.2']);
+        </script>
+      </section>
+      <section>
+        <h3> Notes on remove </h3>
+        <ul>
+          <li class="fragment"> <a
+              href="https://stackoverflow.com/a/36951611/5021064">
+              Aqrit, Peter Cordes (Stack Overflow)</a></li>
+          <li class="fragment"> remove_copy(f, l, o) </li>
+        </ul>
+      </section>
+      <section>
+        <h3> General notes </h3>
+        <ul>
+          <li class="fragment"> massive speed ups </li>
+          <li class="fragment"> code alignment impact on SIMD </li>
+          <li class="fragment"> data impact on SIMD </li>
+          <li class="fragment"> aligned/unaligned memory access </li>
+        </ul>
+      </section>
+      <section>
+        <h3> What we didn't cover? </h3>
+        <ul>
+          <li class="fragment"> multiple range algorithms </li>
+          <li class="fragment"> set operations</li>
+          <li class="fragment"> partition (in place) / reverse</li>
+          <li class="fragment"> floating point / math </li>
+          <li class="fragment"> cache effects </li>
+          <li class="fragment"> gather </li>
+        </ul>
+      </section>
+      <section>
+        <h2> Write strlen </h2>
+      </section>
+      <section>
+        <h3>Thanks to</h3>
+        <li> Joel Falcou, Jean-Thierry Lapresté </li>
+        <li> Stack Overflow: @aqrit, @Peter Cordes, @Z boson, @Stephen Canon </li>
+      </section>
+      <section>
+        <h3> eve library links</h3>
+        <li> <a href="https://github.com/jfalcou/eve">github.com/jfalcou/eve</a> (discussions/issues) </li>
+        <li> <a href="https://youtu.be/WZGNCPBMInI"> CppCon 2020: SIMD in C++20: EVE of a new Era </a></li>
+        <li> <a	href="https://discord.com/channels/692734675726237696/692735259204124692">Discord</a></li>
+        <li> cpplang slack: jfalcou, dyaroshev </li>
+        <li> email: joel.falcou@lri.fr, denis.yaroshevskij@gmail.com </li>
+        <li> twitter: @dyaroshev</li>
+      </ul>
+      </section>
+    </div>
+  </div>
+
+  <script src="../../dist/reveal.js"></script>
+  <script src="../../plugin/notes/notes.js"></script>
+  <script src="../../plugin/markdown/markdown.js"></script>
+  <script src="../../plugin/highlight/highlight.js"></script>
+  <script>
+    // More info about initialization & config:
+    // - https://revealjs.com/initialization/
+    // - https://revealjs.com/config/
+    Reveal.initialize({
+      hash: true,
+
+      // Learn about plugins: https://revealjs.com/plugins/
+      plugins: [RevealMarkdown, RevealHighlight, RevealNotes]
+    });
+  </script>
+</body>
+
+</html>
