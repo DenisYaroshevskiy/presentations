@@ -23,6 +23,32 @@
         <h2>Enough TMP to write a variant</h2>
         <p>Denis Yaroshevskiy</p>
       </section>
+      <section>
+        <h2> So what's this about? </h2>
+        <p> Link todo</p>
+      </section>
+      <section>
+        <h3> variant pseudocode </h3>
+        <pre>
+          <code>
+template &lt;typename ...Ts&gt;
+struct variant {
+  union { Ts ... elems; } data;
+
+  index_type idx;
+};
+
+auto visit(auto&& vis, auto&& ... vs) {
+  switch ( ... )  {
+    case 0: return vis(get&lt;0&gt(vs) ....);
+    case 1: ...
+    ...
+  }
+};
+          </code>
+        </pre>
+
+      </section>
     </div>
   </div>
   <script src="../../dist/reveal.js"></script>
