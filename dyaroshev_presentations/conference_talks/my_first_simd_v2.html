@@ -148,6 +148,13 @@
       <section>
         <h3>strlen</h3>
       </section>
+      <section>
+        <h3>Ideas</h3>
+        <ul>
+          <li class="fragment">allocations happen in pages</li>
+          <li class="fragment">aligned addresses are safe</li>
+        </ul>
+      </section>
       <section id="02_pages">
         <script> imagesSlideShow("02_pages", 4); </script>
       </section>
@@ -161,7 +168,7 @@
       <section>
         <h3>Dynamic analysis</h3>
         <ul>
-          <li class="fragment">unsafe(load_unsafe)</li>
+          <li class="fragment">unsafe(load)</li>
           <li class="fragment">__attribute__((no_sanitize_address))</li>
         </ul>
       </section>
@@ -386,7 +393,8 @@
               time: 'y',
               padding: 'min',
             },
-            ['sse4.2/eve::algo::inclusive_scan_inplace',
+            ['sse2/eve::algo::inclusive_scan_inplace',
+             'sse4.2/eve::algo::inclusive_scan_inplace',
              'avx2+bmi/eve::algo::inclusive_scan_inplace',
              'avx2+bmi/std::inclusive_scan']);
         </script>
@@ -509,6 +517,7 @@
         <li> <a href="https://github.com/jfalcou/eve">github.com/jfalcou/eve</a> (discussions/issues) </li>
         <li> <a href="https://youtu.be/WZGNCPBMInI"> CppCon 2020: SIMD in C++20: EVE of a new Era </a></li>
         <li> <a	href="https://discord.com/channels/692734675726237696/692735259204124692">Discord</a></li>
+        <li> <a href="https://youtube.com/playlist?list=PLYCMvilhmuPEM8DUvY6Wg_jaSFHpmlSBD">My videos on SIMD</a></li>
         <li> cpplang slack: jfalcou, dyaroshev </li>
         <li> email: joel.falcou@lri.fr, denis.yaroshevskij@gmail.com </li>
         <li> twitter: @dyaroshev</li>
