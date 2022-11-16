@@ -28,6 +28,13 @@
         <a href="https://tinyurl.com/enoughtmp2022"> tinyurl.com/enoughtmp2022 </a>
       </section>
       <section>
+        <h3> std::variant usage</h3>
+      </section>
+      <section>
+        <h3> std::variant usage</h3>
+        <iframe width='800px' height='600px' src='https://godbolt.org/e#g:!((g:!((h:codeEditor,i:(filename:'1',fontScale:20,fontUsePx:'0',j:1,lang:c%2B%2B,selection:(endColumn:54,endLineNumber:8,positionColumn:54,positionLineNumber:8,selectionStartColumn:44,selectionStartLineNumber:8,startColumn:44,startLineNumber:8),source:'%23include+%3Cconcepts%3E%0A%23include+%3Cstdexcept%3E%0A%23include+%3Cstring%3E%0A%23include+%3Cvariant%3E%0A%0A//+https://en.cppreference.com/w/cpp/utility/variant/visit%0Atemplate%3Cclass...+Ts%3E+struct+overloaded+:+Ts...+%7B+using+Ts::operator()...%3B+%7D%3B%0Atemplate%3Cclass...+Ts%3E+overloaded(Ts...)+-%3E+overloaded%3CTs...%3E%3B%0A%0Astruct+Cell+%7B%0A++std::variant%3Cint,+std::string%3E+data%3B%0A%0A++Cell%26+operator%2B%3D(const+Cell%26+other)+%7B%0A++++std::visit(overloaded%7B%0A++++++%5B%5D(int%26+x,+++++++++int++++++++++++++++y)+%7B+x+%2B%3D+y%3B+%7D,%0A++++++%5B%5D(int%26+x,+++++++++const+std::string%26+y)+%7B+throw+std::runtime_error(%22bad+types+match%22)%3B+%7D,%0A++++++%5B%5D(std::string%26+x,+const+std::string%26+y)+%7B+x+%2B%3D+y%3B+%7D,%0A++++++%5B%5D(std::string%26+x,+int++++++++++++++++y)+%7B+x+%2B%3D+std::to_string(y)%3B+%7D%0A++++%7D,%0A++++data,+other.data)%3B%0A++++return+*this%3B%0A++%7D%0A%7D%3B'),l:'5',n:'0',o:'C%2B%2B+source+%231',t:'0'),(h:compiler,i:(compiler:clang1500,deviceViewOpen:'1',filters:(b:'0',binary:'1',commentOnly:'0',demangle:'0',directives:'0',execute:'1',intel:'0',libraryCode:'0',trim:'1'),flagsViewOpen:'1',fontScale:14,fontUsePx:'0',j:1,lang:c%2B%2B,libs:!(),options:'-O3+--std%3Dc%2B%2B20+--stdlib%3Dlibstdc%2B%2B',selection:(endColumn:1,endLineNumber:1,positionColumn:1,positionLineNumber:1,selectionStartColumn:1,selectionStartLineNumber:1,startColumn:1,startLineNumber:1),source:1),l:'5',n:'0',o:'+x86-64+clang+15.0.0+(Editor+%231)',t:'0'),(h:output,i:(compilerName:'x86-64+gcc+12.2',editorid:1,fontScale:14,fontUsePx:'0',j:1,wrap:'1'),l:'5',n:'0',o:'Output+of+x86-64+clang+15.0.0+(Compiler+%231)',t:'0')),k:100,l:'4',n:'0',o:'',s:0,t:'0')),version:4'></iframe>
+      </section>
+      <section>
         <h3> variant pseudocode </h3>
         <pre>
           <code>
