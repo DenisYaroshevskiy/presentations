@@ -1,0 +1,87 @@
+<!doctype html>
+<html>
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport"
+    content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
+  <title> Advanced SIMD Algorithms in Pictures </title>
+
+  <link rel="stylesheet" href="../../dist/reset.css">
+  <link rel="stylesheet" href="../../dist/reveal.css">
+  <link rel="stylesheet" href="../../dist/theme/moon.css">
+
+  <script src="https://cdn.plot.ly/plotly-2.5.0.min.js"></script>
+  <script> const UNSQ_EVE_COMMIT = 'fb271e27790e043adea973ec77ad54cc6d7303b8'; </script>
+  <script type="text/javascript"
+    src="https://cdn.jsdelivr.net/gh/DenisYaroshevskiy/unsq_eve@2cf6819dda923fc021629eda0cfba4113eb5f530/scripts/bench.js"></script>
+
+  <script src="../scripts/helper_scripts.js"></script>
+
+
+  <!-- Theme used for syntax highlighted code -->
+  <link rel="stylesheet" href="../../plugin/highlight/monokai.css">
+</head>
+
+<body>
+  <div class="reveal">
+    <div class="slides">
+      <section data-transition="none">
+        <h2>Advanced SIMD algorithms in pictures</h2>
+        <p>Denis Yaroshevskiy</p>
+      </section>
+      <section>
+        <h2> std::memcmp </h2>
+      </section>
+      <section id="advanced_simd_algorithms_in_pictures/memcmp">
+        <script> imagesSlideShow("advanced_simd_algorithms_in_pictures/memcmp", 5); </script>
+      </section>
+      <section>
+        <h2> PLACEHOLDER: std::memcmp is faster >2x std::mismatch(uint64_t)</h2>
+      </section>
+      <section>
+        <h2> eve library </h2>
+        <ul>
+          <li class="fragment"> <a href="https://github.com/jfalcou/eve"> github </a></li>
+          <li class="fragment"> eve::algo::mismatch </li>
+          <li class="fragment"> find_if + zip </li>
+        </ul>
+      </section>
+      <section>
+        <h3> mismatch from scratch </h3>
+        <iframe width="1600px" height="550px" src="https://godbolt.org/e?hideEditorToolbars=true#g:!((g:!((g:!((h:codeEditor,i:(filename:'1',fontScale:18,fontUsePx:'0',j:1,lang:c%2B%2B,selection:(endColumn:27,endLineNumber:14,positionColumn:27,positionLineNumber:14,selectionStartColumn:27,selectionStartLineNumber:14,startColumn:27,startLineNumber:14),source:'%23include+%3Ceve/module/core.hpp%3E%0A%0Abool+core_of_mmatch(const+std::uint8_t*%26+a,+const+std::uint8_t*%26+b)%0A%7B%0A++using+wide+%3D+eve::wide%3Cstd::uint8_t%3E%3B%0A%0A++wide+wide_a+%3D+eve::load(a)%3B%0A++wide+wide_b+%3D+eve::load(b)%3B%0A%0A++eve::logical%3Cwide%3E+test+%3D+wide_a+!!%3D+wide_b%3B%0A++std::optional%3Cstd::ptrdiff_t%3E+match+%3D+eve::first_true(test)%3B%0A%0A++a+%2B%3D+match.value_or(wide::size())%3B%0A++b+%2B%3D+match.value_or(wide::size())%3B%0A++return+match.has_value()%3B%0A%7D'),l:'5',n:'0',o:'C%2B%2B+source+%231',t:'0')),k:100,l:'4',m:82.3650653059978,n:'0',o:'',s:0,t:'0'),(g:!((h:compiler,i:(compiler:clang1500,deviceViewOpen:'1',filters:(b:'0',binary:'1',binaryObject:'1',commentOnly:'0',debugCalls:'1',demangle:'0',directives:'0',execute:'1',intel:'0',libraryCode:'0',trim:'1'),flagsViewOpen:'1',fontScale:18,fontUsePx:'0',j:1,lang:c%2B%2B,libs:!((name:eve,ver:v20230215)),options:'-mavx2+-DNDEBUG+--std%3Dc%2B%2B20+-O3',overrides:!(),selection:(endColumn:1,endLineNumber:1,positionColumn:1,positionLineNumber:1,selectionStartColumn:1,selectionStartLineNumber:1,startColumn:1,startLineNumber:1),source:1),l:'5',n:'0',o:'+x86-64+clang+15.0.0+(Editor+%231)',t:'0')),header:(),l:'4',m:17.6349346940022,n:'0',o:'',s:0,t:'0')),l:'3',n:'0',o:'',t:'0')),version:4"></iframe>
+      </section>
+      <section data-markdown>
+        <textarea data-template>
+          ## compare with proposal
+          | eve        | p1928(r6)                    |
+          |------------|------------------------------|
+          | wide       |  std::simd                   |
+          | load       |  .copy_from                  |
+          | logical    |  std::simd_mask              |
+          | !=         | !=                           |
+          | first_true | any_of + reduce_min_index    |
+        </textarea>
+      </section>
+    </div>
+  </div>
+
+  <script src="../../dist/reveal.js"></script>
+  <script src="../../plugin/notes/notes.js"></script>
+  <script src="../../plugin/markdown/markdown.js"></script>
+  <script src="../../plugin/highlight/highlight.js"></script>
+  <script>
+    // More info about initialization & config:
+    // - https://revealjs.com/initialization/
+    // - https://revealjs.com/config/
+    Reveal.initialize({
+      hash: true,
+
+      // Learn about plugins: https://revealjs.com/plugins/
+      plugins: [RevealMarkdown, RevealHighlight, RevealNotes]
+    });
+  </script>
+</body>
+
+</html>
