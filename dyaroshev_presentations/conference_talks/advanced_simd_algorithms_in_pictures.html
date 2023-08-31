@@ -21,7 +21,7 @@
 
 
   <!-- Theme used for syntax highlighted code -->
-  <link rel="stylesheet" href="../../plugin/highlight/monokai.css">
+  <link rel="stylesheet" href="../../plugin/highlight/zenburn.css">
 </head>
 
 <body>
@@ -93,6 +93,20 @@
       </section>
       <section id="advanced_simd_algorithms_in_pictures/compress_copy_simd_scalar">
         <script> imagesSlideShow("advanced_simd_algorithms_in_pictures/compress_copy_simd_scalar", 4); </script>
+      </section>
+      <section>
+        <section data-markdown>
+          <textarea data-template>
+            ## Proposal P2664r3
+
+            ```
+            template<typename T, typename Abi>
+            constexpr simd<T, Abi>
+            compress(const simd<T, Abi>& value,
+                     const simd_mask<T, MAbi>& mask);
+            ```
+          </textarea>
+        </section>
       </section>
     </div>
   </div>
