@@ -38,7 +38,7 @@
         <script> imagesSlideShow("advanced_simd_algorithms_in_pictures/memcmp", 5); </script>
       </section>
       <section>
-        <h2> PLACEHOLDER: std::memcmp is faster >2x std::mismatch(uint64_t)</h2>
+        <h2> PLACEHOLDER: std::memcmp is faster >4x std::mismatch(uint64_t)</h2>
       </section>
       <section>
         <h2> eve library </h2>
@@ -46,12 +46,38 @@
           <li class="fragment"> <a href="https://github.com/jfalcou/eve"> github </a></li>
           <li class="fragment"> Joel Falcou, Jean-Thierry Lapresté </li>
           <li class="fragment"> eve::algo::mismatch </li>
+        </ul>
+      </section>
+      <section>
+        <h2>Vector Processor Extensions</h2>
+        <ul>
+          <li>x86</li>
+          <ul>
+            <li>128 bits: SSE2, SSE3, SSSE3, SSE4, SSE4.1, SSE4.2</li>
+            <li>256 bits: AVX, AVX2, XOP</li>
+            <li>512 bits: AVX512 and its myriad of sub-genre</li>
+          </ul>
+          <li>ARM</li>
+          <ul>
+            <li>128 bits: NEON, ASIMD</li>
+            <li> SVE (VLS/VLA)</li>
+          </ul>
+          <li>PowerPC</li>
+          <li>WASM</li>
+        </ul>
+      </section>
+      <section>
+        <h2> PLACEHOLDER: std::memcmp == eve/avx2 and 2x faster eve/sse2 </h2>
+      </section>
+      <section>
+        <h2> What's inside mismatch? </h2>
+        <ul>
           <li class="fragment"> find_if + zip </li>
         </ul>
       </section>
       <section>
         <h3> mismatch from scratch </h3>
-        <iframe width="1600px" height="550px" src="https://godbolt.org/e?hideEditorToolbars=true#g:!((g:!((g:!((h:codeEditor,i:(filename:'1',fontScale:18,fontUsePx:'0',j:1,lang:c%2B%2B,selection:(endColumn:27,endLineNumber:14,positionColumn:27,positionLineNumber:14,selectionStartColumn:27,selectionStartLineNumber:14,startColumn:27,startLineNumber:14),source:'%23include+%3Ceve/module/core.hpp%3E%0A%0Abool+core_of_mmatch(const+std::uint8_t*%26+a,+const+std::uint8_t*%26+b)%0A%7B%0A++using+wide+%3D+eve::wide%3Cstd::uint8_t%3E%3B%0A%0A++wide+wide_a+%3D+eve::load(a)%3B%0A++wide+wide_b+%3D+eve::load(b)%3B%0A%0A++eve::logical%3Cwide%3E+test+%3D+wide_a+!!%3D+wide_b%3B%0A++std::optional%3Cstd::ptrdiff_t%3E+match+%3D+eve::first_true(test)%3B%0A%0A++a+%2B%3D+match.value_or(wide::size())%3B%0A++b+%2B%3D+match.value_or(wide::size())%3B%0A++return+match.has_value()%3B%0A%7D'),l:'5',n:'0',o:'C%2B%2B+source+%231',t:'0')),k:100,l:'4',m:82.3650653059978,n:'0',o:'',s:0,t:'0'),(g:!((h:compiler,i:(compiler:clang1500,deviceViewOpen:'1',filters:(b:'0',binary:'1',binaryObject:'1',commentOnly:'0',debugCalls:'1',demangle:'0',directives:'0',execute:'1',intel:'0',libraryCode:'0',trim:'1'),flagsViewOpen:'1',fontScale:18,fontUsePx:'0',j:1,lang:c%2B%2B,libs:!((name:eve,ver:v20230215)),options:'-mavx2+-DNDEBUG+--std%3Dc%2B%2B20+-O3',overrides:!(),selection:(endColumn:1,endLineNumber:1,positionColumn:1,positionLineNumber:1,selectionStartColumn:1,selectionStartLineNumber:1,startColumn:1,startLineNumber:1),source:1),l:'5',n:'0',o:'+x86-64+clang+15.0.0+(Editor+%231)',t:'0')),header:(),l:'4',m:17.6349346940022,n:'0',o:'',s:0,t:'0')),l:'3',n:'0',o:'',t:'0')),version:4"></iframe>
+        <iframe width="1600px" height="550px" src="https://godbolt.org/e#g:!((g:!((g:!((h:codeEditor,i:(filename:'1',fontScale:18,fontUsePx:'0',j:1,lang:c%2B%2B,selection:(endColumn:1,endLineNumber:3,positionColumn:1,positionLineNumber:3,selectionStartColumn:1,selectionStartLineNumber:3,startColumn:1,startLineNumber:3),source:'%23include+%3Ceve/module/core.hpp%3E%0A%0Abool+core_of_mmatch(const+std::uint8_t*%26+a,+const+std::uint8_t*%26+b)%0A%7B%0A++using+wide+%3D+eve::wide%3Cstd::uint8_t%3E%3B%0A%0A++wide+wide_a+%3D+eve::load(a)%3B%0A++wide+wide_b+%3D+eve::load(b)%3B%0A%0A++eve::logical%3Cwide%3E+test+%3D+wide_a+!!%3D+wide_b%3B%0A++std::optional%3Cstd::ptrdiff_t%3E+match+%3D+eve::first_true(test)%3B%0A%0A++if+(!!match)+%7B%0A++++a+%2B%3D+wide::size()%3B%0A++++b+%2B%3D+wide::size()%3B%0A++++return+false%3B%0A++%7D%0A%0A++a+%2B%3D+*match%3B%0A++b+%2B%3D+*match%3B%0A++return+true%3B%0A%7D'),l:'5',n:'0',o:'C%2B%2B+source+%231',t:'0')),k:100,l:'4',m:82.3650653059978,n:'0',o:'',s:0,t:'0'),(g:!((h:compiler,i:(compiler:clang1500,deviceViewOpen:'1',filters:(b:'0',binary:'1',binaryObject:'1',commentOnly:'0',debugCalls:'1',demangle:'0',directives:'0',execute:'1',intel:'0',libraryCode:'0',trim:'1'),flagsViewOpen:'1',fontScale:18,fontUsePx:'0',j:1,lang:c%2B%2B,libs:!((name:eve,ver:v20230215)),options:'-mavx2+-DNDEBUG+--std%3Dc%2B%2B20+-O3',overrides:!(),selection:(endColumn:1,endLineNumber:1,positionColumn:1,positionLineNumber:1,selectionStartColumn:1,selectionStartLineNumber:1,startColumn:1,startLineNumber:1),source:1),l:'5',n:'0',o:'+x86-64+clang+15.0.0+(Editor+%231)',t:'0')),header:(),l:'4',m:17.6349346940022,n:'0',o:'',s:0,t:'0')),l:'3',n:'0',o:'',t:'0')),version:4"></iframe>
       </section>
       <section id="advanced_simd_algorithms_in_pictures/first_true">
         <script> imagesSlideShow("advanced_simd_algorithms_in_pictures/first_true", 6); </script>
@@ -114,6 +140,12 @@
             ```
           </textarea>
         </section>
+      </section>
+      <section>
+        <h2> set_intersection </h2>
+      </section>
+      <section id="advanced_simd_algorithms_in_pictures/set_intersection_simd_scalar">
+        <script> imagesSlideShow("advanced_simd_algorithms_in_pictures/set_intersection_simd_scalar", 9); </script>
       </section>
     </div>
   </div>
