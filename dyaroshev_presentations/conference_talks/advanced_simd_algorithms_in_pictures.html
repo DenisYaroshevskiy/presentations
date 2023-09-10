@@ -13,9 +13,9 @@
   <link rel="stylesheet" href="../../dist/theme/moon.css">
 
   <script src="https://cdn.plot.ly/plotly-2.5.0.min.js"></script>
-  <script> const UNSQ_EVE_COMMIT = 'fb271e27790e043adea973ec77ad54cc6d7303b8'; </script>
+  <script> const UNSQ_EVE_COMMIT = '095883aedd2d5cd90cb59563be23e6b98e119714'; </script>
   <script type="text/javascript"
-    src="https://cdn.jsdelivr.net/gh/DenisYaroshevskiy/unsq_eve@2cf6819dda923fc021629eda0cfba4113eb5f530/scripts/bench.js"></script>
+    src="https://cdn.jsdelivr.net/gh/DenisYaroshevskiy/unsq_eve@095883aedd2d5cd90cb59563be23e6b98e119714/scripts/bench.js"></script>
 
   <script src="../scripts/helper_scripts.js"></script>
 
@@ -37,16 +37,67 @@
       <section id="advanced_simd_algorithms_in_pictures/memcmp">
         <script> imagesSlideShow("advanced_simd_algorithms_in_pictures/memcmp", 5); </script>
       </section>
-      <section>
-        <h2> PLACEHOLDER: std::memcmp is faster >4x std::mismatch(uint64_t)</h2>
+      <section id='int64 vs memcmp'>
+        <script>
+          addBenchmarkForParameters('int64 vs memcmp',
+            'Memcmp results, x86',
+            {
+              name: 'mismatch',
+              size: 10000,
+              algorithm: 'selection',
+              type: 'char',
+              time: 'y',
+              padding: 'min',
+              group: 'avx2+bmi',
+            },
+            ['std::mismatch', 'use_int64s', 'std::memcmp'],
+            []);
+        </script>
       </section>
       <section>
         <h2> eve library </h2>
         <ul>
-          <li class="fragment"> <a href="https://github.com/jfalcou/eve"> github </a></li>
+          <li class="fragment"> <a href="https://github.com/jfalcou/eve"> github
+            </a></li>
           <li class="fragment"> Joel Falcou, Jean-Thierry Lapresté </li>
           <li class="fragment"> eve::algo::mismatch </li>
         </ul>
+      </section>
+      <section>
+        <section id='eve::mistamtch,x86,0'>
+          <script>
+            addBenchmarkForParameters('eve::mistamtch,x86,0',
+              'Memcmp results, x86',
+              {
+                name: 'mismatch',
+                size: 10000,
+                algorithm: 'selection',
+                type: 'char',
+                time: 'y',
+                padding: 'min',
+                group: 'avx2+bmi',
+              },
+              ['std::mismatch', 'use_int64s', 'std::memcmp', 'eve::algo::mismatch'],
+              offByDefault = ['std::mismatch']);
+          </script>
+        </section>
+        <section id='eve::mistamtch,apple_m1,0'>
+          <script>
+            addBenchmarkForParameters('eve::mistamtch,apple_m1,0',
+              'Memcmp results, M1',
+              {
+                name: 'mismatch',
+                size: 10000,
+                algorithm: 'selection',
+                type: 'char',
+                time: 'y',
+                padding: 'min',
+                group: 'apple_m1',
+              },
+              ['std::mismatch', 'use_int64s', 'std::memcmp', 'eve::algo::mismatch'],
+              offByDefault = ['std::mismatch']);
+          </script>
+        </section>
       </section>
       <section>
         <h2>Vector Processor Extensions</h2>
@@ -66,8 +117,22 @@
           <li>WASM</li>
         </ul>
       </section>
-      <section>
-        <h2> PLACEHOLDER: std::memcmp == eve/avx2 and 2x faster eve/sse2 </h2>
+      <section id='eve::mistamtch,arch'>
+        <script>
+          addBenchmarkForParameters('eve::mistamtch,arch',
+            'Marching',
+            {
+              name: 'mismatch',
+              size: 10000,
+              algorithm: 'selection',
+              type: 'char',
+              time: 'y',
+              padding: 'min',
+              group: 'selection',
+            },
+            ['std::memcmp/avx2+bmi', 'eve::algo::mismatch/avx2+bmi', 'eve::algo::mismatch/sse2'],
+            offByDefault = ['std::mismatch']);
+        </script>
       </section>
       <section>
         <h2> What's inside mismatch? </h2>
@@ -77,7 +142,8 @@
       </section>
       <section>
         <h3> mismatch from scratch </h3>
-        <iframe width="1600px" height="550px" src="https://godbolt.org/e#g:!((g:!((g:!((h:codeEditor,i:(filename:'1',fontScale:18,fontUsePx:'0',j:1,lang:c%2B%2B,selection:(endColumn:1,endLineNumber:3,positionColumn:1,positionLineNumber:3,selectionStartColumn:1,selectionStartLineNumber:3,startColumn:1,startLineNumber:3),source:'%23include+%3Ceve/module/core.hpp%3E%0A%0Abool+core_of_mmatch(const+std::uint8_t*%26+a,+const+std::uint8_t*%26+b)%0A%7B%0A++using+wide+%3D+eve::wide%3Cstd::uint8_t%3E%3B%0A%0A++wide+wide_a+%3D+eve::load(a)%3B%0A++wide+wide_b+%3D+eve::load(b)%3B%0A%0A++eve::logical%3Cwide%3E+test+%3D+wide_a+!!%3D+wide_b%3B%0A++std::optional%3Cstd::ptrdiff_t%3E+match+%3D+eve::first_true(test)%3B%0A%0A++if+(!!match)+%7B%0A++++a+%2B%3D+wide::size()%3B%0A++++b+%2B%3D+wide::size()%3B%0A++++return+false%3B%0A++%7D%0A%0A++a+%2B%3D+*match%3B%0A++b+%2B%3D+*match%3B%0A++return+true%3B%0A%7D'),l:'5',n:'0',o:'C%2B%2B+source+%231',t:'0')),k:100,l:'4',m:82.3650653059978,n:'0',o:'',s:0,t:'0'),(g:!((h:compiler,i:(compiler:clang1500,deviceViewOpen:'1',filters:(b:'0',binary:'1',binaryObject:'1',commentOnly:'0',debugCalls:'1',demangle:'0',directives:'0',execute:'1',intel:'0',libraryCode:'0',trim:'1'),flagsViewOpen:'1',fontScale:18,fontUsePx:'0',j:1,lang:c%2B%2B,libs:!((name:eve,ver:v20230215)),options:'-mavx2+-DNDEBUG+--std%3Dc%2B%2B20+-O3',overrides:!(),selection:(endColumn:1,endLineNumber:1,positionColumn:1,positionLineNumber:1,selectionStartColumn:1,selectionStartLineNumber:1,startColumn:1,startLineNumber:1),source:1),l:'5',n:'0',o:'+x86-64+clang+15.0.0+(Editor+%231)',t:'0')),header:(),l:'4',m:17.6349346940022,n:'0',o:'',s:0,t:'0')),l:'3',n:'0',o:'',t:'0')),version:4"></iframe>
+        <iframe width="1600px" height="550px"
+          src="https://godbolt.org/e#g:!((g:!((g:!((h:codeEditor,i:(filename:'1',fontScale:18,fontUsePx:'0',j:1,lang:c%2B%2B,selection:(endColumn:1,endLineNumber:3,positionColumn:1,positionLineNumber:3,selectionStartColumn:1,selectionStartLineNumber:3,startColumn:1,startLineNumber:3),source:'%23include+%3Ceve/module/core.hpp%3E%0A%0Abool+core_of_mmatch(const+std::uint8_t*%26+a,+const+std::uint8_t*%26+b)%0A%7B%0A++using+wide+%3D+eve::wide%3Cstd::uint8_t%3E%3B%0A%0A++wide+wide_a+%3D+eve::load(a)%3B%0A++wide+wide_b+%3D+eve::load(b)%3B%0A%0A++eve::logical%3Cwide%3E+test+%3D+wide_a+!!%3D+wide_b%3B%0A++std::optional%3Cstd::ptrdiff_t%3E+match+%3D+eve::first_true(test)%3B%0A%0A++if+(!!match)+%7B%0A++++a+%2B%3D+wide::size()%3B%0A++++b+%2B%3D+wide::size()%3B%0A++++return+false%3B%0A++%7D%0A%0A++a+%2B%3D+*match%3B%0A++b+%2B%3D+*match%3B%0A++return+true%3B%0A%7D'),l:'5',n:'0',o:'C%2B%2B+source+%231',t:'0')),k:100,l:'4',m:82.3650653059978,n:'0',o:'',s:0,t:'0'),(g:!((h:compiler,i:(compiler:clang1500,deviceViewOpen:'1',filters:(b:'0',binary:'1',binaryObject:'1',commentOnly:'0',debugCalls:'1',demangle:'0',directives:'0',execute:'1',intel:'0',libraryCode:'0',trim:'1'),flagsViewOpen:'1',fontScale:18,fontUsePx:'0',j:1,lang:c%2B%2B,libs:!((name:eve,ver:v20230215)),options:'-mavx2+-DNDEBUG+--std%3Dc%2B%2B20+-O3',overrides:!(),selection:(endColumn:1,endLineNumber:1,positionColumn:1,positionLineNumber:1,selectionStartColumn:1,selectionStartLineNumber:1,startColumn:1,startLineNumber:1),source:1),l:'5',n:'0',o:'+x86-64+clang+15.0.0+(Editor+%231)',t:'0')),header:(),l:'4',m:17.6349346940022,n:'0',o:'',s:0,t:'0')),l:'3',n:'0',o:'',t:'0')),version:4"></iframe>
       </section>
       <section id="advanced_simd_algorithms_in_pictures/first_true">
         <script> imagesSlideShow("advanced_simd_algorithms_in_pictures/first_true", 6); </script>
@@ -118,7 +184,8 @@
           <li class="fragment"> switch + shuffle (@Z boson) </li>
         </ul>
       </section>
-      <section id="advanced_simd_algorithms_in_pictures/compress_copy_simd_scalar">
+      <section
+        id="advanced_simd_algorithms_in_pictures/compress_copy_simd_scalar">
         <script> imagesSlideShow("advanced_simd_algorithms_in_pictures/compress_copy_simd_scalar", 4); </script>
       </section>
       <section>
@@ -144,17 +211,21 @@
       <section>
         <h2> set_intersection </h2>
       </section>
-      <section id="advanced_simd_algorithms_in_pictures/set_intersection_simd_scalar">
+      <section
+        id="advanced_simd_algorithms_in_pictures/set_intersection_simd_scalar">
         <script> imagesSlideShow("advanced_simd_algorithms_in_pictures/set_intersection_simd_scalar", 9); </script>
       </section>
       <section>
         <h2> set intersection (simd/simd) </h2>
         <ul>
-          <li class="fragment">  <a href="https://arxiv.org/abs/2112.06342">Faster-Than-Native Alternatives for x86 VP2INTERSECT Instructions</a></li>
+          <li class="fragment"> <a
+              href="https://arxiv.org/abs/2112.06342">Faster-Than-Native
+              Alternatives for x86 VP2INTERSECT Instructions</a></li>
           <li class="fragment"> Guillermo Diez-Canas </li>
         </ul>
       </section>
-      <section id="advanced_simd_algorithms_in_pictures/set_intersection_simd_simd">
+      <section
+        id="advanced_simd_algorithms_in_pictures/set_intersection_simd_simd">
         <script> imagesSlideShow("advanced_simd_algorithms_in_pictures/set_intersection_simd_simd", 8); </script>
       </section>
       <section id="advanced_simd_algorithms_in_pictures/has_equal_in">
