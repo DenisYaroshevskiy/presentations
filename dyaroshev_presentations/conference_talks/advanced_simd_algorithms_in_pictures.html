@@ -33,6 +33,8 @@
       </section>
       <section>
         <h2> std::memcmp </h2>
+        <a href="https://tinyurl.com/dycppcon2023">
+          tinyurl.com/dycppcon2023 </a>
       </section>
       <section id="advanced_simd_algorithms_in_pictures/memcmp">
         <script> imagesSlideShow("advanced_simd_algorithms_in_pictures/memcmp", 5); </script>
@@ -51,7 +53,7 @@
               group: 'avx2+bmi',
             },
             ['std::mismatch', 'use_int64s', 'std::memcmp'],
-            []);
+            ['std::memcmp']);
         </script>
       </section>
       <section>
@@ -60,6 +62,9 @@
           <li class="fragment"> <a href="https://github.com/jfalcou/eve"> github
             </a></li>
           <li class="fragment"> Joel Falcou, Jean-Thierry Lapresté </li>
+          <li class="fragment"> <a
+              href="https://youtu.be/WZGNCPBMInI?si=CcQdrU6QSH0cXnoh"> SIMD in
+              C++20: EVE of a new Era </a> </li>
           <li class="fragment"> eve::algo::mismatch </li>
         </ul>
       </section>
@@ -130,8 +135,8 @@
               padding: 'min',
               group: 'selection',
             },
-            ['std::memcmp/avx2+bmi', 'eve::algo::mismatch/avx2+bmi', 'eve::algo::mismatch/sse2'],
-            offByDefault = ['std::mismatch']);
+            ['std::memcmp/avx2+bmi', 'use_int64s/avx2+bmi', 'eve::algo::mismatch/avx2+bmi', 'eve::algo::mismatch/sse2'],
+            offByDefault = ['std::memcmp/avx2+bmi', 'use_int64s/avx2+bmi']);
         </script>
       </section>
       <section>
@@ -195,6 +200,82 @@
         </ul>
       </section>
       <section>
+        <section id='copy_if,int'>
+          <script>
+            addBenchmarkForParameters('copy_if,int',
+              'copy_if, int',
+              {
+                name: 'copy not 0s',
+                size: 10000,
+                algorithm: 'selection',
+                type: 'int',
+                percentage: 'x',
+                time: 'y',
+                padding: 'min',
+                group: 'avx2+bmi',
+              },
+              [],
+              offByDefault = []);
+          </script>
+        </section>
+        <section id='copy_if,short'>
+          <script>
+            addBenchmarkForParameters('copy_if,short',
+              'copy_if, short',
+              {
+                name: 'copy not 0s',
+                size: 10000,
+                algorithm: 'selection',
+                type: 'short',
+                percentage: 'x',
+                time: 'y',
+                padding: 'min',
+                group: 'avx2+bmi',
+              },
+              [],
+              offByDefault = []);
+          </script>
+        </section>
+      </section>
+      <section>
+        <section id='copy_if,int,m1'>
+          <script>
+            addBenchmarkForParameters('copy_if,int,m1',
+              'copy_if, int, m1',
+              {
+                name: 'copy not 0s',
+                size: 10000,
+                algorithm: 'selection',
+                type: 'int',
+                percentage: 'x',
+                time: 'y',
+                padding: 'min',
+                group: 'apple_m1',
+              },
+              [],
+              offByDefault = []);
+          </script>
+        </section>
+        <section id='copy_if,short,m1'>
+          <script>
+            addBenchmarkForParameters('copy_if,short,m1',
+              'copy_if, short, m1',
+              {
+                name: 'copy not 0s',
+                size: 10000,
+                algorithm: 'selection',
+                type: 'short',
+                percentage: 'x',
+                time: 'y',
+                padding: 'min',
+                group: 'apple_m1',
+              },
+              [],
+              offByDefault = []);
+          </script>
+        </section>
+      </section>
+      <section>
         <section data-markdown>
           <textarea data-template>
             ## Proposal P2664r3
@@ -230,6 +311,64 @@
       </section>
       <section id="advanced_simd_algorithms_in_pictures/has_equal_in">
         <script> imagesSlideShow("advanced_simd_algorithms_in_pictures/has_equal_in", 5); </script>
+      </section>
+      <section>
+        <section id='set_intersection,avx2_bmi'>
+          <script>
+            addBenchmarkForParameters('set_intersection,avx2_bmi',
+              'set_interscection, int',
+              {
+                name: 'set_intersection',
+                size: 20000,
+                algorithm: 'selection',
+                type: 'int',
+                percentage: 'x',
+                time: 'y',
+                padding: 'min',
+                group: 'avx2+bmi',
+              },
+              [],
+              offByDefault = []);
+          </script>
+        </section>
+        <section id='set_intersection,apple_m1'>
+          <script>
+            addBenchmarkForParameters('set_intersection,apple_m1',
+              'set_interscection, int',
+              {
+                name: 'set_intersection',
+                size: 20000,
+                algorithm: 'selection',
+                type: 'int',
+                percentage: 'x',
+                time: 'y',
+                padding: 'min',
+                group: 'apple_m1',
+              },
+              [],
+              offByDefault = []);
+          </script>
+        </section>
+      </section>
+      <section>
+        <h2> Thanks </h2>
+        <ul>
+          <li class="fragment"> Joel Falcou, Jean-Thierry Lapresté </li>
+          <li class="fragment"> Amazing people mentioned </li>
+        </ul>
+      </section>
+      <section>
+        <h2> Links </h2>
+        <ul>
+          <li> <a href="https://github.com/jfalcou/eve"> eve github </a></li>
+          <li> <a href="https://tinyurl.com/dycppcon2023">
+              tinyurl.com/dycppcon2023 </a></li>
+          <li> <a href=https://youtu.be/PHZRTv3erlA?si=SGW1TZVV2KC6OpHE> My First Simd </a></li>
+          <li> <a href="https://youtu.be/WZGNCPBMInI?si=CcQdrU6QSH0cXnoh"> SIMD
+              in
+              C++20: EVE of a new Era </a> </li>
+          <li> Advanced Simd Algorithms In Pictures, Meeting C++</li>
+        </ul>
       </section>
     </div>
   </div>
