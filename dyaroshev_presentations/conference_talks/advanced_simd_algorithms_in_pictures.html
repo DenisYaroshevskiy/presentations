@@ -32,9 +32,17 @@
         <p>Denis Yaroshevskiy</p>
       </section>
       <section>
-        <h2> std::memcmp </h2>
-        <a href="https://tinyurl.com/dycppcon2023">
-          tinyurl.com/dycppcon2023 </a>
+        <h2> This talk </h2>
+        <ul>
+          <li class="fragment"> <a href="https://tinyurl.com/dycppcon2023">
+            tinyurl.com/dycppcon2023 </a> </li>
+          <li class="fragment"> memcmp </li>
+          <li class="fragment"> copy_if </li>
+          <li class="fragment"> set_interscection </li>
+        </ul>
+      </section>
+      <section>
+        <h2> memcmp </h2>
       </section>
       <section id="advanced_simd_algorithms_in_pictures/memcmp">
         <script> imagesSlideShow("advanced_simd_algorithms_in_pictures/memcmp", 5); </script>
@@ -150,8 +158,8 @@
         <iframe width="1600px" height="550px"
           src="https://godbolt.org/e#g:!((g:!((g:!((h:codeEditor,i:(filename:'1',fontScale:18,fontUsePx:'0',j:1,lang:c%2B%2B,selection:(endColumn:1,endLineNumber:3,positionColumn:1,positionLineNumber:3,selectionStartColumn:1,selectionStartLineNumber:3,startColumn:1,startLineNumber:3),source:'%23include+%3Ceve/module/core.hpp%3E%0A%0Abool+core_of_mmatch(const+std::uint8_t*%26+a,+const+std::uint8_t*%26+b)%0A%7B%0A++using+wide+%3D+eve::wide%3Cstd::uint8_t%3E%3B%0A%0A++wide+wide_a+%3D+eve::load(a)%3B%0A++wide+wide_b+%3D+eve::load(b)%3B%0A%0A++eve::logical%3Cwide%3E+test+%3D+wide_a+!!%3D+wide_b%3B%0A++std::optional%3Cstd::ptrdiff_t%3E+match+%3D+eve::first_true(test)%3B%0A%0A++if+(!!match)+%7B%0A++++a+%2B%3D+wide::size()%3B%0A++++b+%2B%3D+wide::size()%3B%0A++++return+false%3B%0A++%7D%0A%0A++a+%2B%3D+*match%3B%0A++b+%2B%3D+*match%3B%0A++return+true%3B%0A%7D'),l:'5',n:'0',o:'C%2B%2B+source+%231',t:'0')),k:100,l:'4',m:82.3650653059978,n:'0',o:'',s:0,t:'0'),(g:!((h:compiler,i:(compiler:clang1500,deviceViewOpen:'1',filters:(b:'0',binary:'1',binaryObject:'1',commentOnly:'0',debugCalls:'1',demangle:'0',directives:'0',execute:'1',intel:'0',libraryCode:'0',trim:'1'),flagsViewOpen:'1',fontScale:18,fontUsePx:'0',j:1,lang:c%2B%2B,libs:!((name:eve,ver:v20230215)),options:'-mavx2+-DNDEBUG+--std%3Dc%2B%2B20+-O3',overrides:!(),selection:(endColumn:1,endLineNumber:1,positionColumn:1,positionLineNumber:1,selectionStartColumn:1,selectionStartLineNumber:1,startColumn:1,startLineNumber:1),source:1),l:'5',n:'0',o:'+x86-64+clang+15.0.0+(Editor+%231)',t:'0')),header:(),l:'4',m:17.6349346940022,n:'0',o:'',s:0,t:'0')),l:'3',n:'0',o:'',t:'0')),version:4"></iframe>
       </section>
-      <section id="advanced_simd_algorithms_in_pictures/first_true">
-        <script> imagesSlideShow("advanced_simd_algorithms_in_pictures/first_true", 6); </script>
+      <section id="advanced_simd_algorithms_in_pictures/first_true_v2">
+        <script> imagesSlideShow("advanced_simd_algorithms_in_pictures/first_true_v2", 7); </script>
       </section>
       <section data-markdown>
         <textarea data-template>
@@ -196,7 +204,7 @@
       <section>
         <h2> compress_copy (simd/scalar) </h2>
         <ul>
-          <li> Peter Cordes, Ilya Albercht </li>
+          <li> Peter Cordes, Ilya Albrecht </li>
         </ul>
       </section>
       <section>
