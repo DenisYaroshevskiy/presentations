@@ -94,6 +94,7 @@ function imagesSlideShow(id, img_count) {
   let main = document.getElementById(id);
   for (let i = 0; i != img_count; ++i) {
     let section = addSection(main);
+    section.setAttribute('data-transition', 'none')
     const img_path = '../img/' + id + '/img' + i.toString() + '.png';
     console.log(img_path);
     addImg(section, img_path);
