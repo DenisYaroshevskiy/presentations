@@ -223,7 +223,7 @@
                 group: 'avx2+bmi',
               },
               [],
-              offByDefault = []);
+              offByDefault = ['eve::algo::copy_if']);
           </script>
         </section>
         <section id='copy_if,short'>
@@ -339,7 +339,7 @@
                 group: 'avx2+bmi',
               },
               [],
-              offByDefault = []);
+              offByDefault = ['eve::algo::set_intersection']);
           </script>
         </section>
         <section id='set_intersection,apple_m1'>
@@ -357,7 +357,7 @@
                 group: 'apple_m1',
               },
               [],
-              offByDefault = []);
+              offByDefault = ['eve::algo::set_intersection[sparse_output]']);
           </script>
         </section>
       </section>
@@ -422,6 +422,9 @@
       </section>
       <section id="advanced_simd_algorithms_in_pictures/partition">
         <script> imagesSlideShow("advanced_simd_algorithms_in_pictures/partition", 10); </script>
+      </section>
+      <section>
+        <h2> ~sort </h2>
       </section>
       <section>
         <h2> Thanks </h2>
