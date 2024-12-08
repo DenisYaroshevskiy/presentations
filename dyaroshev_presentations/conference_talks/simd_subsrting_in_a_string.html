@@ -6,7 +6,7 @@
   <meta name="viewport"
     content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 
-  <title> Advanced SIMD Algorithms in Pictures </title>
+  <title> SIMD substring in a string </title>
 
   <link rel="stylesheet" href="../../dist/reset.css">
   <link rel="stylesheet" href="../../dist/reveal.css">
@@ -48,25 +48,32 @@
         </ul>
       </section>
       <section>
-
+        <h3> substring in a string (interview) </h3>
+        <iframe width="1600px" height="550px"
+          src="https://godbolt.org/e#z:OYLghAFBqd5TKALEBjA9gEwKYFFMCWALugE4A0BIEAZgQDbYB2AhgLbYgDkAjF%2BTXRMiAZVQtGIAEwAGAUKIBVAM7YACgA9uM/gCsQPcvRZNQqAKRSAQpavlVjVEQJDqzTAGF09AK5smBgCc5O4AMgRM2AByfgBG2KQGAKzkAA7oysQuTF6%2B/kFpGVlC4ZExbPGJPCkO2E7ZIkQspES5fgE8ACz22I7OQo3NRKXRcQnJ9k0tbfldk0Mj5ZXJAJT26D6kqJxclgDMEai%2BOADU5nseEsBkxEhs57jmMgCC%2B4fH2GcXGEzbqUTKB5PV4vYFEbBsVLGcFfDzKIiYEAgUgmTDoNgAfRYqG2ymUGOICRYJFIJwAkoYTvDEcjUeisTjsHiCeCUSTyVIgS8KVTsM1UEgMXQmJgMdgAI4%2BCQQHk0Sk8%2BjyqQnGhScgck70KQrM4AdhsLxOJwINBOtGV5wAIlbNdqTqRsERNkwVTxzgbnkaTWatScALQqi17XCanj%2B106h1O0guxXu4HAo0KuVfS2h8MQX0B1U62wnN17D2Jk4AdyQDE%2BECIpB82Fz%2BuLRpTNupSOFmFolPocvVACoc/HDUbjabO6mbd2eJHHc7Q4PPcPvRBWyAJVL6OaztZ8%2Bqterm9up9Poy65fPh1ubNYz4Xi%2BZddbQQ%2BEy8fvCTgLmr2PxIN2%2BiB%2BSBfq66r/oBwGKuQjYXjBMFgZ%2BpDfqqoFCO%2BCHflq9YekaUazqo/KCu2YqStKPahvuaq2is873paXBrPQ3BJPwARcDo5DoNwHi2HmygbFsnz7Hw5BENo9FrAA1iAex7AAdDJCmKUpABsRjcJ0/BsCAAAc2myVISRSJ0gQ8CZMg8FIymBCkrHsZxXD8MoIByKJbH0eQcCwCgGCQhWFBUBAPmpH5aDGKYPDaTwch0PQrJORAsRieQsQRM0ACe3DCSlrCkGlADysS6HUrnCT5HDCHlTD0BlbnkDgsQ%2BMAlz0PQTm8PwOBsCYwCSLVhAOvUABuTJJdgGh1D44KZfwETgoxtX0AQsQorlXg4El1YEFp7XkMNpCxBk2CWhC3WLaYYlrDQxjAMoABqBDYCWeWpMw03yMIYgSJwcyCMIKjqFotX6IYYVmDx1hGEtTmQGs6D/NkbV%2Bnlez%2Bn61JWhY1i2LI/pdVsSBWsoElpcYEmfH6aMIotsRWtTmNXlY/DoHtpAEDg0MQGstT1K4EDuDMHQhCKixjFUhSZP0OTeO0Bji8UTAixU4yGNzkuDNM0uzD0fQNFMwwRKMSti/CQwC7LJstIryxTusmzbAYDFMSxSX2ScGjacpfrKZ0H6g/mek8LJMhmvgxBkFuexTvwrk6CsaxIHyOCJJzalcBp5BaTwge6p0upJDI2kF4E2m6nsMg2S73COc5IkXZJID56nezO7V9nRxdHmIJ5yBoFgeCECSlDUDFzDsDswm/aI4iSLI71KKomhJfoaqg2g4N2Kr2RuCKZuqWEBtLOMs/pBL2Rm4YJ/y1bys1L0xW66bmsBKpm8DHr1%2BJLPFutE/5vvwfotVi2wEtwN4vwPiwiuDcIgdwuSvCkAccBPhTjnA8D8P4AI4FgghFCYkgkLgrhRCKek2JcT4kJGycOFJ1SELpJiUhTJyGsmJFQzkwZgQ8nwvjDERASzoAxPQdAcNlAyjDGRBUSpAzqjJMqTCepsIjjNKqccew0xyNwjGV055FGZmVNmIMIZFThjlMeWccZbygiHMmMME4wwBl0cYu0eYCxFiHCwSa6ATh7RNGlVMZwkhXmUuYJIaZ7wKKTGGVAkIbGqK0RYhcSZlRRNSEGNMqoaJDiNGWCsZpqy1iwtBL0o5ezJLDGAMANoSmQjtBo08EhVDaIvOvUpjThzNOqa0opZpkmpInDUmcmi8nYFabRO8z54nFmyYwJRZSKmxMnAUzJOjvE0DSpzUxmibzhMvLYLZYzHwLlqXOCZz5LHPHgkBRCP4WqBVQgBdCIEPx3PAlcyChTYKwQucBZCTymBoUuRhJxDYhxHK4QKHhfCBFCNSCIsikEpFURog%2Bdy81mLkFskzLi68qT8W2BHKQ7c3Jx3IFJRu8105aRLvJQIUhdJ7FkJ0GQMhAjF3RZXBy9ga4x3ct3CA3l0TBUYP5agQUQpHG6hFKKAgGBxWoIlWq2V0pvUVblAqRUnBvTKswIglVqpJXqo1ZqrU3qdVOjsdi/V77DTauxMaE0po7Vmr0JK1MVppTWua6OrNtrCT2gdVQx0uqmDOqAIlAhrp3Qek9F6rEJ4KE%2BpIH6Ch/qLyBtIIw3U15YwhtTDmsN4aoW4EjFGFN0aqPptjYOfo8YCkJsTUm5NKaYGprTJaFbrBMxZmzEaMNtb315vzX%2Bhh95lEARfIoktz5y0lh/c2d8eZMHVj/PIgtX6Lv/qOo2f9H4ru3ZbABW6bZ8TtpwbUqc0UYo4twN2HsvY%2B3FaYf2slA7BwgKHdk%2BxtSEtjvHRO4wU7ks0gYKQsllIyF1FnZSuprIsqZQZNlrcq6cpcnXElDc5DzWbghuySHuXEvmgS7DmKOV4bWHtTIrhOhAA%3D%3D"></iframe>
       </section>
-  </div>
+      <section>
+        <h3> find + equal (asm) </h3>
+        <iframe width="1600px" height="550px"
+          src="https://godbolt.org/e#g:!((g:!((g:!((h:codeEditor,i:(filename:'1',fontScale:20,fontUsePx:'0',j:1,lang:c%2B%2B,selection:(endColumn:19,endLineNumber:15,positionColumn:19,positionLineNumber:15,selectionStartColumn:14,selectionStartLineNumber:15,startColumn:14,startLineNumber:15),source:'%23include+%3Calgorithm%3E%0A%23include+%3Cconcepts%3E%0A%0A%0Atemplate+%3Cstd::random_access_iterator+I1,+std::random_access_iterator+I2%3E%0AI1+search_find_equal(I1+f1,+I1+l1,+I2+f2,+I2+l2)+%7B%0A++if+(f2+%3D%3D+l2)+return+f1%3B%0A++if+(l2+-+f2+%3E+l1+-+f1)+return+l1%3B%0A%0A++I1+lf1+%3D+l1+-+(l2+-+f2)+%2B+1%3B%0A%0A++while+(true)+%7B%0A++++f1+%3D+std::find(f1,+lf1,+*f2)%3B%0A++++if+(f1+%3D%3D+lf1)+return+l1%3B%0A++++if+(std::equal(f2+%2B+1,+l2,+f1+%2B+1))+return+f1%3B%0A++++%2B%2Bf1%3B%0A++%7D%0A%7D%0A%0Aconst+char*+call(const+char*+f1,+const+char*+l1,%0A+++++++++++++++++const+char*+f2,+const+char*+l2)+%7B%0A++return+search_find_equal(f1,+l1,+f2,+l2)%3B%0A%7D'),l:'5',n:'0',o:'C%2B%2B+source+%231',t:'0')),k:33.333333333333336,l:'4',m:39.25497327592464,n:'0',o:'',s:0,t:'0'),(g:!((h:compiler,i:(compiler:clang1810,filters:(b:'0',binary:'1',binaryObject:'1',commentOnly:'0',debugCalls:'1',demangle:'0',directives:'0',execute:'1',intel:'0',libraryCode:'0',trim:'1',verboseDemangling:'0'),flagsViewOpen:'1',fontScale:20,fontUsePx:'0',j:1,lang:c%2B%2B,libs:!(),options:'-O3+--std%3Dc%2B%2B20+-march%3Dskylake+--stdlib%3Dlibc%2B%2B',overrides:!(),selection:(endColumn:23,endLineNumber:38,positionColumn:23,positionLineNumber:38,selectionStartColumn:17,selectionStartLineNumber:38,startColumn:17,startLineNumber:38),source:1),l:'5',n:'0',o:'+x86-64+clang+18.1.0+(Editor+%231)',t:'0')),header:(),l:'4',m:60.74502672407536,n:'0',o:'',s:0,t:'0')),l:'3',n:'0',o:'',t:'0')),version:4"></iframe>
+      </section>
+    </div>
 
-  <script src="../../dist/reveal.js"></script>
-  <script src="../../plugin/notes/notes.js"></script>
-  <script src="../../plugin/markdown/markdown.js"></script>
-  <script src="../../plugin/highlight/highlight.js"></script>
-  <script>
-    // More info about initialization & config:
-    // - https://revealjs.com/initialization/
-    // - https://revealjs.com/config/
-    Reveal.initialize({
-      hash: true,
+    <script src="../../dist/reveal.js"></script>
+    <script src="../../plugin/notes/notes.js"></script>
+    <script src="../../plugin/markdown/markdown.js"></script>
+    <script src="../../plugin/highlight/highlight.js"></script>
+    <script>
+      // More info about initialization & config:
+      // - https://revealjs.com/initialization/
+      // - https://revealjs.com/config/
+      Reveal.initialize({
+        hash: true,
 
-      // Learn about plugins: https://revealjs.com/plugins/
-      plugins: [RevealMarkdown, RevealHighlight, RevealNotes]
-    });
-  </script>
+        // Learn about plugins: https://revealjs.com/plugins/
+        plugins: [RevealMarkdown, RevealHighlight, RevealNotes]
+      });
+    </script>
 </body>
 
 </html>
