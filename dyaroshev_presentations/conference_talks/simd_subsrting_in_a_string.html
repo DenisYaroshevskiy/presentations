@@ -13,7 +13,7 @@
   <link rel="stylesheet" href="../../dist/theme/moon.css">
 
   <script src="https://cdn.plot.ly/plotly-2.5.0.min.js"></script>
-  <script> const UNSQ_EVE_COMMIT = '095883aedd2d5cd90cb59563be23e6b98e119714'; </script>
+  <script> const UNSQ_EVE_COMMIT = 'a2c914f0c37e57911ba47751db0463a33f48bf22'; </script>
   <script type="text/javascript"
     src="https://cdn.jsdelivr.net/gh/DenisYaroshevskiy/unsq_eve@095883aedd2d5cd90cb59563be23e6b98e119714/scripts/bench.js"></script>
 
@@ -35,6 +35,7 @@
         <h2> This talk </h2>
         <ul>
           <li class="fragment"> link here </li>
+          <li class="fragment"> quadratic algorithm </li>
           <li class="fragment"> interview problem </li>
           <li class="fragment"> c++ standard </li>
           <li class="fragment"> simd </li>
@@ -56,6 +57,50 @@
         <h3> find + equal (asm) </h3>
         <iframe width="1600px" height="550px"
           src="https://godbolt.org/e#g:!((g:!((g:!((h:codeEditor,i:(filename:'1',fontScale:20,fontUsePx:'0',j:1,lang:c%2B%2B,selection:(endColumn:19,endLineNumber:15,positionColumn:19,positionLineNumber:15,selectionStartColumn:14,selectionStartLineNumber:15,startColumn:14,startLineNumber:15),source:'%23include+%3Calgorithm%3E%0A%23include+%3Cconcepts%3E%0A%0A%0Atemplate+%3Cstd::random_access_iterator+I1,+std::random_access_iterator+I2%3E%0AI1+search_find_equal(I1+f1,+I1+l1,+I2+f2,+I2+l2)+%7B%0A++if+(f2+%3D%3D+l2)+return+f1%3B%0A++if+(l2+-+f2+%3E+l1+-+f1)+return+l1%3B%0A%0A++I1+lf1+%3D+l1+-+(l2+-+f2)+%2B+1%3B%0A%0A++while+(true)+%7B%0A++++f1+%3D+std::find(f1,+lf1,+*f2)%3B%0A++++if+(f1+%3D%3D+lf1)+return+l1%3B%0A++++if+(std::equal(f2+%2B+1,+l2,+f1+%2B+1))+return+f1%3B%0A++++%2B%2Bf1%3B%0A++%7D%0A%7D%0A%0Aconst+char*+call(const+char*+f1,+const+char*+l1,%0A+++++++++++++++++const+char*+f2,+const+char*+l2)+%7B%0A++return+search_find_equal(f1,+l1,+f2,+l2)%3B%0A%7D'),l:'5',n:'0',o:'C%2B%2B+source+%231',t:'0')),k:33.333333333333336,l:'4',m:39.25497327592464,n:'0',o:'',s:0,t:'0'),(g:!((h:compiler,i:(compiler:clang1810,filters:(b:'0',binary:'1',binaryObject:'1',commentOnly:'0',debugCalls:'1',demangle:'0',directives:'0',execute:'1',intel:'0',libraryCode:'0',trim:'1',verboseDemangling:'0'),flagsViewOpen:'1',fontScale:20,fontUsePx:'0',j:1,lang:c%2B%2B,libs:!(),options:'-O3+--std%3Dc%2B%2B20+-march%3Dskylake+--stdlib%3Dlibc%2B%2B',overrides:!(),selection:(endColumn:23,endLineNumber:38,positionColumn:23,positionLineNumber:38,selectionStartColumn:17,selectionStartLineNumber:38,startColumn:17,startLineNumber:38),source:1),l:'5',n:'0',o:'+x86-64+clang+18.1.0+(Editor+%231)',t:'0')),header:(),l:'4',m:60.74502672407536,n:'0',o:'',s:0,t:'0')),l:'3',n:'0',o:'',t:'0')),version:4"></iframe>
+      </section>
+      <section>
+        <h3> performance expectations </h3>
+        <ul>
+          <li class="fragment"> first char is rare </li>
+          <li class="fragment"> first char is common </li>
+          <li class="fragment"> very long needle </li>
+        </ul>
+      </section>
+      <section>
+        <section id='search,interview,1'>
+          <script>
+            addBenchmarkForParameters('search,interview,1',
+              'search one char',
+              {
+                name: 'find 0',
+                size: 1000,
+                algorithm: 'selection',
+                type: 'char',
+                percentage: 100,
+                time: 'y',
+                padding: 'min',
+                group: 'avx2+bmi',
+              },
+              ['search_find_equal', 'search_two_loops']);
+          </script>
+        </section>
+        <section id='search,interview,bad'>
+          <script>
+            addBenchmarkForParameters('search,interview,bad',
+              'search, first repeats',
+              {
+                name: 'search 121 in 1111s',
+                size: 1000,
+                algorithm: 'selection',
+                type: 'char',
+                percentage: 100,
+                time: 'y',
+                padding: 'min',
+                group: 'avx2+bmi',
+              },
+              ['search find equal', 'search two loops']);
+          </script>
+        </section>
       </section>
     </div>
 
