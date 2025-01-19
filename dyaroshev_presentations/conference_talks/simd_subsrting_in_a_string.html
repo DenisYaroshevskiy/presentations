@@ -13,9 +13,9 @@
   <link rel="stylesheet" href="../../dist/theme/moon.css">
 
   <script src="https://cdn.plot.ly/plotly-2.5.0.min.js"></script>
-  <script> const UNSQ_EVE_COMMIT = 'a2c914f0c37e57911ba47751db0463a33f48bf22'; </script>
+  <script> const UNSQ_EVE_COMMIT = '731b35145621351efe9a8a76c096cb61c653d3f9'; </script>
   <script type="text/javascript"
-    src="https://cdn.jsdelivr.net/gh/DenisYaroshevskiy/unsq_eve@095883aedd2d5cd90cb59563be23e6b98e119714/scripts/bench.js"></script>
+    src="https://cdn.jsdelivr.net/gh/DenisYaroshevskiy/unsq_eve@731b35145621351efe9a8a76c096cb61c653d3f9/scripts/bench.js"></script>
 
   <script src="../scripts/helper_scripts.js"></script>
 
@@ -35,7 +35,7 @@
         <h2> This talk </h2>
         <ul>
           <li class="fragment"> link here </li>
-          <li class="fragment"> quadratic algorithm </li>
+          <li class="fragment"> n*m algorithm </li>
           <li class="fragment"> interview problem </li>
           <li class="fragment"> c++ standard </li>
           <li class="fragment"> simd </li>
@@ -61,46 +61,89 @@
       <section>
         <h3> performance expectations </h3>
         <ul>
-          <li class="fragment"> first char is rare </li>
-          <li class="fragment"> first char is common </li>
+          <li class="fragment"> first char is rare: 22 in 1111...s </li>
+          <li class="fragment"> first char is common: 12 in 1111...s </li>
           <li class="fragment"> very long needle </li>
         </ul>
       </section>
+      <section id='search,interview,22,x86'>
+        <script>
+          addBenchmarkForParameters('search,interview,22,x86',
+            'search 22 in 1111..., x86',
+            {
+              name: 'search',
+              size: 1000,
+              algorithm: 'selection',
+              type: 'char',
+              percentage: 100,
+              time: 'y',
+              padding: 'min',
+              group: 'avx2+bmi',
+            },
+            ['search_find_equal(22)', 'search_two_loops(22)']);
+        </script>
+      </section>
+      <section id='search,interview,12,x86'>
+        <script>
+          addBenchmarkForParameters('search,interview,12,x86',
+            'search 12 in 1111..., x86',
+            {
+              name: 'search',
+              size: 1000,
+              algorithm: 'selection',
+              type: 'char',
+              percentage: 100,
+              time: 'y',
+              padding: 'min',
+              group: 'avx2+bmi',
+            },
+            ['search_find_equal(12)', 'search_two_loops(12)']);
+        </script>
+      </section>
       <section>
-        <section id='search,interview,1'>
-          <script>
-            addBenchmarkForParameters('search,interview,1',
-              'search one char',
-              {
-                name: 'find 0',
-                size: 1000,
-                algorithm: 'selection',
-                type: 'char',
-                percentage: 100,
-                time: 'y',
-                padding: 'min',
-                group: 'avx2+bmi',
-              },
-              ['search_find_equal', 'search_two_loops']);
-          </script>
-        </section>
-        <section id='search,interview,bad'>
-          <script>
-            addBenchmarkForParameters('search,interview,bad',
-              'search, first repeats',
-              {
-                name: 'search 121 in 1111s',
-                size: 1000,
-                algorithm: 'selection',
-                type: 'char',
-                percentage: 100,
-                time: 'y',
-                padding: 'min',
-                group: 'avx2+bmi',
-              },
-              ['search find equal', 'search two loops']);
-          </script>
-        </section>
+        <h2> C++ standard </h2>
+        <ul>
+          <li class="fragment"> string/string_view::find </li>
+          <li class="fragment"> std::search </li>
+          <li class="fragment"> std::strstr </li>
+          <li class="fragment"> regex </li>
+          <li class="fragment"> searchers </li>
+        </ul>
+      </section>
+      <section id='search,std,22,x86'>
+        <script>
+          addBenchmarkForParameters('search,std,22,x86',
+            'search 22 in 1111..., x86',
+            {
+              name: 'search',
+              size: 1000,
+              algorithm: 'selection',
+              type: 'char',
+              percentage: 100,
+              time: 'y',
+              padding: 'min',
+              group: 'avx2+bmi',
+            },
+            ['search_find_equal(22)', 'search_two_loops(22)', 'string_view::find(22)', 'std::search(22)', 'strstr(22)']);
+        </script>
+      </section>
+      <section id='search,std,12,x86'>
+        <script>
+          addBenchmarkForParameters('search,std,12,x86',
+            'search 22 in 1111..., x86',
+            {
+              name: 'search',
+              size: 1000,
+              algorithm: 'selection',
+              type: 'char',
+              percentage: 100,
+              time: 'y',
+              padding: 'min',
+              group: 'avx2+bmi',
+            },
+            ['search_find_equal(12)', 'search_two_loops(12)', 'string_view::find(12)', 'std::search(12)', 'strstr(12)', 'strstr(112)'],
+            ['strstr(112)']);
+        </script>
       </section>
     </div>
 
