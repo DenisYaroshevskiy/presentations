@@ -145,6 +145,34 @@
             ['strstr(112)']);
         </script>
       </section>
+      <section>
+        <h2> SIMD </h2>
+        <ul>
+          <li class="fragment"> memcmp </li>
+          <li class="fragment"> memchr </li>
+          <li class="fragment"> search </li>
+        </ul>
+      </section>
+      <section id="advanced_simd_algorithms_in_pictures/memcmp">
+        <script> imagesSlideShow("advanced_simd_algorithms_in_pictures/memcmp", 5); </script>
+      </section>
+      <section id='int64 vs memcmp'>
+        <script>
+          addBenchmarkForParameters('int64 vs memcmp',
+            'Memcmp results, x86',
+            {
+              name: 'mismatch',
+              size: 10000,
+              algorithm: 'selection',
+              type: 'char',
+              time: 'y',
+              padding: 'min',
+              group: 'avx2+bmi',
+            },
+            ['std::mismatch', 'use_int64s', 'std::memcmp'],
+            ['std::memcmp']);
+        </script>
+      </section>
     </div>
 
     <script src="../../dist/reveal.js"></script>
