@@ -13,9 +13,9 @@
   <link rel="stylesheet" href="../../dist/theme/moon.css">
 
   <script src="https://cdn.plot.ly/plotly-2.5.0.min.js"></script>
-  <script> const UNSQ_EVE_COMMIT = '731b35145621351efe9a8a76c096cb61c653d3f9'; </script>
+  <script> const UNSQ_EVE_COMMIT = 'fb4d73d8e8eb4d116dfb1288d60ddf8837ed75ba'; </script>
   <script type="text/javascript"
-    src="https://cdn.jsdelivr.net/gh/DenisYaroshevskiy/unsq_eve@731b35145621351efe9a8a76c096cb61c653d3f9/scripts/bench.js"></script>
+    src="https://cdn.jsdelivr.net/gh/DenisYaroshevskiy/unsq_eve@fb4d73d8e8eb4d116dfb1288d60ddf8837ed75ba/scripts/bench.js"></script>
 
   <script src="../scripts/helper_scripts.js"></script>
 
@@ -130,7 +130,7 @@
       <section id='search,std,12,x86'>
         <script>
           addBenchmarkForParameters('search,std,12,x86',
-            'search 22 in 1111..., x86',
+            'search 12 in 1111..., x86',
             {
               name: 'search',
               size: 1000,
@@ -169,9 +169,68 @@
               padding: 'min',
               group: 'avx2+bmi',
             },
-            ['std::mismatch', 'use_int64s', 'std::memcmp'],
-            ['std::memcmp']);
+            ['mismatch_scalar',
+              'std::mismatch', 'use_int64s', 'std::memcmp'],
+            ['std::memcmp', 'std::mismatch']);
         </script>
+      </section>
+      <section>
+        <h2> Notes </h2>
+        <ul>
+          <li class="fragment"> std::mismatch - Nikolas Klauser </li>
+        </ul>
+      </section>
+      <section>
+        <h2> eve library </h2>
+        <ul>
+          <li class="fragment"> <a href="https://github.com/jfalcou/eve"> github
+            </a></li>
+          <li class="fragment"> Joel Falcou, Jean-Thierry Lapresté, Denis
+            Yaroshevskiy </li>
+          <li class="fragment"> <a
+              href="https://youtu.be/WZGNCPBMInI?si=CcQdrU6QSH0cXnoh"> SIMD in
+              C++20: EVE of a new Era </a> </li>
+          <li class="fragment"> eve::algo::mismatch </li>
+        </ul>
+      </section>
+      </section>
+      <section>
+        <section id='eve,mismatch,x86'>
+          <script>
+            addBenchmarkForParameters('eve,mismatch,x86',
+              'Memcmp results, x86',
+              {
+                name: 'mismatch',
+                size: 10000,
+                algorithm: 'selection',
+                type: 'char',
+                time: 'y',
+                padding: 'min',
+                group: 'avx2+bmi',
+              },
+              ['mismatch_scalar',
+                'std::mismatch', 'use_int64s', 'std::memcmp', 'eve::algo::mismatch'],
+              ['mismatch_scalar']);
+          </script>
+        </section>
+        <section id='eve,mismatch,apple_m2'>
+          <script>
+            addBenchmarkForParameters('eve,mismatch,apple_m2',
+              'Memcmp results, Apple M2',
+              {
+                name: 'mismatch',
+                size: 10000,
+                algorithm: 'selection',
+                type: 'char',
+                time: 'y',
+                padding: 'min',
+                group: 'apple_m2',
+              },
+              ['mismatch_scalar',
+                'std::mismatch', 'use_int64s', 'std::memcmp', 'eve::algo::mismatch'],
+              ['mismatch_scalar']);
+          </script>
+        </section>
       </section>
     </div>
 
