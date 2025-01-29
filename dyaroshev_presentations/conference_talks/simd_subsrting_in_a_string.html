@@ -61,6 +61,7 @@
       <section>
         <h3> performance expectations </h3>
         <ul>
+          <li class="fragment"> Robin Karp algorithm </li>
           <li class="fragment"> first char is rare: 22 in 1111...s </li>
           <li class="fragment"> first char is common: 12 in 1111...s </li>
           <li class="fragment"> very long needle </li>
@@ -142,7 +143,7 @@
               group: 'avx2+bmi',
             },
             ['search_find_equal(12)', 'search_two_loops(12)', 'string_view::find(12)', 'std::search(12)', 'strstr(12)', 'strstr(112)'],
-            ['strstr(112)']);
+            ['std::strstr(112)']);
         </script>
       </section>
       <section>
@@ -155,6 +156,9 @@
       </section>
       <section id="advanced_simd_algorithms_in_pictures/memcmp">
         <script> imagesSlideShow("advanced_simd_algorithms_in_pictures/memcmp", 5); </script>
+      </section>
+      <section id="substring/memcmp_tail">
+        <script> imagesSlideShow("substring/memcmp_tail", 7); </script>
       </section>
       <section id='int64 vs memcmp'>
         <script>
@@ -185,7 +189,8 @@
         <ul>
           <li class="fragment"> <a href="https://github.com/jfalcou/eve"> github
             </a></li>
-          <li class="fragment"> Joel Falcou, Jean-Thierry Lapresté, Alexis Aune, Denis
+          <li class="fragment"> Joel Falcou, Jean-Thierry Lapresté, Alexis Aune,
+            Denis
             Yaroshevskiy </li>
           <li class="fragment"> <a
               href="https://youtu.be/WZGNCPBMInI?si=CcQdrU6QSH0cXnoh"> SIMD in
@@ -277,10 +282,8 @@
       </section>
       <section>
         <h3> find </h3>
-        <iframe width="1600px" height="550px" src="https://godbolt.org/e#g:!((g:!((g:!((h:codeEditor,i:(filename:'1',fontScale:20,fontUsePx:'0',j:1,lang:c%2B%2B,selection:(endColumn:64,endLineNumber:3,positionColumn:64,positionLineNumber:3,selectionStartColumn:64,selectionStartLineNumber:3,startColumn:64,startLineNumber:3),source:'%23include+%3Ceve/module/core.hpp%3E%0A%0Abool+core_of_find(const+std::uint8_t*%26+f,+std::uint8_t+needle)+%0A%7B%0A++using+wide+%3D+eve::wide%3Cstd::uint8_t%3E%3B%0A%0A++wide+loaded+%3D+eve::load(f)%3B+//+%5B0,+1,+2,+3%5D%0A%0A++eve::logical%3Cwide%3E+test+%3D+loaded+%3D%3D+needle%3B++//+%5BF,+T,+F,+F%5D%0A++std::optional%3Cstd::ptrdiff_t%3E+match+%3D+eve::first_true(test)%3B++//+1%0A%0A++if+(!!match)+%7B%0A++++f+%2B%3D+wide::size()%3B%0A++++return+false%3B%0A++%7D%0A%0A++f+%2B%3D+*match%3B%0A++return+true%3B%0A%7D'),l:'5',n:'0',o:'C%2B%2B+source+%231',t:'0')),k:100,l:'4',m:92.28779066710136,n:'0',o:'',s:0,t:'0'),(g:!((h:compiler,i:(compiler:clang1600,filters:(b:'0',binary:'1',binaryObject:'1',commentOnly:'0',debugCalls:'1',demangle:'0',directives:'0',execute:'1',intel:'0',libraryCode:'0',trim:'1',verboseDemangling:'0'),flagsViewOpen:'1',fontScale:18,fontUsePx:'0',j:1,lang:c%2B%2B,libs:!((name:eve,ver:v20230215)),options:'-mavx2+-DNDEBUG+--std%3Dc%2B%2B20+-O3',overrides:!(),selection:(endColumn:1,endLineNumber:1,positionColumn:1,positionLineNumber:1,selectionStartColumn:1,selectionStartLineNumber:1,startColumn:1,startLineNumber:1),source:1),l:'5',n:'0',o:'+x86-64+clang+16.0.0+(Editor+%231)',t:'0')),header:(),l:'4',m:7.7122093328986345,n:'0',o:'',s:0,t:'0')),l:'3',n:'0',o:'',t:'0')),version:4"></iframe>
-      </section>
-      <section id="advanced_simd_algorithms_in_pictures/first_true_v4">
-        <script> imagesSlideShow("advanced_simd_algorithms_in_pictures/first_true_v4", 7); </script>
+        <iframe width="1600px" height="550px"
+          src="https://godbolt.org/e#g:!((g:!((g:!((h:codeEditor,i:(filename:'1',fontScale:20,fontUsePx:'0',j:1,lang:c%2B%2B,selection:(endColumn:64,endLineNumber:3,positionColumn:64,positionLineNumber:3,selectionStartColumn:64,selectionStartLineNumber:3,startColumn:64,startLineNumber:3),source:'%23include+%3Ceve/module/core.hpp%3E%0A%0Abool+core_of_find(const+std::uint8_t*%26+f,+std::uint8_t+needle)+%0A%7B%0A++using+wide+%3D+eve::wide%3Cstd::uint8_t%3E%3B%0A%0A++wide+loaded+%3D+eve::load(f)%3B+//+%5B0,+1,+2,+3%5D%0A%0A++eve::logical%3Cwide%3E+test+%3D+loaded+%3D%3D+needle%3B++//+%5BF,+T,+F,+F%5D%0A++std::optional%3Cstd::ptrdiff_t%3E+match+%3D+eve::first_true(test)%3B++//+1%0A%0A++if+(!!match)+%7B%0A++++f+%2B%3D+wide::size()%3B%0A++++return+false%3B%0A++%7D%0A%0A++f+%2B%3D+*match%3B%0A++return+true%3B%0A%7D'),l:'5',n:'0',o:'C%2B%2B+source+%231',t:'0')),k:100,l:'4',m:92.28779066710136,n:'0',o:'',s:0,t:'0'),(g:!((h:compiler,i:(compiler:clang1600,filters:(b:'0',binary:'1',binaryObject:'1',commentOnly:'0',debugCalls:'1',demangle:'0',directives:'0',execute:'1',intel:'0',libraryCode:'0',trim:'1',verboseDemangling:'0'),flagsViewOpen:'1',fontScale:18,fontUsePx:'0',j:1,lang:c%2B%2B,libs:!((name:eve,ver:v20230215)),options:'-mavx2+-DNDEBUG+--std%3Dc%2B%2B20+-O3',overrides:!(),selection:(endColumn:1,endLineNumber:1,positionColumn:1,positionLineNumber:1,selectionStartColumn:1,selectionStartLineNumber:1,startColumn:1,startLineNumber:1),source:1),l:'5',n:'0',o:'+x86-64+clang+16.0.0+(Editor+%231)',t:'0')),header:(),l:'4',m:7.7122093328986345,n:'0',o:'',s:0,t:'0')),l:'3',n:'0',o:'',t:'0')),version:4"></iframe>
       </section>
       <section>
         <section id='eve,find,no_unroll,x86'>
@@ -300,6 +303,11 @@
               ['std::find']);
           </script>
         </section>
+      </section>
+      <section id='substring/unrolling'>
+        <script>
+          imagesSlideShow('substring/unrolling', 6);
+        </script>
       </section>
       <section id='04_using_multiple_registers'>
         <script>
@@ -343,29 +351,123 @@
         </section>
       </section>
       <section>
-        <h2> search </h2>
+        <h2> Unrolling: Notes </h2>
         <ul>
-          <li class="fragment"> Robin Karp algorithm </li>
-          <li class="fragment"> <a href="http://0x80.pl/notesen/2016-11-28-simd-strfind.html"> Wojciech Muła: 0x80 blog </a>
-          </a></li>
-          <li class="fragment"> <a href="https://github.com/ashvardanian/StringZilla/blob/07e0a2a4ad8330c91a20fccb66022715b386e1b4/include/stringzilla/stringzilla.h#L3784"> Ash Vardanian: StringZilla </a>
-          </a></li>
-          <li class="fragment"> <a href="https://codebrowser.dev/glibc/glibc/sysdeps/x86_64/multiarch/strstr-sse2-unaligned.S.html"> glibc - strstr </a>
-          </a></li>
+          <li class="fragment"> less instructions </li>
+          <li class="fragment"> perf stat </li>
+          <li class="fragment"> Duff's device  </li>
         </ul>
       </section>
       <section>
         <h2> search </h2>
-        <iframe width="1600px" height="550px" src="https://godbolt.org/e#g:!((g:!((g:!((h:codeEditor,i:(filename:'1',fontScale:20,fontUsePx:'0',j:1,lang:c%2B%2B,selection:(endColumn:32,endLineNumber:10,positionColumn:32,positionLineNumber:10,selectionStartColumn:32,selectionStartLineNumber:10,startColumn:32,startLineNumber:10),source:'%23include+%3Ceve/module/core.hpp%3E%0A%0Abool+core_of_search(const+std::uint8_t*%26+front,%0A++++++++++++++++++++const+std::uint8_t*%26+back,%0A++++++++++++++++++++const+std::uint8_t*+needle,%0A++++++++++++++++++++std::size_t+needle_size)+%7B%0A++using+wide+%3D+eve::wide%3Cstd::uint8_t%3E%3B%0A%0A++wide+fronts+%3D+eve::load(front)%3B%0A++wide+backs+%3D+eve::load(back)%3B%0A%0A++eve::logical%3Cwide%3E+potential+%3D%0A++++++(fronts+%3D%3D+needle%5B0%5D)+%26%26+(backs+%3D%3D+needle%5Bneedle_size+-+1%5D)%3B%0A%0A++bool+found+%3D+eve::iterate_selected(potential,+%5B%26%5D(std::ptrdiff_t+offset)+%7B%0A++++bool+matches+%3D+std::memcmp(front+%2B+offset,+needle,+needle_size)+%3D%3D+0%3B%0A++++if+(matches)+%7B%0A++++++front+%2B%3D+offset%3B%0A++++%7D%0A++++return+matches%3B%0A++%7D)%3B%0A%0A++if+(found)%0A++++return+true%3B%0A%0A++front+%2B%3D+wide::size()%3B%0A++back+%2B%3D+wide::size()%3B%0A%7D'),l:'5',n:'0',o:'C%2B%2B+source+%231',t:'0')),k:100,l:'4',m:91.81773161343526,n:'0',o:'',s:0,t:'0'),(g:!((h:compiler,i:(compiler:clang1600,filters:(b:'0',binary:'1',binaryObject:'1',commentOnly:'0',debugCalls:'1',demangle:'0',directives:'0',execute:'1',intel:'0',libraryCode:'0',trim:'1',verboseDemangling:'0'),flagsViewOpen:'1',fontScale:18,fontUsePx:'0',j:1,lang:c%2B%2B,libs:!((name:eve,ver:trunk)),options:'-mavx2+-DNDEBUG+--std%3Dc%2B%2B20+-O3',overrides:!(),selection:(endColumn:1,endLineNumber:1,positionColumn:1,positionLineNumber:1,selectionStartColumn:1,selectionStartLineNumber:1,startColumn:1,startLineNumber:1),source:1),l:'5',n:'0',o:'+x86-64+clang+16.0.0+(Editor+%231)',t:'0')),header:(),l:'4',m:8.18226838656474,n:'0',o:'',s:0,t:'0')),l:'3',n:'0',o:'',t:'0')),version:4"></iframe>
+        <ul>
+          <li class="fragment"> <a
+              href="http://0x80.pl/notesen/2016-11-28-simd-strfind.html">
+              Wojciech Muła: 0x80 blog </a>
+            </a></li>
+          <li class="fragment"> <a
+              href="https://github.com/ashvardanian/StringZilla/blob/07e0a2a4ad8330c91a20fccb66022715b386e1b4/include/stringzilla/stringzilla.h#L3784">
+              Ash Vardanian: StringZilla </a>
+            </a></li>
+          <li class="fragment"> <a
+              href="https://codebrowser.dev/glibc/glibc/sysdeps/x86_64/multiarch/strstr-sse2-unaligned.S.html">
+              glibc - strstr </a>
+            </a></li>
+        </ul>
       </section>
       <section>
-        <h2> TODO: iterate top bits </h2>
+        <h2> search </h2>
+        <iframe width="1600px" height="550px" src="https://godbolt.org/e#g:!((g:!((h:codeEditor,i:(filename:'1',fontScale:18,fontUsePx:'0',j:1,lang:c%2B%2B,selection:(endColumn:2,endLineNumber:28,positionColumn:2,positionLineNumber:28,selectionStartColumn:2,selectionStartLineNumber:28,startColumn:2,startLineNumber:28),source:'%23include+%3Ceve/module/core.hpp%3E%0A%0Abool+core_of_search(const+std::uint8_t*%26+front,%0A++++++++++++++++++++const+std::uint8_t*%26+back,%0A++++++++++++++++++++const+std::uint8_t*+needle,%0A++++++++++++++++++++std::size_t+needle_size)+%7B%0A++using+wide+%3D+eve::wide%3Cstd::uint8_t%3E%3B%0A%0A++wide+fronts+%3D+eve::load(front)%3B%0A++wide+backs+%3D+eve::load(back)%3B%0A%0A++eve::logical%3Cwide%3E+potential+%3D%0A++++++(fronts+%3D%3D+needle%5B0%5D)+%26%26+(backs+%3D%3D+needle%5Bneedle_size+-+1%5D)%3B%0A%0A++bool+found+%3D+eve::iterate_selected(potential,+%5B%26%5D(std::ptrdiff_t+offset)+%7B%0A++++bool+matches+%3D+std::memcmp(front+%2B+offset,+needle,+needle_size)+%3D%3D+0%3B%0A++++if+(matches)+%7B%0A++++++front+%2B%3D+offset%3B%0A++++%7D%0A++++return+matches%3B%0A++%7D)%3B%0A%0A++if+(found)%0A++++return+true%3B%0A%0A++front+%2B%3D+wide::size()%3B%0A++back+%2B%3D+wide::size()%3B%0A%7D'),l:'5',n:'0',o:'C%2B%2B+source+%231',t:'0')),k:100,l:'4',m:100,n:'0',o:'',s:0,t:'0')),version:4"></iframe>
       </section>
       <section>
         <h2> StringZilla </h2>
         <img src="../img/substring/stringzilla_substring.png">
-        <a href="https://github.com/ashvardanian/StringZilla/blob/07e0a2a4ad8330c91a20fccb66022715b386e1b4/include/stringzilla/stringzilla.h#L3784"> code </a>
+        <a
+          href="https://github.com/ashvardanian/StringZilla/blob/07e0a2a4ad8330c91a20fccb66022715b386e1b4/include/stringzilla/stringzilla.h#L3784">
+          code </a>
       </section>
+      <section>
+        <h2> Improvements </h2>
+        <ul>
+          <li class="fragment"> unrolled pre-check </li>
+          <li class="fragment"> inline needle validation </li>
+        </ul>
+      </section>
+      <section>
+        <img src="../img/04_using_multiple_registers/img6.png">
+      </section>
+      <section id="substring/needle_validation">
+        <script> imagesSlideShow("substring/needle_validation", 8); </script>
+      </section>
+      <section>
+        <section id='eve_vs_strstr,1000,x86'>
+          <script>
+            addBenchmarkForParameters('eve_vs_strstr,1000,x86',
+              'search 22 in 1111..., x86, 1000 bytes',
+              {
+                name: 'search',
+                size: 1000,
+                algorithm: 'selection',
+                type: 'char',
+                time: 'y',
+                padding: 'min',
+                group: 'avx2+bmi',
+              },
+              ['eve::algo::search(22)', 'std::strstr(22)']);
+          </script>
+        </section>
+        <section id='eve_vs_strstr,1000,apple_m2'>
+          <script>
+            addBenchmarkForParameters('eve_vs_strstr,1000,apple_m2',
+              'search 22 in 1111..., Apple M2, 1000 bytes',
+              {
+                name: 'search',
+                size: 1000,
+                algorithm: 'selection',
+                type: 'char',
+                time: 'y',
+                padding: 'min',
+                group: 'apple_m2',
+              },
+              ['eve::algo::search(22)', 'std::strstr(22)']);
+          </script>
+        </section>
+      </section>
+      <section>
+      <section id='eve_vs_strstr,10000,x86'>
+        <script>
+          addBenchmarkForParameters('eve_vs_strstr,10000,x86',
+            'search 22 in 1111..., x86, 10000 bytes',
+            {
+              name: 'search',
+              size: 10000,
+              algorithm: 'selection',
+              type: 'char',
+              time: 'y',
+              padding: 'min',
+              group: 'avx2+bmi',
+            },
+            ['eve::algo::search(22)', 'std::strstr(22)']);
+        </script>
+      </section>
+      <section id='eve_vs_strstr,10000,apple_m2'>
+        <script>
+          addBenchmarkForParameters('eve_vs_strstr,10000,apple_m2',
+            'search 22 in 1111..., Apple M2, 10000 bytes',
+            {
+              name: 'search',
+              size: 10000,
+              algorithm: 'selection',
+              type: 'char',
+              time: 'y',
+              padding: 'min',
+              group: 'apple_m2',
+            },
+            ['eve::algo::search(22)', 'std::strstr(22)']);
+        </script>
+      </section>
+    </section>
+
     </div>
 
     <script src="../../dist/reveal.js"></script>
