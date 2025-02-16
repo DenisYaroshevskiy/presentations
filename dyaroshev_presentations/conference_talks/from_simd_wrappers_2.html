@@ -33,6 +33,78 @@
         </h2>
         <p>Joel Falcou, Denis Yaroshevskiy</p>
       </section>
+      <section>
+        <h2> This talk (pt2) </h2>
+        <ul>
+          <li class="fragment"> TODO: link to pt2 slides </li>
+          <li class="fragment"> Some plan thingy here </li>
+        </ul>
+      </section>
+      <section>
+        <h2> No Magic Compiler for this talk </h2>
+        <ul>
+          <li class="fragment"> let's not assume that the compilers do much more
+            than today </li>
+          <li class="fragment"> inlining/ collapsing instructions with exactaly
+            the same semantics </li>
+          <li class="fragment"> std::unseq is not really a thing (yet?) </li>
+          <li class="fragment"> there is some code in libc++ - that I coudn't do
+            anything with </li>
+        </ul>
+      </section>
+      <section>
+        <h2> Elephant in the ROOM (is this too long? I have no idea) </h2>
+        <ul>
+          <li class="fragment"> _this is many slides_ </li>
+          <li class="fragment"> SVE/RVV don't know the compile time register
+            size </li>
+          <li class="fragment"> Mention streaming extensions </li>
+          <li class="fragment"> show how this affects find from part 1 (not
+            much) </li>
+          <li class="fragment"> show how this affects inclusive_scan from part
+            1, it's tricky </li>
+          <li class="fragment"> Why std::simd doesn't support this (super new)
+          </li>
+          <li class="fragment"> Why eve doesn't support this (the
+            sizeless_struct that is no more) </li>
+          <li class="fragment"> How google highway manages to do it by splitting
+            meta information and intrinsics </li>
+          <li class="fragment"> If a major compiler gives us a sizeless struct,
+            we promise to experiment </li>
+          <li class="fragment"> DLLs approach </li>
+          <li class="fragment"> One binary approach that is probably not modules
+            friendly </li>
+          <li class="fragment"> Hey standard ppl, can we compile multiple
+            versions of the same function in std c++ please? </li>
+        </ul>
+      </section>
+      <section>
+        <h2> Importance of extensibility </h2>
+        <ul>
+          <li class="fragment"> GF2P8AFFINEQB is "Compute an affine
+            transformation in the Galois Field 2^8" </li>
+          <li class="fragment"> Harold Aptroot: <a
+              href="https://bitmath.blogspot.com/2024/11/histogramming-bytes-with-positional.html">Histogramming
+              bytes with positional popcount (GF2P8AFFINEQB edition)</a>
+          </li>
+          <li> eve is implictly convertible </li>
+          <li> std::simd supports std:bit_cast </li>
+        </ul>
+      </section>
+      <section>
+        <h2> Importance of tuning algorithms</h2>
+        <ul>
+          <li class="fragment"> People will want to try things </li>
+          <li class="fragment"> eve exposes unrolling/aligning/cardinal changes </li>
+        </ul>
+      </section>
+      <section>
+        <h2> Importance of knowing parameter limits</h2>
+        <ul>
+          <li class="fragment"> How limiting sin inputs affects generated code </li>
+          <li class="fragment"> Probably `assume` won't be enough </li>
+        </ul>
+      </section>
     </div>
 
     <script src="../../dist/reveal.js"></script>
