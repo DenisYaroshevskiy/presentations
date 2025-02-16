@@ -1,0 +1,88 @@
+<!doctype html>
+<html>
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport"
+    content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
+  <title> SIMD substring in a string </title>
+
+  <link rel="stylesheet" href="../../dist/reset.css">
+  <link rel="stylesheet" href="../../dist/reveal.css">
+  <link rel="stylesheet" href="../../dist/theme/moon.css">
+
+  <script src="https://cdn.plot.ly/plotly-2.5.0.min.js"></script>
+  <script> const UNSQ_EVE_COMMIT = '10d97219f305ec3c7aa0b89e712ac739d2d9c2c2'; </script>
+  <script type="text/javascript"
+    src="https://cdn.jsdelivr.net/gh/DenisYaroshevskiy/unsq_eve@10d97219f305ec3c7aa0b89e712ac739d2d9c2c2/scripts/bench.js"></script>
+
+  <script src="../scripts/helper_scripts.js"></script>
+
+
+  <!-- Theme used for syntax highlighted code -->
+  <link rel="stylesheet" href="../../plugin/highlight/zenburn.css">
+</head>
+
+<body>
+  <div class="reveal">
+    <div class="slides">
+      <section data-transition="none">
+        <h2>
+          From SIMD Wrappers to SIMD Ranges (pt 1).
+        </h2>
+        <p>Joel Falcou, Denis Yaroshevskiy</p>
+      </section>
+      <section>
+        <h2> This talk </h2>
+        <ul>
+          <li class="fragment"> TODO: link to pt1 slides </li>
+          <li class="fragment"> SIMD ranges are coming </li>
+          <li class="fragment"> We need to teach you some simd </li>
+          <li class="fragment"> strlen </li>
+          <li class="fragment"> reduce </li>
+          <li class="fragment"> min_element </li>
+          <li class="fragment"> copy_if </li>
+          <li class="fragment"> search </li>
+        </ul>
+      </section>
+      <section>
+        <section id='performance of the while loop'>
+          <script>
+            addBenchmarkForParameters('performance of the while loop',
+              'Performance of the while loop',
+              {
+                name: 'search',
+                size: 1000,
+                algorithm: 'selection',
+                type: 'char',
+                percentage: 100,
+                time: 'y',
+                padding: 'min',
+                group: 'avx2+bmi',
+              },
+              ['std::strlen', 'std_::find_unguarded'],
+              ['std::strlen']);
+          </script>
+        </section>
+      </section>
+    </div>
+
+    <script src="../../dist/reveal.js"></script>
+    <script src="../../plugin/notes/notes.js"></script>
+    <script src="../../plugin/markdown/markdown.js"></script>
+    <script src="../../plugin/highlight/highlight.js"></script>
+    <script>
+      // More info about initialization & config:
+      // - https://revealjs.com/initialization/
+      // - https://revealjs.com/config/
+      Reveal.initialize({
+        hash: true,
+        slideNumber: true,
+        // Learn about plugins: https://revealjs.com/plugins/
+        plugins: [RevealMarkdown, RevealHighlight, RevealNotes]
+      });
+    </script>
+</body>
+
+</html>
