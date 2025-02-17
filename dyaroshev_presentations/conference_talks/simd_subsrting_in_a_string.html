@@ -376,6 +376,9 @@
             </a></li>
         </ul>
       </section>
+      <section id="substring/search">
+        <script> imagesSlideShow("substring/search", 8); </script>
+      </section>
       <section>
         <h2> search </h2>
         <iframe width="1800px" height="550px" src="https://godbolt.org/e#g:!((g:!((h:codeEditor,i:(filename:'1',fontScale:18,fontUsePx:'0',j:1,lang:c%2B%2B,selection:(endColumn:6,endLineNumber:19,positionColumn:6,positionLineNumber:19,selectionStartColumn:6,selectionStartLineNumber:19,startColumn:6,startLineNumber:19),source:'%23include+%3Ceve/module/core.hpp%3E%0A%0Abool+core_of_search(const+std::uint8_t*%26+front,%0A++++++++++++++++++++const+std::uint8_t*%26+back,%0A++++++++++++++++++++const+std::uint8_t*+needle,%0A++++++++++++++++++++std::size_t+needle_size)+%7B%0A++using+wide+%3D+eve::wide%3Cstd::uint8_t%3E%3B%0A%0A++wide+fronts+%3D+eve::load(front)%3B%0A++wide+backs+%3D+eve::load(back)%3B%0A%0A++eve::logical%3Cwide%3E+potential+%3D%0A++++++(fronts+%3D%3D+needle%5B0%5D)+%26%26+(backs+%3D%3D+needle%5Bneedle_size+-+1%5D)%3B%0A%0A++bool+found+%3D+eve::iterate_selected(potential,+%5B%26%5D(std::ptrdiff_t+offset)+%7B%0A++++bool+matches+%3D+std::memcmp(front+%2B+offset,+needle,+needle_size)+%3D%3D+0%3B%0A++++if+(matches)+%7B%0A++++++front+%2B%3D+offset%3B%0A++++%7D%0A++++return+matches%3B%0A++%7D)%3B%0A%0A++if+(found)%0A++++return+true%3B%0A%0A++front+%2B%3D+wide::size()%3B%0A++back+%2B%3D+wide::size()%3B%0A++return+false%3B%0A%7D'),l:'5',n:'0',o:'C%2B%2B+source+%231',t:'0')),k:100,l:'4',m:100,n:'0',o:'',s:0,t:'0')),version:4"></iframe>
