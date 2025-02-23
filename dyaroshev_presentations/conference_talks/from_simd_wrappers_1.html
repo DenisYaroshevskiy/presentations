@@ -38,48 +38,142 @@
         <ul>
           <li class="fragment"> TODO: link to pt1 slides </li>
           <li class="fragment"> SIMD ranges are coming </li>
-          <li class="fragment"> We need to teach you some simd </li>
-          <li class="fragment"> strlen </li>
-          <li class="fragment"> inclusive_scan </li>
-          <li class="fragment"> min_element </li>
-          <li class="fragment"> copy_if </li>
-          <li class="fragment"> search </li>
+          <li class="fragment"> We want to knowledge share </li>
+          <li class="fragment"> We need to teach you simd first </li>
         </ul>
       </section>
       <section>
-        <h2> How do you use SIMD today? </h2>
+        <h2> Let's do some algorithms </h2>
         <ul>
-          <li class="fragment"> I DUNNO WHERE TO PUT THIS SLIDE </li>
-          <li class="fragment"> libc </li>
-          <li class="fragment"> mathematics </li>
-          <li class="fragment"> auto-vectorization </li>
-          <li class="fragment"> special important libraries (compression/hash_maps) </li>
+          <li class="fragment">memcmp</li>
+          <li class="fragment">memchr</li>
+          <li class="fragment">strlen</li>
+          <li class="fragment">reduce</li>
+          <li class="fragment">inclusive_scan</li>
+          <li class="fragment">min_element</li>
+          <li class="fragment">copy_if</li>
+          <li class="fragment">reverse</li>
+        </ul>
+      </section>
+      <section id="advanced_simd_algorithms_in_pictures/memcmp">
+        <script> imagesSlideShow("advanced_simd_algorithms_in_pictures/memcmp", 5); </script>
+      </section>
+      <section id='int64 vs memcmp'>
+        <script>
+          addBenchmarkForParameters('int64 vs memcmp',
+            'Memcmp results, x86',
+            {
+              name: 'mismatch',
+              size: 10000,
+              algorithm: 'selection',
+              type: 'char',
+              time: 'y',
+              padding: 'min',
+              group: 'avx2+bmi',
+            },
+            ['mismatch_scalar',
+              'std::mismatch', 'use_int64s', 'std::memcmp'],
+            ['std::memcmp', 'std::mismatch']);
+        </script>
+      </section>
+      <section>
+        <h2> Notes </h2>
+        <ul>
+          <li class="fragment"> std::mismatch - Nikolas Klauser </li>
         </ul>
       </section>
       <section>
-        <section id='performance of the while loop'>
+        <h2> eve library </h2>
+        <ul>
+          <li class="fragment"> <a href="https://github.com/jfalcou/eve">
+              github
+            </a></li>
+          <li class="fragment"> Joel Falcou, Jean-Thierry Lapresté, Alexis
+            Aune,
+            Denis
+            Yaroshevskiy </li>
+          <li class="fragment"> eve::algo::mismatch </li>
+        </ul>
+      </section>
+      <section>
+        <section id='eve,mismatch,x86'>
           <script>
-            addBenchmarkForParameters('performance of the while loop',
-              'Performance of the while loop',
+            addBenchmarkForParameters('eve,mismatch,x86',
+              'Memcmp results, x86',
               {
-                name: 'search',
-                size: 1000,
+                name: 'mismatch',
+                size: 10000,
                 algorithm: 'selection',
                 type: 'char',
-                percentage: 100,
                 time: 'y',
                 padding: 'min',
                 group: 'avx2+bmi',
               },
-              ['std::strlen', 'std_::find_unguarded'],
-              ['std::strlen']);
+              ['mismatch_scalar',
+                'std::mismatch', 'use_int64s', 'std::memcmp', 'eve::algo::mismatch'],
+              ['mismatch_scalar']);
           </script>
         </section>
-        <section>
-          What's SIMD?
-          Single Instruction Multiple Data
-          Wide registers
+        <section id='eve,mismatch,apple_m2'>
+          <script>
+            addBenchmarkForParameters('eve,mismatch,apple_m2',
+              'Memcmp results, Apple M2',
+              {
+                name: 'mismatch',
+                size: 10000,
+                algorithm: 'selection',
+                type: 'char',
+                time: 'y',
+                padding: 'min',
+                group: 'apple_m2',
+              },
+              ['mismatch_scalar',
+                'std::mismatch', 'use_int64s', 'std::memcmp', 'eve::algo::mismatch'],
+              ['mismatch_scalar']);
+          </script>
         </section>
+      </section>
+      <section>
+        <h2>Vector Processor Extensions</h2>
+        <ul>
+          <li>x86</li>
+          <ul>
+            <li>128 bits: SSE2, SSE3, SSSE3, SSE4, SSE4.1, SSE4.2</li>
+            <li>256 bits: AVX, AVX2, XOP</li>
+            <li>512 bits: AVX512 and its myriad of sub-genre</li>
+          </ul>
+          <li>ARM</li>
+          <ul>
+            <li>128 bits: NEON, ASIMD</li>
+            <li> SVE (VLS/VLA)</li>
+          </ul>
+          <li> RVV </li>
+          <li>PowerPC</li>
+          <li>WASM</li>
+        </ul>
+      </section>
+      <section id='eve::mistamtch,arch'>
+        <script>
+          addBenchmarkForParameters('eve::mistamtch,arch',
+            'Marching',
+            {
+              name: 'mismatch',
+              size: 10000,
+              algorithm: 'selection',
+              type: 'char',
+              time: 'y',
+              padding: 'min',
+              group: 'selection',
+            },
+            ['std::memcmp/avx2+bmi', 'use_int64s/avx2+bmi', 'eve::algo::mismatch/avx2+bmi', 'eve::algo::mismatch/sse2'],
+            offByDefault = ['std::memcmp/avx2+bmi', 'use_int64s/avx2+bmi']);
+        </script>
+      </section>
+      <section>
+        <h2> What's inside mismatch? </h2>
+        <ul>
+          <li class="fragment"> find_if_not + zip </li>
+        </ul>
       </section>
     </div>
 
