@@ -58,6 +58,9 @@
       <section id="advanced_simd_algorithms_in_pictures/memcmp">
         <script> imagesSlideShow("advanced_simd_algorithms_in_pictures/memcmp", 5); </script>
       </section>
+      <section id="substring/memcmp_tail">
+        <script> imagesSlideShow("substring/memcmp_tail", 7); </script>
+      </section>
       <section id='int64 vs memcmp'>
         <script>
           addBenchmarkForParameters('int64 vs memcmp',
@@ -174,6 +177,86 @@
         <ul>
           <li class="fragment"> find_if_not + zip </li>
         </ul>
+      </section>
+      <section>
+        <h3> find </h3>
+        <iframe width="1800px" height="550px"
+          src="https://godbolt.org/e#g:!((g:!((g:!((h:codeEditor,i:(filename:'1',fontScale:20,fontUsePx:'0',j:1,lang:c%2B%2B,selection:(endColumn:1,endLineNumber:4,positionColumn:1,positionLineNumber:4,selectionStartColumn:1,selectionStartLineNumber:4,startColumn:1,startLineNumber:4),source:'%23include+%3Ceve/module/core.hpp%3E%0A%0Ausing+wide+%3D+eve::wide%3Cstd::uint8_t%3E%3B%0A%0Abool+core_of_find(const+std::uint8_t*%26+f,+wide+bcast_needle)+%0A%7B%0A++wide+loaded+%3D+eve::load(f)%3B+//+%5B0,+1,+2,+3%5D%0A%0A++eve::logical%3Cwide%3E+test+%3D+loaded+%3D%3D+bcast_needle%3B++//+%5BF,+T,+F,+F%5D%0A++std::optional%3Cstd::ptrdiff_t%3E+match+%3D+eve::first_true(test)%3B++//+1%0A%0A++if+(!!match)+%7B%0A++++f+%2B%3D+wide::size()%3B%0A++++return+false%3B%0A++%7D%0A%0A++f+%2B%3D+*match%3B%0A++return+true%3B%0A%7D'),l:'5',n:'0',o:'C%2B%2B+source+%231',t:'0')),k:100,l:'4',m:92.28779066710136,n:'0',o:'',s:0,t:'0'),(g:!((h:compiler,i:(compiler:clang1600,filters:(b:'0',binary:'1',binaryObject:'1',commentOnly:'0',debugCalls:'1',demangle:'0',directives:'0',execute:'1',intel:'0',libraryCode:'0',trim:'1',verboseDemangling:'0'),flagsViewOpen:'1',fontScale:18,fontUsePx:'0',j:1,lang:c%2B%2B,libs:!((name:eve,ver:v20230215)),options:'-mavx2+-DNDEBUG+--std%3Dc%2B%2B20+-O3',overrides:!(),selection:(endColumn:1,endLineNumber:1,positionColumn:1,positionLineNumber:1,selectionStartColumn:1,selectionStartLineNumber:1,startColumn:1,startLineNumber:1),source:1),l:'5',n:'0',o:'+x86-64+clang+16.0.0+(Editor+%231)',t:'0')),header:(),l:'4',m:7.7122093328986345,n:'0',o:'',s:0,t:'0')),l:'3',n:'0',o:'',t:'0')),version:4"></iframe>
+      </section>
+      <section id='eve,find,no_unroll,x86'>
+        <script>
+          addBenchmarkForParameters('eve,find,no_unroll,x86',
+            'find results, x86',
+            {
+              name: 'search',
+              size: 10000,
+              algorithm: 'selection',
+              type: 'char',
+              time: 'y',
+              padding: 'min',
+              group: 'avx2+bmi',
+            },
+            ['std::find', 'std::find_if', 'eve::algo::find_if[no_unrolling]'],
+            ['std::find']);
+        </script>
+      </section>
+      <section id='04_using_multiple_registers'>
+        <script>
+          imagesSlideShow('04_using_multiple_registers', 6);
+        </script>
+      </section>
+      <section>
+        <section id='eve,find,x86'>
+          <script>
+            addBenchmarkForParameters('eve,find,x86',
+              'find results, x86',
+              {
+                name: 'search',
+                size: 10000,
+                algorithm: 'selection',
+                type: 'char',
+                time: 'y',
+                padding: 'min',
+                group: 'avx2+bmi',
+              },
+              ['std::find', 'eve::algo::find_if[no_unrolling]', 'eve::algo::find_if'],
+              ['std::find_if']);
+          </script>
+        </section>
+        <section id='eve,find,apple_m2'>
+          <script>
+            addBenchmarkForParameters('eve,find,apple_m2',
+              'find results, apple_m2',
+              {
+                name: 'search',
+                size: 10000,
+                algorithm: 'selection',
+                type: 'char',
+                time: 'y',
+                padding: 'min',
+                group: 'apple_m2',
+              },
+              ['std::find', 'eve::algo::find_if[no_unrolling]', 'eve::algo::find_if', 'memchr'],
+              ['std::find_if']);
+          </script>
+        </section>
+      </section>
+      <section id='eve,find,all_types,x86'>
+        <script>
+          addBenchmarkForParameters('eve,find,all_types,x86',
+            'find, all types, x6',
+            {
+              name: 'search',
+              size: 10000,
+              algorithm: 'selection',
+              type: 'x',
+              time: 'y',
+              padding: 'min',
+              group: 'avx2+bmi',
+            },
+            ['std::find', 'eve::algo::find_if'],
+            ['eve::algo::find_if[no_unrolling]', 'std::find']);
+        </script>
       </section>
     </div>
 
