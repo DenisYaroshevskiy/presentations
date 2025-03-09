@@ -6,7 +6,7 @@
   <meta name="viewport"
     content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 
-  <title> SIMD substring in a string </title>
+  <title> From SIMD Wrappers to SIMD Ranges (pt 1). </title>
 
   <link rel="stylesheet" href="../../dist/reset.css">
   <link rel="stylesheet" href="../../dist/reveal.css">
@@ -183,6 +183,18 @@
         <iframe width="1800px" height="550px"
           src="https://godbolt.org/e#g:!((g:!((g:!((h:codeEditor,i:(filename:'1',fontScale:20,fontUsePx:'0',j:1,lang:c%2B%2B,selection:(endColumn:1,endLineNumber:4,positionColumn:1,positionLineNumber:4,selectionStartColumn:1,selectionStartLineNumber:4,startColumn:1,startLineNumber:4),source:'%23include+%3Ceve/module/core.hpp%3E%0A%0Ausing+wide+%3D+eve::wide%3Cstd::uint8_t%3E%3B%0A%0Abool+core_of_find(const+std::uint8_t*%26+f,+wide+bcast_needle)+%0A%7B%0A++wide+loaded+%3D+eve::load(f)%3B+//+%5B0,+1,+2,+3%5D%0A%0A++eve::logical%3Cwide%3E+test+%3D+loaded+%3D%3D+bcast_needle%3B++//+%5BF,+T,+F,+F%5D%0A++std::optional%3Cstd::ptrdiff_t%3E+match+%3D+eve::first_true(test)%3B++//+1%0A%0A++if+(!!match)+%7B%0A++++f+%2B%3D+wide::size()%3B%0A++++return+false%3B%0A++%7D%0A%0A++f+%2B%3D+*match%3B%0A++return+true%3B%0A%7D'),l:'5',n:'0',o:'C%2B%2B+source+%231',t:'0')),k:100,l:'4',m:92.28779066710136,n:'0',o:'',s:0,t:'0'),(g:!((h:compiler,i:(compiler:clang1600,filters:(b:'0',binary:'1',binaryObject:'1',commentOnly:'0',debugCalls:'1',demangle:'0',directives:'0',execute:'1',intel:'0',libraryCode:'0',trim:'1',verboseDemangling:'0'),flagsViewOpen:'1',fontScale:18,fontUsePx:'0',j:1,lang:c%2B%2B,libs:!((name:eve,ver:v20230215)),options:'-mavx2+-DNDEBUG+--std%3Dc%2B%2B20+-O3',overrides:!(),selection:(endColumn:1,endLineNumber:1,positionColumn:1,positionLineNumber:1,selectionStartColumn:1,selectionStartLineNumber:1,startColumn:1,startLineNumber:1),source:1),l:'5',n:'0',o:'+x86-64+clang+16.0.0+(Editor+%231)',t:'0')),header:(),l:'4',m:7.7122093328986345,n:'0',o:'',s:0,t:'0')),l:'3',n:'0',o:'',t:'0')),version:4"></iframe>
       </section>
+      <section data-markdown>
+        <textarea data-template>
+          ## compare with std::simd
+          | eve        | p1928(r6)                    |
+          |------------|------------------------------|
+          | wide       |  std::simd                   |
+          | load       |  .copy_from                  |
+          | logical    |  std::simd_mask              |
+          | !=         | !=                           |
+          | first_true | any_of + find_first_set      |
+        </textarea>
+      </section>
       <section id='eve,find,no_unroll,x86'>
         <script>
           addBenchmarkForParameters('eve,find,no_unroll,x86',
@@ -244,7 +256,7 @@
       <section id='eve,find,all_types,x86'>
         <script>
           addBenchmarkForParameters('eve,find,all_types,x86',
-            'find, all types, x6',
+            'find, all types, x86',
             {
               name: 'search',
               size: 10000,
@@ -257,6 +269,61 @@
             ['std::find', 'eve::algo::find_if'],
             ['eve::algo::find_if[no_unrolling]', 'std::find']);
         </script>
+      </section>
+      <section>
+        <h3>Strlen</h3>
+        <ul>
+          <li class="fragment">allocations happen in pages</li>
+          <li class="fragment">aligned addresses are safe</li>
+        </ul>
+      </section>
+      <section id="02_pages">
+        <script> imagesSlideShow("02_pages", 4); </script>
+      </section>
+      <section id="02_strlen">
+        <script> imagesSlideShow("02_strlen", 8); </script>
+      </section>
+      <section id='eve,find,tail_handling,x86'>
+        <script>
+          addBenchmarkForParameters('eve,find,tail_handling,x86',
+            'find, tail handling, x86',
+            {
+              name: 'search',
+              size: 40,
+              algorithm: 'selection',
+              type: 'x',
+              time: 'y',
+              padding: 'min',
+              group: 'avx2+bmi',
+            },
+            ['std::find', 'eve::algo::find_if'],
+            ['eve::algo::find_if[no_unrolling]', 'std::find']);
+        </script>
+      </section>
+      <section>
+        <h3> memcmp/memchr/strlen conclusions </h3>
+        <ul>
+          <li class="fragment"> Compilation target is important </li>
+          <li class="fragment"> Types are important </li>
+          <li class="fragment"> You can't just do "for each" </li>
+          <li class="fragment"> Overlapping registers tail
+            handling </li>
+          <li class="fragment"> Aligned loads tail handling </li>
+          <li class="fragment"> Registers can contain garbage </li>
+          <li class="fragment"> <a
+              href="https://stackoverflow.com/questions/25566302/vectorized-strlen-getting-away-with-reading-unallocated-memory">
+              Stephen Canon (Stack Overflow)</a></li>
+          <li class="fragment"> glibc </li>
+        </ul>
+      </section>
+      <section>
+        <h2> reduce </h2>
+      </section>
+      <section id="my_first_simd/reduce">
+        <script> imagesSlideShow("my_first_simd/reduce", 9); </script>
+      </section>
+      <section id="my_first_simd/reduce_wide">
+        <script> imagesSlideShow("my_first_simd/reduce_wide", 6); </script>
       </section>
     </div>
 
