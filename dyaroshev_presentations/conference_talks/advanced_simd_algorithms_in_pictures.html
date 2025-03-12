@@ -70,7 +70,7 @@
         <ul>
           <li class="fragment"> <a href="https://github.com/jfalcou/eve"> github
             </a></li>
-          <li class="fragment"> Joel Falcou, Jean-Thierry Lapresté, Denis Yaroshevskiy </li>
+          <li class="fragment"> Joel Falcou, Jean-Thierry Lapresté, Alexis Aune, Denis Yaroshevskiy </li>
           <li class="fragment"> <a
               href="https://youtu.be/WZGNCPBMInI?si=CcQdrU6QSH0cXnoh"> SIMD in
               C++20: EVE of a new Era </a> </li>
@@ -163,14 +163,14 @@
       </section>
       <section data-markdown>
         <textarea data-template>
-          ## compare with proposal
-          | eve        | p1928(r6)                    |
+          ## compare with std::simd
+          | eve        | std                          |
           |------------|------------------------------|
           | wide       |  std::simd                   |
-          | load       |  .copy_from                  |
+          | load       |  simd_unchecked_load(R)      |
           | logical    |  std::simd_mask              |
-          | !=         | !=                           |
-          | first_true | any_of + reduce_min_index    |
+          | !=         |  !=                          |
+          | first_true |  any_of + reduce_min_index   |
         </textarea>
       </section>
       <section>

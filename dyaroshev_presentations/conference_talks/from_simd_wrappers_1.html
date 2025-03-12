@@ -186,13 +186,13 @@
       <section data-markdown>
         <textarea data-template>
           ## compare with std::simd
-          | eve        | p1928(r6)                    |
+          | eve        | std                          |
           |------------|------------------------------|
           | wide       |  std::simd                   |
-          | load       |  .copy_from                  |
+          | load       |  simd_unchecked_load(R)      |
           | logical    |  std::simd_mask              |
-          | !=         | !=                           |
-          | first_true | any_of + find_first_set      |
+          | !=         |  !=                          |
+          | first_true |  any_of + reduce_min_index   |
         </textarea>
       </section>
       <section id='eve,find,no_unroll,x86'>
@@ -277,6 +277,13 @@
           <li class="fragment">aligned addresses are safe</li>
         </ul>
       </section>
+      <section>
+        <h3> Strlen (new functions) </h3>
+        <ul>
+          <li class="fragment"> load[unsafe](ptr) </li>
+          <li class="fragment"> first_true[ignore](test) </li>
+        </ul>
+      </section>
       <section id="02_pages">
         <script> imagesSlideShow("02_pages", 4); </script>
       </section>
@@ -318,12 +325,95 @@
       </section>
       <section>
         <h2> reduce </h2>
+        <ul>
+          <li class="fragment"> reduce to the same type </li>
+          <li class="fragment"> reduce to a different type</li>
+        </ul>
+      </section>
+      <section>
+        <h2> reduce same type (operations) </h2>
+        <ul>
+          <li class="fragment"> replace_ignored(x, ignore, with) </li>
+          <li class="fragment"> reduce(w, op) </li>
+        </ul>
       </section>
       <section id="my_first_simd/reduce">
         <script> imagesSlideShow("my_first_simd/reduce", 9); </script>
       </section>
       <section id="my_first_simd/reduce_wide">
         <script> imagesSlideShow("my_first_simd/reduce_wide", 6); </script>
+      </section>
+      <section>
+        <h3> reduce (different type) </h3>
+        <ul>
+          <li class="fragment">wide&lt;T, fixed&lt;N&gt;&gt;</li>
+          <li class="fragment"> convert(w, as<Scalar>) </li>
+        </ul>
+      </section>
+      <section id="my_first_simd/reduce_different_type">
+        <script> imagesSlideShow("my_first_simd/reduce_different_type", 6); </script>
+      </section>
+      <section id='reduce: char'>
+        <script>
+          addBenchmarkForParameters('reduce: char',
+            'reduce: char (10000)',
+            {
+              name: 'sum',
+              size: 10000,
+              group: 'avx2+bmi',
+              algorithm: 'selection',
+              type: 'char',
+              sum_type: 'x',
+              time: 'y',
+              padding: 'min',
+            },
+            ['std::reduce', 'eve::algo::reduce']);
+        </script>
+      </section>
+      <section id='reduce: short'>
+        <script>
+          addBenchmarkForParameters('reduce: short',
+            'reduce: short (10000)',
+            {
+              name: 'sum',
+              size: 10000,
+              group: 'avx2+bmi',
+              algorithm: 'selection',
+              type: 'short',
+              sum_type: 'x',
+              time: 'y',
+              padding: 'min',
+            },
+            ['std::reduce', 'eve::algo::reduce']);
+        </script>
+      </section>
+      <section id='reduce: int'>
+        <script>
+          addBenchmarkForParameters('reduce: int',
+            'reduce: int (10000)',
+            {
+              name: 'sum',
+              size: 10000,
+              group: 'avx2+bmi',
+              algorithm: 'selection',
+              type: 'int',
+              time: 'y',
+              padding: 'min',
+            },
+            ['std::reduce', 'eve::algo::reduce']);
+        </script>
+      </section>
+      <section data-markdown>
+        <textarea data-template>
+          ## compare with std::simd
+          | eve               | std                   |
+          |-------------------|-----------------------|
+          | replace_ignored   |  simd_select          |
+          | reduce            |  reduce               |
+          | shuffle           |                       |
+          | convert           |  explicit constructor |
+          |                   |  simd_flag_convert    |
+        </textarea>
       </section>
     </div>
 
