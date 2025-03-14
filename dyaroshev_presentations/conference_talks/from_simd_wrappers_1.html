@@ -80,12 +80,6 @@
         </script>
       </section>
       <section>
-        <h2> Notes </h2>
-        <ul>
-          <li class="fragment"> std::mismatch - Nikolas Klauser </li>
-        </ul>
-      </section>
-      <section>
         <h2> eve library </h2>
         <ul>
           <li class="fragment"> <a href="https://github.com/jfalcou/eve">
@@ -317,10 +311,16 @@
             handling </li>
           <li class="fragment"> Aligned loads tail handling </li>
           <li class="fragment"> Registers can contain garbage </li>
+        </ul>
+      </section>
+      <section>
+        <h3> memcmp/memchr/strlen acknowledgements </h3>
+        <ul>
           <li class="fragment"> <a
               href="https://stackoverflow.com/questions/25566302/vectorized-strlen-getting-away-with-reading-unallocated-memory">
               Stephen Canon (Stack Overflow)</a></li>
           <li class="fragment"> glibc </li>
+          <li class="fragment"> std::mismatch - Nikolas Klauser </li>
         </ul>
       </section>
       <section>
@@ -414,6 +414,76 @@
           | convert           |  explicit constructor |
           |                   |  simd_flag_convert    |
         </textarea>
+      </section>
+      <section>
+        <h3> reduce conclusions </h3>
+        <ul>
+          <li class="fragment"> shuffles </li>
+          <li class="fragment"> Types are important </li>
+          <li class="fragment"> You can't just do "for each" </li>
+        </ul>
+      </section>
+      <section>
+        <h3> ----- </h3>
+      </section>
+      <section>
+        <h3> min_element </h3>
+      </section>
+      <section>
+        <h3> min_value </h3>
+        <ul>
+          <li class="fragment"> std::reduce(rng, min) </li>
+          <li class="fragment"> reduce + find </li>
+        </ul>
+      </section>
+      <section id="from_simd_wrappers_1/min_element">
+        <script> imagesSlideShow("from_simd_wrappers_1/min_element", 7); </script>
+      </section>
+      <section>
+        <h3> index overflows </h3>
+        <ul>
+          <li class="fragment"> index types </li>
+          <li class="fragment"> avoid redoing tails </li>
+        </ul>
+      </section>
+      <section>
+        <section id='min: int'>
+          <script>
+            addBenchmarkForParameters('min: int',
+              'min: int (10000)',
+              {
+                name: 'min',
+                size: 10000,
+                group: 'avx2+bmi',
+                algorithm: 'selection',
+                type: 'int',
+                time: 'y',
+                padding: 'min',
+              },
+              ['std::min_element', 'eve::algo::min']);
+          </script>
+        </section>
+      </section>
+      <section>
+        <h3> min_element conclusions </h3>
+        <ul>
+          <li class="fragment"> index handling </li>
+          <li class="fragment"> writing a loop is difficult </li>
+        </ul>
+      </section>
+      <section>
+        <h3> min_element acknowledgements</h3>
+        <ul>
+          <li class="fragment"> <a
+              href="https://stackoverflow.com/a/70813588/5021064">Peter Cordes
+              on two iterations</a> </li>
+          <li class="fragment"> <a
+              href="http://0x80.pl/notesen/2018-10-03-simd-index-of-min.html">
+              Wojciech Muła </a></li>
+          <li class="fragment"> <a
+              href="https://github.com/microsoft/STL/blob/a8888806c6960f1687590ffd4244794c753aa819/stl/src/vector_algorithms.cpp#L861-L1065">
+              Alex Guteniev min_element in MSVC</a></li>
+        </ul>
       </section>
     </div>
 
