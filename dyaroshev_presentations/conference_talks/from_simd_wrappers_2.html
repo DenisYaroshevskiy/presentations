@@ -41,42 +41,43 @@
         </ul>
       </section>
       <section>
-        <h2> No Magic Compiler for this talk </h2>
+        <h2> No Magic Compiler </h2>
         <ul>
-          <li class="fragment"> let's not assume that the compilers do much more
-            than today </li>
-          <li class="fragment"> inlining/ collapsing instructions with exactaly
-            the same semantics </li>
-          <li class="fragment"> std::unseq is not really a thing (yet?) </li>
-          <li class="fragment"> there is some code in libc++ - that I coudn't do
-            anything with </li>
+          <li class="fragment"> std::unseq is not there </li>
+          <li class="fragment"> inlining </li>
+          <li class="fragment"> collapsing instructions (same semantics) </li>
+          <li class="fragment"> tracking simple conditions </li>
         </ul>
       </section>
       <section>
-        <h2> Elephant in the ROOM (is this too long? I have no idea) </h2>
+        <h2> Elephant in the ROOM </h2>
         <ul>
-          <li class="fragment"> _this is many slides_ </li>
-          <li class="fragment"> SVE/RVV don't know the compile time register
-            size </li>
-          <li class="fragment"> Mention streaming extensions </li>
-          <li class="fragment"> show how this affects find from part 1 (not
-            much) </li>
-          <li class="fragment"> show how this affects inclusive_scan from part
-            1, it's tricky </li>
-          <li class="fragment"> Why std::simd doesn't support this (super new)
-          </li>
-          <li class="fragment"> Why eve doesn't support this (the
-            sizeless_struct that is no more) </li>
-          <li class="fragment"> How google highway manages to do it by splitting
-            meta information and intrinsics </li>
-          <li class="fragment"> If a major compiler gives us a sizeless struct,
-            we promise to experiment </li>
-          <li class="fragment"> DLLs approach </li>
-          <li class="fragment"> One binary approach that is probably not modules
-            friendly </li>
-          <li class="fragment"> Hey standard ppl, can we compile multiple
-            versions of the same function in std c++ please? </li>
+          <li class="fragment"> Dynamic register sizes </li>
+          <li class="fragment"> wide::size() </li>
+          <li class="fragment"> streaming extensions </li>
         </ul>
+      </section>
+      <section>
+        <h2> ARM intrinsics </h2>
+        <ul>
+          <li class="fragment"> svint32_t </li>
+          <li class="fragment"> sizeof(svint32_t) </li>
+          <li class="fragment"> struct wrapper { svint32_t x; } </li>
+          <li class="fragment"> svbool_t </li>
+          <li class="fragment"> __sizeless_struct </li>
+        </ul>
+      </section>
+      <section>
+        <h2> Compiling multile versions </h2>
+        <ul>
+          <li class="fragment"> dlls </li>
+          <li class="fragment"> one binary </li>
+          <li class="fragment"> ODR / modules </li>
+          <li class="fragment"> Can the standard help? </li>
+        </ul>
+      </section>
+      <section>
+        <h2> MAYBE: Talk about algorithms from Pt1? </h2>
       </section>
       <section>
         <h2> Importance of extensibility </h2>
