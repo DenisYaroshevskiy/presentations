@@ -45,8 +45,9 @@
         <ul>
           <li class="fragment"> std::unseq is not there </li>
           <li class="fragment"> inlining </li>
-          <li class="fragment"> collapsing instructions (same semantics) </li>
+          <li class="fragment"> collapsing instructions (peephole) </li>
           <li class="fragment"> tracking simple conditions </li>
+          <li class="fragment"> hoisting </li>
         </ul>
       </section>
       <section>
@@ -64,20 +65,19 @@
           <li class="fragment"> sizeof(svint32_t) </li>
           <li class="fragment"> struct wrapper { svint32_t x; } </li>
           <li class="fragment"> svbool_t </li>
-          <li class="fragment"> __sizeless_struct </li>
+          <li class="fragment"> <a
+              href="https://stackoverflow.com/questions/73210512/arm-sve-wrapping-runtime-sized-register">
+              Richard Sandiford: __sizeless_struct </a> </li>
         </ul>
       </section>
       <section>
-        <h2> Compiling multile versions </h2>
+        <h2> Compiling multiple versions </h2>
         <ul>
           <li class="fragment"> dlls </li>
           <li class="fragment"> one binary </li>
           <li class="fragment"> ODR / modules </li>
           <li class="fragment"> Can the standard help? </li>
         </ul>
-      </section>
-      <section>
-        <h2> MAYBE: Talk about algorithms from Pt1? </h2>
       </section>
       <section>
         <h2> Importance of extensibility </h2>
@@ -88,22 +88,45 @@
               href="https://bitmath.blogspot.com/2024/11/histogramming-bytes-with-positional.html">Histogramming
               bytes with positional popcount (GF2P8AFFINEQB edition)</a>
           </li>
-          <li> eve is implictly convertible </li>
-          <li> std::simd supports std:bit_cast </li>
+          <li class="fragment"> eve is implictly convertible </li>
+          <li class="fragment"> std::simd supports std::bit_cast </li>
         </ul>
       </section>
       <section>
         <h2> Importance of tuning algorithms</h2>
         <ul>
-          <li class="fragment"> People will want to try things </li>
+          <li class="fragment"> Usecases can differ </li>
+          <li class="fragment"> Performance requires experiments </li>
           <li class="fragment"> eve exposes unrolling/aligning/cardinal changes </li>
+          <li class="fragment"> sparse/desnse </li>
         </ul>
       </section>
       <section>
-        <h2> Importance of knowing parameter limits</h2>
+        <h3> Domain restrictions </h3>
+        <iframe width="1800px" height="550px"
+          src="https://godbolt.org/e#g:!((g:!((g:!((h:codeEditor,i:(filename:'1',fontScale:20,fontUsePx:'0',j:1,lang:c%2B%2B,selection:(endColumn:43,endLineNumber:6,positionColumn:43,positionLineNumber:6,selectionStartColumn:43,selectionStartLineNumber:6,startColumn:43,startLineNumber:6),source:'%23include+%3Ceve/module/core.hpp%3E%0A%23include+%3Ceve/module/math.hpp%3E%0A%0Aeve::wide%3Cfloat%3E+call_sin(eve::wide%3Cfloat%3E+x)+%0A%7B%0A++return+eve::sin/*%5Beve::quarter_circle%5D*/(x)%3B%0A%7D'),l:'5',n:'0',o:'C%2B%2B+source+%231',t:'0')),k:100,l:'4',m:44.145356662180355,n:'0',o:'',s:0,t:'0'),(g:!((h:compiler,i:(compiler:clang1600,filters:(b:'0',binary:'1',binaryObject:'1',commentOnly:'0',debugCalls:'1',demangle:'0',directives:'0',execute:'1',intel:'0',libraryCode:'0',trim:'1',verboseDemangling:'0'),flagsViewOpen:'1',fontScale:18,fontUsePx:'0',j:1,lang:c%2B%2B,libs:!((name:eve,ver:trunk)),options:'-march%3Dskylake+-DNDEBUG+--std%3Dc%2B%2B20+-O3',overrides:!(),selection:(endColumn:1,endLineNumber:1,positionColumn:1,positionLineNumber:1,selectionStartColumn:1,selectionStartLineNumber:1,startColumn:1,startLineNumber:1),source:1),l:'5',n:'0',o:'+x86-64+clang+16.0.0+(Editor+%231)',t:'0')),header:(),l:'4',m:55.854643337819645,n:'0',o:'',s:0,t:'0')),l:'3',n:'0',o:'',t:'0')),version:4"></iframe>
+      </section>
+      <section>
+        <h3> Alignment </h3>
         <ul>
-          <li class="fragment"> How limiting sin inputs affects generated code </li>
-          <li class="fragment"> Probably `__builtin_assume` won't be enough </li>
+          <li class="fragment"> special instructions </li>
+          <li class="fragment"> tail handling </li>
+          <li class="fragment"> performance </li>
+        </ul>
+      </section>
+      <section>
+        <h3> alignment picture</h3>
+        cacheline - load from inside a cacheline - that's 1 loade
+        cross the cacheline - two loads
+      </section>
+      <section>
+        <h3> alignment benchmark </h3>
+      </section>
+      <section>
+        <h3> Alignment conclusions </h3>
+        <ul>
+          <li class="fragment"> assumptions should be enough </li>
+          <li class="fragment"> std::simd_flag_aligned </li>
         </ul>
       </section>
     </div>
