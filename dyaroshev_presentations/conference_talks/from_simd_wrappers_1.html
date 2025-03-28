@@ -389,10 +389,25 @@
       <section id="from_simd_wrappers_1/aos_gather">
         <script> imagesSlideShow("from_simd_wrappers_1/aos_gather", 9); </script>
       </section>
-    </section>
-    <section id="from_simd_wrappers_1/aos_mask">
-      <script> imagesSlideShow("from_simd_wrappers_1/aos_mask", 8); </script>
-    </section>
+      </section>
+      <section id="from_simd_wrappers_1/aos_mask">
+        <script> imagesSlideShow("from_simd_wrappers_1/aos_mask", 8); </script>
+      </section>
+      <section id="from_simd_wrappers_1/aos_other">
+        <script> imagesSlideShow("from_simd_wrappers_1/aos_other", 4); </script>
+      </section>
+      <section data-markdown>
+        <textarea data-template>
+          ## gather vs masks
+          | gather            | masks                 |
+          |-------------------|-----------------------|
+          |                   | cheap loads/stores    |
+          | support arbitrary types  |                |
+          | full parallelism  |                       |
+          | extracting fields |                       |
+          | operations work (==)  |                   |
+        </textarea>
+      </section>
       <section>
         <h3> min_element </h3>
       </section>
