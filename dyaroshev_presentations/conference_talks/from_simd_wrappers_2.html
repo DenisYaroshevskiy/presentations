@@ -38,20 +38,15 @@
         <ul>
           <li class="fragment"> TODO: link to pt2 slides </li>
           <li class="fragment"> Different Smaller Issues </li>
-          <li class="fragment"> Parallel arrays </li>
           <li class="fragment"> Tail handling and interfaces </li>
+          <li class="fragment"> Structs (SoA/AoS) </li>
           <li class="fragment"> Ranges </li>
-          <li class="fragment"> Types (SoA/AoS) </li>
         </ul>
       </section>
       <section>
         <h2> No Magic Compiler </h2>
         <ul>
           <li class="fragment"> std::unseq is in progress </li>
-          <li class="fragment"> inlining </li>
-          <li class="fragment"> collapsing instructions (peephole) </li>
-          <li class="fragment"> tracking simple conditions </li>
-          <li class="fragment"> hoisting </li>
         </ul>
       </section>
       <section>
@@ -60,18 +55,6 @@
           <li class="fragment"> Dynamic register sizes </li>
           <li class="fragment"> wide::size() </li>
           <li class="fragment"> streaming extensions </li>
-        </ul>
-      </section>
-      <section>
-        <h2> ARM intrinsics </h2>
-        <ul>
-          <li class="fragment"> svint32_t </li>
-          <li class="fragment"> sizeof(svint32_t) </li>
-          <li class="fragment"> struct wrapper { svint32_t x; } </li>
-          <li class="fragment"> svbool_t </li>
-          <li class="fragment"> <a
-              href="https://stackoverflow.com/questions/73210512/arm-sve-wrapping-runtime-sized-register">
-              Richard Sandiford: __sizeless_struct </a> </li>
         </ul>
       </section>
       <section>
@@ -84,6 +67,15 @@
         </ul>
       </section>
       <section>
+        <h2> Tuning algorithms</h2>
+        <ul>
+          <li class="fragment"> Usecases can differ </li>
+          <li class="fragment"> Experiments </li>
+          <li class="fragment"> unrolling/aligning/cardinal </li>
+          <li class="fragment"> sparse/desnse </li>
+        </ul>
+      </section>
+      <section>
         <h2> Extensibility </h2>
         <ul>
           <li class="fragment"> GF2P8AFFINEQB is "Compute an affine
@@ -92,19 +84,12 @@
               href="https://bitmath.blogspot.com/2024/11/histogramming-bytes-with-positional.html">Histogramming
               bytes with positional popcount (GF2P8AFFINEQB edition)</a>
           </li>
-          <li class="fragment"> eve is implictly convertible </li>
-          <li class="fragment"> std::simd supports std::bit_cast </li>
         </ul>
       </section>
       <section>
-        <h2> Tuning algorithms</h2>
-        <ul>
-          <li class="fragment"> Usecases can differ </li>
-          <li class="fragment"> Performance requires experiments </li>
-          <li class="fragment"> eve exposes unrolling/aligning/cardinal changes
-          </li>
-          <li class="fragment"> sparse/desnse </li>
-        </ul>
+        <h2> Extensibility </h2>
+        <iframe width="1800px" height="550px"
+          src="https://godbolt.org/e#g:!((g:!((g:!((h:codeEditor,i:(filename:'1',fontScale:20,fontUsePx:'0',j:1,lang:c%2B%2B,selection:(endColumn:2,endLineNumber:18,positionColumn:2,positionLineNumber:18,selectionStartColumn:2,selectionStartLineNumber:18,startColumn:2,startLineNumber:18),source:'%23include+%3Ceve/module/algo.hpp%3E%0A%0Avoid+affine_transformation(const+std::uint8_t*+in1,++//%0A+++++++++++++++++++++++++++const+std::uint8_t*+in2,++//%0A+++++++++++++++++++++++++++std::uint8_t*+out,++//%0A+++++++++++++++++++++++++++std::size_t+n)+%7B%0A++++auto+in+%3D+eve::views::zip(++++++++++++++//%0A++++++++eve::algo::as_range(in1,+in1+%2B+n),++//%0A++++++++in2)%3B%0A%0A++++eve::algo::transform_to%0A++++++++%5Beve::algo::no_unrolling%5D%5Beve::algo::no_aligning%5D%0A++++++++%5Beve::algo::allow_frequency_scaling%5D%0A++++++++(in,+out,+%5B%26%5D(auto+xy)+-%3E+eve::wide%3Cstd::uint8_t%3E+%7B%0A++++++++++++auto+%5Bx,+y%5D+%3D+xy%3B%0A++++++++++++return+_mm512_gf2p8affine_epi64_epi8(x,+y,+4)%3B%0A++++++++%7D)%3B%0A%7D'),l:'5',n:'0',o:'C%2B%2B+source+%231',t:'0')),k:100,l:'4',m:76.63344407530454,n:'0',o:'',s:0,t:'0'),(g:!((h:compiler,i:(compiler:clang2010,filters:(b:'0',binary:'1',binaryObject:'1',commentOnly:'0',debugCalls:'1',demangle:'0',directives:'0',execute:'1',intel:'0',libraryCode:'0',trim:'1',verboseDemangling:'0'),flagsViewOpen:'1',fontScale:18,fontUsePx:'0',j:1,lang:c%2B%2B,libs:!((name:eve,ver:trunk)),options:'-march%3Dznver5++-DNDEBUG+--std%3Dc%2B%2B20+-O3',overrides:!(),selection:(endColumn:1,endLineNumber:1,positionColumn:1,positionLineNumber:1,selectionStartColumn:1,selectionStartLineNumber:1,startColumn:1,startLineNumber:1),source:1),l:'5',n:'0',o:'+x86-64+clang+20.1.0+(Editor+%231)',t:'0')),header:(),l:'4',m:23.366555924695465,n:'0',o:'',s:0,t:'0')),l:'3',n:'0',o:'',t:'0')),version:4"></iframe>
       </section>
       <section>
         <h3> Domain restrictions </h3>
@@ -137,7 +122,9 @@
         <ul>
           <li class="fragment"> Data is in L1 </li>
           <li class="fragment"> Operation is very cheap </li>
-          <li class="fragment"> <a href="https://stackoverflow.com/a/71095495/5021064"> Peter Corders </a> </li>
+          <li class="fragment"> <a
+              href="https://stackoverflow.com/a/71095495/5021064"> Peter Corders
+            </a> </li>
           <li class="fragment"> align when it's cheap </li>
         </ul>
       </section>
@@ -149,6 +136,15 @@
           <li class="fragment"> tails </li>
           <li class="fragment"> loop structure </li>
           <li class="fragment"> std::simd_flag_aligned </li>
+        </ul>
+      </section>
+      <section>
+        <h3> Thanks </h3>
+        <ul>
+          <li> Peter Cordes </li>
+          <li> Ilya Albrecht </li>
+          <li> Mohamed Mediouni </li>
+          <li> Geoff Langdale </li>
         </ul>
       </section>
       <section>
@@ -170,14 +166,28 @@
         </script>
       </section>
       <section>
-        <h3> Thanks </h3>
+        <h3> Performance portability </h3>
         <ul>
-          <li> Peter Cordes </li>
-          <li> Ilya Albrecht </li>
-          <li> Mohamed Mediouni </li>
-          <li> Geoff Langdale </li>
+          <li class="fragment"> compress/masked store/table lookup </li>
+          <li class="fragment"> don't expose </li>
+          <li class="fragment"> don't care </li>
+          <li class="fragment"> query </li>
         </ul>
       </section>
+      <section>
+        END
+      </section>
+      <section>
+        <h2> ARM intrinsics </h2>
+        <ul>
+          <li class="fragment"> svint32_t </li>
+          <li class="fragment"> sizeof(svint32_t) </li>
+          <li class="fragment"> struct wrapper { svint32_t x; } </li>
+          <li class="fragment"> <a
+              href="https://stackoverflow.com/questions/73210512/arm-sve-wrapping-runtime-sized-register">
+              Richard Sandiford: __sizeless_struct </a> </li>
+        </ul>
+        </sectiom>
     </div>
 
     <script src="../../dist/reveal.js"></script>
