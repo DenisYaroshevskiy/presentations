@@ -67,34 +67,25 @@
         </ul>
       </section>
       <section>
-        <h2> Tuning algorithms</h2>
-        <ul>
-          <li class="fragment"> Usecases can differ </li>
-          <li class="fragment"> Experiments </li>
-          <li class="fragment"> unrolling/aligning/cardinal </li>
-          <li class="fragment"> sparse/desnse </li>
-        </ul>
+        <h3> Tail Handling </h3>
+      </section>
+      <section id='from_simd_wrappers_2/scalar_tail_handling'>
+        <script>
+          imagesSlideShow('from_simd_wrappers_2/scalar_tail_handling', 6);
+        </script>
+      </section>
+      <section id='from_simd_wrappers_2/masked_loads_tail_handling'>
+        <script>
+          imagesSlideShow('from_simd_wrappers_2/masked_loads_tail_handling', 12);
+        </script>
+      </section>
+      <section id='from_simd_wrappers_2/overlapping_tail_handling'>
+        <script>
+          imagesSlideShow('from_simd_wrappers_2/overlapping_tail_handling', 12);
+        </script>
       </section>
       <section>
-        <h2> Extensibility </h2>
-        <ul>
-          <li class="fragment"> GF2P8AFFINEQB is "Compute an affine
-            transformation in the Galois Field 2^8" </li>
-          <li class="fragment"> Harold Aptroot: <a
-              href="https://bitmath.blogspot.com/2024/11/histogramming-bytes-with-positional.html">Histogramming
-              bytes with positional popcount (GF2P8AFFINEQB edition)</a>
-          </li>
-        </ul>
-      </section>
-      <section>
-        <h2> Extensibility </h2>
-        <iframe width="1800px" height="550px"
-          src="https://godbolt.org/e#g:!((g:!((g:!((h:codeEditor,i:(filename:'1',fontScale:20,fontUsePx:'0',j:1,lang:c%2B%2B,selection:(endColumn:2,endLineNumber:18,positionColumn:2,positionLineNumber:18,selectionStartColumn:2,selectionStartLineNumber:18,startColumn:2,startLineNumber:18),source:'%23include+%3Ceve/module/algo.hpp%3E%0A%0Avoid+affine_transformation(const+std::uint8_t*+in1,++//%0A+++++++++++++++++++++++++++const+std::uint8_t*+in2,++//%0A+++++++++++++++++++++++++++std::uint8_t*+out,++//%0A+++++++++++++++++++++++++++std::size_t+n)+%7B%0A++++auto+in+%3D+eve::views::zip(++++++++++++++//%0A++++++++eve::algo::as_range(in1,+in1+%2B+n),++//%0A++++++++in2)%3B%0A%0A++++eve::algo::transform_to%0A++++++++%5Beve::algo::no_unrolling%5D%5Beve::algo::no_aligning%5D%0A++++++++%5Beve::algo::allow_frequency_scaling%5D%0A++++++++(in,+out,+%5B%26%5D(auto+xy)+-%3E+eve::wide%3Cstd::uint8_t%3E+%7B%0A++++++++++++auto+%5Bx,+y%5D+%3D+xy%3B%0A++++++++++++return+_mm512_gf2p8affine_epi64_epi8(x,+y,+4)%3B%0A++++++++%7D)%3B%0A%7D'),l:'5',n:'0',o:'C%2B%2B+source+%231',t:'0')),k:100,l:'4',m:76.63344407530454,n:'0',o:'',s:0,t:'0'),(g:!((h:compiler,i:(compiler:clang2010,filters:(b:'0',binary:'1',binaryObject:'1',commentOnly:'0',debugCalls:'1',demangle:'0',directives:'0',execute:'1',intel:'0',libraryCode:'0',trim:'1',verboseDemangling:'0'),flagsViewOpen:'1',fontScale:18,fontUsePx:'0',j:1,lang:c%2B%2B,libs:!((name:eve,ver:trunk)),options:'-march%3Dznver5++-DNDEBUG+--std%3Dc%2B%2B20+-O3',overrides:!(),selection:(endColumn:1,endLineNumber:1,positionColumn:1,positionLineNumber:1,selectionStartColumn:1,selectionStartLineNumber:1,startColumn:1,startLineNumber:1),source:1),l:'5',n:'0',o:'+x86-64+clang+20.1.0+(Editor+%231)',t:'0')),header:(),l:'4',m:23.366555924695465,n:'0',o:'',s:0,t:'0')),l:'3',n:'0',o:'',t:'0')),version:4"></iframe>
-      </section>
-      <section>
-        <h3> Domain restrictions </h3>
-        <iframe width="1800px" height="550px"
-          src="https://godbolt.org/e#g:!((g:!((g:!((h:codeEditor,i:(filename:'1',fontScale:20,fontUsePx:'0',j:1,lang:c%2B%2B,selection:(endColumn:31,endLineNumber:1,positionColumn:31,positionLineNumber:1,selectionStartColumn:31,selectionStartLineNumber:1,startColumn:31,startLineNumber:1),source:'%23include+%3Ceve/module/core.hpp%3E%0A%23include+%3Ceve/module/math.hpp%3E%0A%0Aeve::wide%3Cfloat%3E+call_sin(eve::wide%3Cfloat%3E+x)+%0A%7B%0A++return+eve::sin/*%5Beve::quarter_circle%5D*/(x)%3B%0A%7D'),l:'5',n:'0',o:'C%2B%2B+source+%231',t:'0')),k:100,l:'4',m:44.145356662180355,n:'0',o:'',s:0,t:'0'),(g:!((h:compiler,i:(compiler:clang1600,filters:(b:'0',binary:'1',binaryObject:'1',commentOnly:'0',debugCalls:'1',demangle:'0',directives:'0',execute:'1',intel:'0',libraryCode:'0',trim:'1',verboseDemangling:'0'),flagsViewOpen:'1',fontScale:18,fontUsePx:'0',j:1,lang:c%2B%2B,libs:!((name:eve,ver:trunk)),options:'-march%3Dskylake+-DNDEBUG+--std%3Dc%2B%2B20+-O3',overrides:!(),selection:(endColumn:1,endLineNumber:1,positionColumn:1,positionLineNumber:1,selectionStartColumn:1,selectionStartLineNumber:1,startColumn:1,startLineNumber:1),source:1),l:'5',n:'0',o:'+x86-64+clang+16.0.0+(Editor+%231)',t:'0')),header:(),l:'4',m:55.854643337819645,n:'0',o:'',s:0,t:'0')),l:'3',n:'0',o:'',t:'0')),version:4"></iframe>
+        <h3> Aligning </h3>
       </section>
       <section id='from_simd_wrappers_2/unaligned_access'>
         <script>
@@ -148,22 +139,112 @@
         </ul>
       </section>
       <section>
-        <h3> Tail Handling </h3>
+        <h2> Extensibility </h2>
       </section>
-      <section id='from_simd_wrappers_2/scalar_tail_handling'>
-        <script>
-          imagesSlideShow('from_simd_wrappers_2/scalar_tail_handling', 6);
-        </script>
+      <section>
+        <h2> Tuning algorithms</h2>
+        <ul>
+          <li class="fragment"> Usecases can differ </li>
+          <li class="fragment"> Experiments </li>
+          <li class="fragment"> unrolling/aligning/cardinal </li>
+          <li class="fragment"> sparse/desnse </li>
+        </ul>
       </section>
-      <section id='from_simd_wrappers_2/masked_loads_tail_handling'>
-        <script>
-          imagesSlideShow('from_simd_wrappers_2/masked_loads_tail_handling', 12);
-        </script>
+      <section>
+        <h2> Extensibility </h2>
+        <ul>
+          <li class="fragment"> GF2P8AFFINEQB is "Compute an affine
+            transformation in the Galois Field 2^8" </li>
+          <li class="fragment"> Harold Aptroot: <a
+              href="https://bitmath.blogspot.com/2024/11/histogramming-bytes-with-positional.html">Histogramming
+              bytes with positional popcount (GF2P8AFFINEQB edition)</a>
+          </li>
+        </ul>
       </section>
-      <section id='from_simd_wrappers_2/overlapping_tail_handling'>
-        <script>
-          imagesSlideShow('from_simd_wrappers_2/overlapping_tail_handling', 12);
-        </script>
+      <section>
+        <h2> Extensibility </h2>
+        <iframe width="1800px" height="550px" src="https://godbolt.org/e#g:!((g:!((g:!((h:codeEditor,i:(filename:'1',fontScale:20,fontUsePx:'0',j:1,lang:c%2B%2B,selection:(endColumn:49,endLineNumber:10,positionColumn:49,positionLineNumber:10,selectionStartColumn:49,selectionStartLineNumber:10,startColumn:49,startLineNumber:10),source:'%23include+%3Ceve/module/algo.hpp%3E%0A%23include+%3Cspan%3E%0A%0Avoid+affine_transformation(std::span%3Cconst+std::uint8_t%3E+in1,++//%0A+++++++++++++++++++++++++++std::span%3Cconst+std::uint8_t%3E+in2,++//%0A+++++++++++++++++++++++++++std::span%3Cstd::uint8_t%3E+out)+%7B%0A++++eve::algo::transform_to+++++++++++++++++++//%0A++++++++%5Beve::algo::no_unrolling%5D+++++++++++++//%0A++++++++%5Beve::algo::no_aligning%5D++++++++++++++//%0A++++++++%5Beve::algo::allow_frequency_scaling%5D++//%0A++++++++(eve::views::zip(in1,+in2),+++++++++++//%0A+++++++++out,+++++++++++++++++++++++++++++++++//%0A+++++++++%5B%26%5D(auto+xy)+-%3E+eve::wide%3Cstd::uint8_t%3E+%7B%0A+++++++++++++auto+%5Bx,+y%5D+%3D+xy%3B%0A+++++++++++++return+_mm512_gf2p8affine_epi64_epi8(x,+y,+4)%3B%0A+++++++++%7D)%3B%0A%7D'),l:'5',n:'0',o:'C%2B%2B+source+%231',t:'0')),k:100,l:'4',m:72.31450719822813,n:'0',o:'',s:0,t:'0'),(g:!((h:compiler,i:(compiler:clang2010,filters:(b:'0',binary:'1',binaryObject:'1',commentOnly:'0',debugCalls:'1',demangle:'0',directives:'0',execute:'1',intel:'0',libraryCode:'0',trim:'1',verboseDemangling:'0'),flagsViewOpen:'1',fontScale:18,fontUsePx:'0',j:1,lang:c%2B%2B,libs:!((name:eve,ver:trunk)),options:'-march%3Dznver5++-DNDEBUG+--std%3Dc%2B%2B20+-O3',overrides:!(),selection:(endColumn:1,endLineNumber:1,positionColumn:1,positionLineNumber:1,selectionStartColumn:1,selectionStartLineNumber:1,startColumn:1,startLineNumber:1),source:1),l:'5',n:'0',o:'+x86-64+clang+20.1.0+(Editor+%231)',t:'0')),header:(),l:'4',m:27.685492801771872,n:'0',o:'',s:0,t:'0')),l:'3',n:'0',o:'',t:'0')),version:4"></iframe>
+      </section>
+      <section>
+        <h3> Domain restrictions </h3>
+        <iframe width="1800px" height="550px"
+          src="https://godbolt.org/e#g:!((g:!((g:!((h:codeEditor,i:(filename:'1',fontScale:20,fontUsePx:'0',j:1,lang:c%2B%2B,selection:(endColumn:31,endLineNumber:1,positionColumn:31,positionLineNumber:1,selectionStartColumn:31,selectionStartLineNumber:1,startColumn:31,startLineNumber:1),source:'%23include+%3Ceve/module/core.hpp%3E%0A%23include+%3Ceve/module/math.hpp%3E%0A%0Aeve::wide%3Cfloat%3E+call_sin(eve::wide%3Cfloat%3E+x)+%0A%7B%0A++return+eve::sin/*%5Beve::quarter_circle%5D*/(x)%3B%0A%7D'),l:'5',n:'0',o:'C%2B%2B+source+%231',t:'0')),k:100,l:'4',m:44.145356662180355,n:'0',o:'',s:0,t:'0'),(g:!((h:compiler,i:(compiler:clang1600,filters:(b:'0',binary:'1',binaryObject:'1',commentOnly:'0',debugCalls:'1',demangle:'0',directives:'0',execute:'1',intel:'0',libraryCode:'0',trim:'1',verboseDemangling:'0'),flagsViewOpen:'1',fontScale:18,fontUsePx:'0',j:1,lang:c%2B%2B,libs:!((name:eve,ver:trunk)),options:'-march%3Dskylake+-DNDEBUG+--std%3Dc%2B%2B20+-O3',overrides:!(),selection:(endColumn:1,endLineNumber:1,positionColumn:1,positionLineNumber:1,selectionStartColumn:1,selectionStartLineNumber:1,startColumn:1,startLineNumber:1),source:1),l:'5',n:'0',o:'+x86-64+clang+16.0.0+(Editor+%231)',t:'0')),header:(),l:'4',m:55.854643337819645,n:'0',o:'',s:0,t:'0')),l:'3',n:'0',o:'',t:'0')),version:4"></iframe>
+      </section>
+      <section>
+        <h3> SIMD Ranges</h3>
+      </section>
+      <section>
+        <h3> What are we talking about? </h3>
+        <ul>
+          <li class="fragment"> NOT range&lt;simd&gt; </li>
+          <li class="fragment"> algo::range ~ ranges::range </li>
+          <li class="fragment"> iterator is a position </li>
+        </ul>
+      </section>
+      <section>
+        <h3> contiguous_range? </h3>
+        <ul>
+          <li class="fragment"> Positions outside </li>
+          <li class="fragment"> previous_aligned/next_aligned </li>
+          <li class="fragment"> base + offset </li>
+        </ul>
+      </section>
+      <section>
+        <h3> is everything random access? </h3>
+        <ul>
+          <li class="fragment"> scan (partial sum) </li>
+        </ul>
+      </section>
+      <section>
+        <h3> eve iterator model </h3>
+        <ul>
+          <li class="fragment"> value_type </li>
+          <li class="fragment"> types_to_consider </li>
+          <li class="fragment"> operator + / - / &lt;=&gt; </li>
+          <li class="fragment"> read / write / load / store </li>
+          <li class="fragment"> --------------------------- </li>
+          <li class="fragment"> iterator_cardinal / cardinal_cast </li>
+          <li class="fragment"> *partially_aligned* / unalign </li>
+        </ul>
+      </section>
+      <section>
+        <h3> views </h3>
+        <ul>
+          <li class="fragment"> convert </li>
+          <li class="fragment"> zip </li>
+          <li class="fragment"> map </li>
+          <li class="fragment"> iota </li>
+          <li class="fragment"> reverse/backward </li>
+        </ul>
+      </section>
+      <section>
+        <h3> no filter view </h3>
+        <ul>
+          <li class="fragment"> compress store </li>
+          <li class="fragment"> transform_copy_if </li>
+        </ul>
+      </section>
+      <section>
+        <h3> map view </h3>
+        <ul>
+          <li class="fragment"> [](wide&lt;int, N&gt;)]{} </li>
+          <li class="fragment"> value_type </li>
+          <li class="fragment"> what's N? </li>
+          <li class="fragment"> Luke D'alessandro: projections </li>
+        </ul>
+      </section>
+      <section>
+        <h3> More small things </h3>
+      </section>
+      <section>
+        <h3> Sharing iteration logic </h3>
+        <ul>
+          <li class="fragment"> iteration(options, range, delegate) </li>
+          <li class="fragment"> for_each_iteration </li>
+          <li class="fragment"> for_each_iteration_fixed_overflow </li>
+          <li class="fragment"> for_each_iteration_with_expensive_optional_part </li>
+          <li class="fragment"> two_stage_iteration </li>
+        </ul>
       </section>
       <section>
         <h3> Performance portability </h3>
