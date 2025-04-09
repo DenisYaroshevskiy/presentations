@@ -36,7 +36,8 @@
       <section>
         <h2> This talk </h2>
         <ul>
-          <li class="fragment"> TODO: link to pt1 slides </li>
+          <li class="fragment"> <a href="https://tinyurl.com/jfdy2025pt1">
+              tinyurl.com/jfdy2025pt1 </a> </li>
           <li class="fragment"> SIMD ranges are coming </li>
           <li class="fragment"> We want to knowledge share </li>
           <li class="fragment"> We need to teach you simd first </li>
@@ -90,18 +91,6 @@
         </ul>
       </section>
       <section>
-        <section>
-          <h3> eve::algo::mismatch </h3>
-          <iframe width="1200px" height="550px"
-            src="https://godbolt.org/e#g:!((g:!((g:!((h:codeEditor,i:(filename:'1',fontScale:18,fontUsePx:'0',j:1,lang:c%2B%2B,selection:(endColumn:2,endLineNumber:9,positionColumn:2,positionLineNumber:9,selectionStartColumn:2,selectionStartLineNumber:9,startColumn:2,startLineNumber:9),source:'%23include+%3Ceve/module/algo.hpp%3E%0A%23include+%3Cspan%3E%0A%0Ausing+I+%3D+std::span%3Cconst+int%3E::iterator%3B%0A%0Astd::pair%3CI,+I%3E+call_mismatch(std::span%3Cconst+int%3E+a,+I+b)+%7B%0A++++auto+%5Ba_it,+b_it%5D+%3D+eve::algo::mismatch(a,+b)%3B%0A++++return+%7Ba_it,+b_it%7D%3B%0A%7D'),l:'5',n:'0',o:'C%2B%2B+source+%231',t:'0')),k:100,l:'4',m:80.39867109634552,n:'0',o:'',s:0,t:'0'),(g:!((h:compiler,i:(compiler:clang2010,filters:(b:'0',binary:'1',binaryObject:'1',commentOnly:'0',debugCalls:'1',demangle:'0',directives:'0',execute:'1',intel:'0',libraryCode:'0',trim:'1',verboseDemangling:'0'),flagsViewOpen:'1',fontScale:18,fontUsePx:'0',j:1,lang:c%2B%2B,libs:!((name:eve,ver:v20230215)),options:'-march%3Dskylake+-DNDEBUG+--std%3Dc%2B%2B20+-O3',overrides:!(),selection:(endColumn:1,endLineNumber:1,positionColumn:1,positionLineNumber:1,selectionStartColumn:1,selectionStartLineNumber:1,startColumn:1,startLineNumber:1),source:1),l:'5',n:'0',o:'+x86-64+clang+20.1.0+(Editor+%231)',t:'0')),header:(),l:'4',m:19.60132890365448,n:'0',o:'',s:0,t:'0')),l:'3',n:'0',o:'',t:'0')),version:4"></iframe>
-        </section>
-        <section>
-          <h3> eve::algo::mismatch </h3>
-          <iframe width="1200px" height="550px"
-            src="https://godbolt.org/e#g:!((g:!((g:!((h:codeEditor,i:(filename:'1',fontScale:18,fontUsePx:'0',j:1,lang:c%2B%2B,selection:(endColumn:2,endLineNumber:14,positionColumn:2,positionLineNumber:14,selectionStartColumn:2,selectionStartLineNumber:14,startColumn:2,startLineNumber:14),source:'%23include+%3Ceve/module/algo.hpp%3E%0A%23include+%3Cspan%3E%0A%0Ausing+I+%3D+std::span%3Cconst+float%3E::iterator%3B%0A%0Aconstexpr+float+kEpsilon+%3D+0.0001%3B%0A%0Astd::pair%3CI,+I%3E+call_mismatch(std::span%3Cconst+float%3E+a,+I+b)+%7B%0A++++auto+%5Ba_it,+b_it%5D+%3D+eve::algo::mismatch(a,+b,+%0A++++++%5B%5D(eve::wide%3Cfloat%3E+x,+eve::wide%3Cfloat%3E+y)+%7B%0A++++++++return+eve::abs(x+-+y)+%3C+kEpsilon%3B%0A++++++%7D)%3B%0A++++return+%7Ba_it,+b_it%7D%3B%0A%7D'),l:'5',n:'0',o:'C%2B%2B+source+%231',t:'0')),k:100,l:'4',m:69.54595791805093,n:'0',o:'',s:0,t:'0'),(g:!((h:compiler,i:(compiler:clang2010,filters:(b:'0',binary:'1',binaryObject:'1',commentOnly:'0',debugCalls:'1',demangle:'0',directives:'0',execute:'1',intel:'0',libraryCode:'0',trim:'1',verboseDemangling:'0'),flagsViewOpen:'1',fontScale:18,fontUsePx:'0',j:1,lang:c%2B%2B,libs:!((name:eve,ver:v20230215)),options:'-march%3Dskylake+-DNDEBUG+--std%3Dc%2B%2B20+-O3',overrides:!(),selection:(endColumn:1,endLineNumber:1,positionColumn:1,positionLineNumber:1,selectionStartColumn:1,selectionStartLineNumber:1,startColumn:1,startLineNumber:1),source:1),l:'5',n:'0',o:'+x86-64+clang+20.1.0+(Editor+%231)',t:'0')),header:(),l:'4',m:30.454042081949062,n:'0',o:'',s:0,t:'0')),l:'3',n:'0',o:'',t:'0')),version:4"></iframe>
-        </section>
-      </section>
-      <section>
         <section id='eve,mismatch,x86'>
           <script>
             addBenchmarkForParameters('eve,mismatch,x86',
@@ -137,6 +126,18 @@
                 'std::mismatch', 'use_int64s', 'std::memcmp', 'eve::algo::mismatch'],
               ['mismatch_scalar']);
           </script>
+        </section>
+      </section>
+      <section>
+        <section>
+          <h3> eve::algo::mismatch </h3>
+          <iframe width="1200px" height="550px"
+            src="https://godbolt.org/e#g:!((g:!((g:!((h:codeEditor,i:(filename:'1',fontScale:18,fontUsePx:'0',j:1,lang:c%2B%2B,selection:(endColumn:2,endLineNumber:9,positionColumn:2,positionLineNumber:9,selectionStartColumn:2,selectionStartLineNumber:9,startColumn:2,startLineNumber:9),source:'%23include+%3Ceve/module/algo.hpp%3E%0A%23include+%3Cspan%3E%0A%0Ausing+I+%3D+std::span%3Cconst+int%3E::iterator%3B%0A%0Astd::pair%3CI,+I%3E+call_mismatch(std::span%3Cconst+int%3E+a,+I+b)+%7B%0A++++auto+%5Ba_it,+b_it%5D+%3D+eve::algo::mismatch(a,+b)%3B%0A++++return+%7Ba_it,+b_it%7D%3B%0A%7D'),l:'5',n:'0',o:'C%2B%2B+source+%231',t:'0')),k:100,l:'4',m:80.39867109634552,n:'0',o:'',s:0,t:'0'),(g:!((h:compiler,i:(compiler:clang2010,filters:(b:'0',binary:'1',binaryObject:'1',commentOnly:'0',debugCalls:'1',demangle:'0',directives:'0',execute:'1',intel:'0',libraryCode:'0',trim:'1',verboseDemangling:'0'),flagsViewOpen:'1',fontScale:18,fontUsePx:'0',j:1,lang:c%2B%2B,libs:!((name:eve,ver:v20230215)),options:'-march%3Dskylake+-DNDEBUG+--std%3Dc%2B%2B20+-O3',overrides:!(),selection:(endColumn:1,endLineNumber:1,positionColumn:1,positionLineNumber:1,selectionStartColumn:1,selectionStartLineNumber:1,startColumn:1,startLineNumber:1),source:1),l:'5',n:'0',o:'+x86-64+clang+20.1.0+(Editor+%231)',t:'0')),header:(),l:'4',m:19.60132890365448,n:'0',o:'',s:0,t:'0')),l:'3',n:'0',o:'',t:'0')),version:4"></iframe>
+        </section>
+        <section>
+          <h3> eve::algo::mismatch </h3>
+          <iframe width="1200px" height="550px"
+            src="https://godbolt.org/e#g:!((g:!((g:!((h:codeEditor,i:(filename:'1',fontScale:18,fontUsePx:'0',j:1,lang:c%2B%2B,selection:(endColumn:2,endLineNumber:14,positionColumn:2,positionLineNumber:14,selectionStartColumn:2,selectionStartLineNumber:14,startColumn:2,startLineNumber:14),source:'%23include+%3Ceve/module/algo.hpp%3E%0A%23include+%3Cspan%3E%0A%0Ausing+I+%3D+std::span%3Cconst+float%3E::iterator%3B%0A%0Aconstexpr+float+kEpsilon+%3D+0.0001%3B%0A%0Astd::pair%3CI,+I%3E+call_mismatch(std::span%3Cconst+float%3E+a,+I+b)+%7B%0A++++auto+%5Ba_it,+b_it%5D+%3D+eve::algo::mismatch(a,+b,+%0A++++++%5B%5D(eve::wide%3Cfloat%3E+x,+eve::wide%3Cfloat%3E+y)+%7B%0A++++++++return+eve::abs(x+-+y)+%3C+kEpsilon%3B%0A++++++%7D)%3B%0A++++return+%7Ba_it,+b_it%7D%3B%0A%7D'),l:'5',n:'0',o:'C%2B%2B+source+%231',t:'0')),k:100,l:'4',m:69.54595791805093,n:'0',o:'',s:0,t:'0'),(g:!((h:compiler,i:(compiler:clang2010,filters:(b:'0',binary:'1',binaryObject:'1',commentOnly:'0',debugCalls:'1',demangle:'0',directives:'0',execute:'1',intel:'0',libraryCode:'0',trim:'1',verboseDemangling:'0'),flagsViewOpen:'1',fontScale:18,fontUsePx:'0',j:1,lang:c%2B%2B,libs:!((name:eve,ver:v20230215)),options:'-march%3Dskylake+-DNDEBUG+--std%3Dc%2B%2B20+-O3',overrides:!(),selection:(endColumn:1,endLineNumber:1,positionColumn:1,positionLineNumber:1,selectionStartColumn:1,selectionStartLineNumber:1,startColumn:1,startLineNumber:1),source:1),l:'5',n:'0',o:'+x86-64+clang+20.1.0+(Editor+%231)',t:'0')),header:(),l:'4',m:30.454042081949062,n:'0',o:'',s:0,t:'0')),l:'3',n:'0',o:'',t:'0')),version:4"></iframe>
         </section>
       </section>
       <section>
@@ -183,7 +184,8 @@
       </section>
       <section>
         <h3> find </h3>
-        <iframe width="1200px" height="550px" src="https://godbolt.org/e#g:!((g:!((g:!((h:codeEditor,i:(filename:'1',fontScale:18,fontUsePx:'0',j:1,lang:c%2B%2B,selection:(endColumn:1,endLineNumber:2,positionColumn:1,positionLineNumber:2,selectionStartColumn:1,selectionStartLineNumber:2,startColumn:1,startLineNumber:2),source:'%23include+%3Ceve/module/core.hpp%3E%0A%0Abool+core_of_find(const+std::uint8_t*%26+f,+std::uint8_t+needle)+%0A%7B%0A++using+wide+%3D+eve::wide%3Cstd::uint8_t%3E%3B%0A%0A++wide+loaded+%3D+eve::load(f)%3B+//+%5B0,+1,+2,+3%5D%0A++wide+bcast_needle%7Bneedle%7D%3B%0A%0A++eve::logical%3Cwide%3E+test+%3D+loaded+%3D%3D+bcast_needle%3B++//+%5BF,+T,+F,+F%5D%0A++std::optional%3Cstd::ptrdiff_t%3E+match+%3D+eve::first_true(test)%3B++//+1%0A%0A++if+(!!match)+%7B%0A++++f+%2B%3D+wide::size()%3B%0A++++return+false%3B%0A++%7D%0A%0A++f+%2B%3D+*match%3B%0A++return+true%3B%0A%7D'),l:'5',n:'0',o:'C%2B%2B+source+%231',t:'0')),k:100,l:'4',m:69.8781838316722,n:'0',o:'',s:0,t:'0'),(g:!((h:compiler,i:(compiler:clang2010,filters:(b:'0',binary:'1',binaryObject:'1',commentOnly:'0',debugCalls:'1',demangle:'0',directives:'0',execute:'1',intel:'0',libraryCode:'0',trim:'1',verboseDemangling:'0'),flagsViewOpen:'1',fontScale:18,fontUsePx:'0',j:1,lang:c%2B%2B,libs:!((name:eve,ver:v20230215)),options:'-march%3Dskylake+-DNDEBUG+--std%3Dc%2B%2B20+-O3',overrides:!(),selection:(endColumn:1,endLineNumber:1,positionColumn:1,positionLineNumber:1,selectionStartColumn:1,selectionStartLineNumber:1,startColumn:1,startLineNumber:1),source:1),l:'5',n:'0',o:'+x86-64+clang+20.1.0+(Editor+%231)',t:'0')),header:(),l:'4',m:30.121816168327797,n:'0',o:'',s:0,t:'0')),l:'3',n:'0',o:'',t:'0')),version:4"></iframe>
+        <iframe width="1200px" height="550px"
+          src="https://godbolt.org/e#g:!((g:!((g:!((h:codeEditor,i:(filename:'1',fontScale:18,fontUsePx:'0',j:1,lang:c%2B%2B,selection:(endColumn:1,endLineNumber:2,positionColumn:1,positionLineNumber:2,selectionStartColumn:1,selectionStartLineNumber:2,startColumn:1,startLineNumber:2),source:'%23include+%3Ceve/module/core.hpp%3E%0A%0Abool+core_of_find(const+std::uint8_t*%26+f,+std::uint8_t+needle)+%0A%7B%0A++using+wide+%3D+eve::wide%3Cstd::uint8_t%3E%3B%0A%0A++wide+loaded+%3D+eve::load(f)%3B+//+%5B0,+1,+2,+3%5D%0A++wide+bcast_needle%7Bneedle%7D%3B%0A%0A++eve::logical%3Cwide%3E+test+%3D+loaded+%3D%3D+bcast_needle%3B++//+%5BF,+T,+F,+F%5D%0A++std::optional%3Cstd::ptrdiff_t%3E+match+%3D+eve::first_true(test)%3B++//+1%0A%0A++if+(!!match)+%7B%0A++++f+%2B%3D+wide::size()%3B%0A++++return+false%3B%0A++%7D%0A%0A++f+%2B%3D+*match%3B%0A++return+true%3B%0A%7D'),l:'5',n:'0',o:'C%2B%2B+source+%231',t:'0')),k:100,l:'4',m:69.8781838316722,n:'0',o:'',s:0,t:'0'),(g:!((h:compiler,i:(compiler:clang2010,filters:(b:'0',binary:'1',binaryObject:'1',commentOnly:'0',debugCalls:'1',demangle:'0',directives:'0',execute:'1',intel:'0',libraryCode:'0',trim:'1',verboseDemangling:'0'),flagsViewOpen:'1',fontScale:18,fontUsePx:'0',j:1,lang:c%2B%2B,libs:!((name:eve,ver:v20230215)),options:'-march%3Dskylake+-DNDEBUG+--std%3Dc%2B%2B20+-O3',overrides:!(),selection:(endColumn:1,endLineNumber:1,positionColumn:1,positionLineNumber:1,selectionStartColumn:1,selectionStartLineNumber:1,startColumn:1,startLineNumber:1),source:1),l:'5',n:'0',o:'+x86-64+clang+20.1.0+(Editor+%231)',t:'0')),header:(),l:'4',m:30.121816168327797,n:'0',o:'',s:0,t:'0')),l:'3',n:'0',o:'',t:'0')),version:4"></iframe>
       </section>
       <section data-markdown>
         <textarea data-template>
@@ -376,7 +378,6 @@
           ## compare with std::simd
           | eve               | std                   |
           |-------------------|-----------------------|
-          | replace_ignored   |  simd_select          |
           | reduce            |  reduce               |
           | shuffle           |  p2664                |
           | convert           |  explicit constructor |
@@ -503,7 +504,7 @@
                 group: 'avx2+bmi',
               },
               [],
-              offByDefault = ['eve::algo::copy_if']);
+              offByDefault = ['eve::algo::copy_if', 'eve::algo::copy_if[sparse_output]']);
           </script>
         </section>
         <section id='copy_if,short'>
@@ -521,12 +522,13 @@
                 group: 'avx2+bmi',
               },
               [],
-              offByDefault = []);
+              offByDefault = ['eve::algo::copy_if', 'eve::algo::copy_if[sparse_output]']);
           </script>
         </section>
       </section>
-      <section data-markdown>
-        <textarea data-template>
+      <section>
+        <section data-markdown>
+          <textarea data-template>
               ## Proposal P2664r9
 
               ```
@@ -534,15 +536,20 @@
               constexpr simd<T>
               compress(simd_mask<T> mask, simd<T> value);
               ```
+        </textarea>
+        </section>
+        <section data-markdown>
+          <textarea data-template class="fragment">
               ## We'd suggest
               ```
-              template<typename T>
-              constexpr T*
+              template<typename T, typename R>
+              constexpr ranges::iterator_t<R>
               unchecked_compress_store(simd_mask<T> mask,
                                        simd<T> value,
                                        R&& r);
               ```
-            </textarea>
+          </textarea>
+        </section>
       </section>
       <section>
         <h2> copy_if conclusions </h2>
@@ -562,8 +569,12 @@
         </ul>
       </section>
       <section>
-        <h2> More algorithms </h2>
+        <h2> Links </h2>
         <ul>
+          <li> pt1: <a href="https://tinyurl.com/jfdy2025pt1">
+              tinyurl.com/jfdy2025pt1 </a> </li>
+          <li> pt2: <a href="https://tinyurl.com/jfdy2025pt2">
+              tinyurl.com/jfdy2025pt2 </a> </li>
           <li> <a href=https://youtu.be/PHZRTv3erlA?si=SGW1TZVV2KC6OpHE> My
               First Simd </a></li>
           <li> <a href="https://youtu.be/vGcH40rkLdA?si=047_xrRYbDd13Sed">
