@@ -41,6 +41,7 @@
           <li class="fragment"> SIMD ranges are coming </li>
           <li class="fragment"> We want to knowledge share </li>
           <li class="fragment"> We need to teach you simd first </li>
+          <li class="fragment"> Discussed with Matthias Kretz </li>
         </ul>
       </section>
       <section>
@@ -195,14 +196,14 @@
       </section>
       <section data-markdown>
         <textarea data-template>
-          ## compare with std::simd
-          | eve        | std                          |
-          |------------|------------------------------|
-          | wide       |  std::simd                   |
-          | load       |  simd_unchecked_load(R)      |
-          | logical    |  std::simd_mask              |
-          | !=         |  !=                          |
-          | first_true |  any_of + reduce_min_index   |
+          ## compare with std::datapar
+          | eve        | std::datapar                |
+          |------------|-----------------------------|
+          | wide       |  simd                       |
+          | load       |  unchecked_load(R)          |
+          | logical    |  simd_mask                  |
+          | !=         |  !=                         |
+          | first_true |  any_of + reduce_min_index  |
         </textarea>
       </section>
       <section id='eve,find,no_unroll,x86'>
@@ -381,8 +382,8 @@
       </section>
       <section data-markdown>
         <textarea data-template>
-          ## compare with std::simd
-          | eve               | std                   |
+          ## compare with std::datapar
+          | eve               | std::datapar          |
           |-------------------|-----------------------|
           | reduce            |  reduce               |
           | shuffle           |  p2664                |
