@@ -18,7 +18,6 @@
 
   <script src="../scripts/helper_scripts.js"></script>
 
-
   <!-- Theme used for syntax highlighted code -->
   <link rel="stylesheet" href="../../plugin/highlight/zenburn.css">
 </head>
@@ -44,6 +43,18 @@
           <li class="fragment"> brief on hazard pointers </li>
         </ul>
       </section>
+      <section>
+        <h3>Motivational Example</h3>
+        <iframe width="800px" height="600px" src="https://godbolt.org/e#g:!((g:!((g:!((h:codeEditor,i:(filename:'1',fontScale:15,fontUsePx:'0',j:1,lang:c%2B%2B,source:'%23include+%3Cmemory%3E%0A%23include+%3Cmutex%3E%0A%23include+%3Cshared_mutex%3E%0A%0Astruct+Config+%7B%7D%3B%0A%0Aclass+ConfigProvider+%7B%0A+++public:%0A++++using+accessor+%3D+std::shared_ptr%3Cconst+Config%3E%3B%0A%0A++++accessor+access()+const+%7B%0A++++++++std::shared_lock+_%7Bm%7D%3B%0A++++++++return+cfg_%3B%0A++++%7D%0A%0A++++void+update(Config+c)+%7B%0A++++++++auto+shared+%3D+std::make_shared%3Cconst+Config%3E(std::move(c))%3B%0A++++++++%7B%0A++++++++++++std::unique_lock+_%7Bm%7D%3B%0A++++++++++++cfg_.swap(shared)%3B%0A++++++++%7D%0A++++%7D%0A%0A+++private:%0A++++std::shared_ptr%3Cconst+Config%3E+cfg_%3B%0A++++mutable+std::shared_mutex+m%3B%0A%7D%3B'),l:'5',n:'0',o:'C%2B%2B+source+%231',t:'0')),k:53.08815103305301,l:'4',m:93.76299376299376,n:'0',o:'',s:0,t:'0'),(g:!((h:compiler,i:(compiler:clang2210,filters:(b:'0',binary:'1',binaryObject:'1',commentOnly:'0',debugCalls:'1',demangle:'0',directives:'0',execute:'1',intel:'0',libraryCode:'0',trim:'1',verboseDemangling:'0'),flagsViewOpen:'1',fontScale:14,fontUsePx:'0',j:1,lang:c%2B%2B,libs:!((name:eve,ver:trunk)),options:'-O3+-DNDEBUG+--std%3Dc%2B%2B20',overrides:!(),source:1),l:'5',n:'0',o:'+x86-64+clang+22.1.0+(Editor+%231)',t:'0')),header:(),l:'4',m:6.237006237006238,n:'0',o:'',s:0,t:'0')),k:100,l:'3',n:'0',o:'',t:'0')),version:4"></iframe>
+      </section>
+      <section>
+        <h3>Atomic Shared Ptr</h3>
+        <iframe width="800px" height="600px" src="https://godbolt.org/e#g:!((g:!((g:!((h:codeEditor,i:(filename:'1',fontScale:15,fontUsePx:'0',j:1,lang:c%2B%2B,source:'%23include+%3Cmemory%3E%0A%0Astruct+Config+%7B%7D%3B%0A%0Aclass+ConfigProvider+%7B%0A+++public:%0A++++using+accessor+%3D+std::shared_ptr%3Cconst+Config%3E%3B%0A%0A++++accessor+access()+const+%7B%0A++++++++return+cfg_.load()%3B%0A++++%7D%0A%0A++++void+update(Config+c)+%7B%0A++++++++cfg_.store(std::make_shared%3Cconst+Config%3E(std::move(c)))%3B%0A++++%7D%0A%0A+++private:%0A++++//+Timur+Doumler:+A+Lock-free+Atomic+shared_ptr%0A++++std::atomic%3Cstd::shared_ptr%3Cconst+Config%3E%3E+cfg_%3B%0A%7D%3B%0A'),l:'5',n:'0',o:'C%2B%2B+source+%231',t:'0')),k:53.08815103305301,l:'4',m:93.76299376299376,n:'0',o:'',s:0,t:'0'),(g:!((h:compiler,i:(compiler:clang2210,filters:(b:'0',binary:'1',binaryObject:'1',commentOnly:'0',debugCalls:'1',demangle:'0',directives:'0',execute:'1',intel:'0',libraryCode:'0',trim:'1',verboseDemangling:'0'),flagsViewOpen:'1',fontScale:14,fontUsePx:'0',j:1,lang:c%2B%2B,libs:!((name:eve,ver:trunk)),options:'-O3+-DNDEBUG+--std%3Dc%2B%2B20',overrides:!(),source:1),l:'5',n:'0',o:'+x86-64+clang+22.1.0+(Editor+%231)',t:'0')),header:(),l:'4',m:6.237006237006238,n:'0',o:'',s:0,t:'0')),k:100,l:'3',n:'0',o:'',t:'0')),version:4"></iframe>
+      </section>
+      <section>
+        <h3> Raw pointer </h3>
+        <iframe width="800px" height="600px" src="https://godbolt.org/e#g:!((g:!((g:!((h:codeEditor,i:(filename:'1',fontScale:15,fontUsePx:'0',j:1,lang:c%2B%2B,source:'%23include+%3Catomic%3E%0A%0Astruct+Config+%7B%7D%3B%0A%0Aclass+ConfigProvider+%7B%0A+++public:%0A++++using+accessor+%3D+const+Config*%3B%0A%0A++++accessor+access()+const+%7B%0A++++++++return+cfg_.load(std::memory_order_acquire)%3B%0A++++%7D%0A%0A++++void+update(Config+c)+%7B%0A++++++++Config*+old+%3D+cfg_.exchange(new+Config(std::move(c)),+std::memory_order_acq_rel)%3B%0A++++++++delete+old%3B+//+%3F%3F%3F%0A++++%7D%0A%0A+++private:%0A++++std::atomic%3CConfig*%3E+cfg_+%3D+nullptr%3B%0A%7D%3B'),l:'5',n:'0',o:'C%2B%2B+source+%231',t:'0')),k:53.08815103305301,l:'4',m:93.76299376299376,n:'0',o:'',s:0,t:'0'),(g:!((h:compiler,i:(compiler:clang2210,filters:(b:'0',binary:'1',binaryObject:'1',commentOnly:'0',debugCalls:'1',demangle:'0',directives:'0',execute:'1',intel:'0',libraryCode:'0',trim:'1',verboseDemangling:'0'),flagsViewOpen:'1',fontScale:14,fontUsePx:'0',j:1,lang:c%2B%2B,libs:!((name:eve,ver:trunk)),options:'-O3+-DNDEBUG+--std%3Dc%2B%2B20',overrides:!(),source:1),l:'5',n:'0',o:'+x86-64+clang+22.1.0+(Editor+%231)',t:'0')),header:(),l:'4',m:6.237006237006238,n:'0',o:'',s:0,t:'0')),k:100,l:'3',n:'0',o:'',t:'0')),version:4"></iframe>
+      </section>
     </div>
 
     <script src="../../dist/reveal.js"></script>
@@ -51,13 +62,9 @@
     <script src="../../plugin/markdown/markdown.js"></script>
     <script src="../../plugin/highlight/highlight.js"></script>
     <script>
-      // More info about initialization & config:
-      // - https://revealjs.com/initialization/
-      // - https://revealjs.com/config/
       Reveal.initialize({
         hash: true,
         slideNumber: true,
-        // Learn about plugins: https://revealjs.com/plugins/
         plugins: [RevealMarkdown, RevealHighlight, RevealNotes]
       });
     </script>
