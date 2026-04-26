@@ -57,11 +57,8 @@
         <iframe width="800px" height="600px" src="https://godbolt.org/e#g:!((g:!((g:!((h:codeEditor,i:(filename:'1',fontScale:15,fontUsePx:'0',j:1,lang:c%2B%2B,source:'%23include+%3Catomic%3E%0A%0Astruct+Config+%7B%7D%3B%0A%0Aclass+ConfigProvider+%7B%0A+++public:%0A++++using+accessor+%3D+const+Config*%3B%0A%0A++++accessor+access()+const+%7B%0A++++++++return+cfg_.load(std::memory_order_acquire)%3B%0A++++%7D%0A%0A++++void+update(Config+c)+%7B%0A++++++++Config*+old+%3D+cfg_.exchange(new+Config(std::move(c)),+std::memory_order_acq_rel)%3B%0A++++++++delete+old%3B+//+%3F%3F%3F%0A++++%7D%0A%0A+++private:%0A++++std::atomic%3CConfig*%3E+cfg_+%3D+nullptr%3B%0A%7D%3B'),l:'5',n:'0',o:'C%2B%2B+source+%231',t:'0')),k:53.08815103305301,l:'4',m:93.76299376299376,n:'0',o:'',s:0,t:'0'),(g:!((h:compiler,i:(compiler:clang2210,filters:(b:'0',binary:'1',binaryObject:'1',commentOnly:'0',debugCalls:'1',demangle:'0',directives:'0',execute:'1',intel:'0',libraryCode:'0',trim:'1',verboseDemangling:'0'),flagsViewOpen:'1',fontScale:14,fontUsePx:'0',j:1,lang:c%2B%2B,libs:!((name:eve,ver:trunk)),options:'-O3+-DNDEBUG+--std%3Dc%2B%2B20',overrides:!(),source:1),l:'5',n:'0',o:'+x86-64+clang+22.1.0+(Editor+%231)',t:'0')),header:(),l:'4',m:6.237006237006238,n:'0',o:'',s:0,t:'0')),k:100,l:'3',n:'0',o:'',t:'0')),version:4"></iframe>
       </section>
       <section id="rcu-diagram">
-        <h3>Per-thread Reference Counting</h3>
+        <h3>alternative to a single ref count</h3>
         <canvas id="rcu-canvas" width="860" height="380"></canvas>
-        <span class="fragment"></span>
-        <span class="fragment"></span>
-        <span class="fragment"></span>
       </section>
     </div>
 
