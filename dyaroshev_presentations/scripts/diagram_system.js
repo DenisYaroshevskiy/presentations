@@ -1,16 +1,35 @@
+const _onReady = [];
+
+function _initAll() {
+  for (const cb of _onReady) cb();
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+  try {
+    if (Reveal.isReady()) _initAll();
+    else Reveal.on('ready', _initAll);
+  } catch(e) {
+    console.error('[diagram]', e);
+  }
+});
+
 class SlideDiagram {
   static #W = 880;
   static #H = 460;
   static #STROKE = '#1e1e1e';
   static #FONT = 'Excalifont, cursive';
+  static #DURATION = 500;
 
+  #section;
   #svg;
-  #steps = [];
+  #steps = [[]];
+  #elements = {};
 
   constructor(opts) {
-    const section = document.currentScript.closest('section');
-    this.#svg = SlideDiagram.#makeSvg(section);
+    this.#section = document.currentScript.closest('section');
+    this.#svg = SlideDiagram.#makeSvg(this.#section);
     SlideDiagram.#drawBlank(this.#svg, opts.title);
+    _onReady.push(() => this.#init());
   }
 
   step() {
@@ -23,9 +42,112 @@ class SlideDiagram {
     return this;
   }
 
-  changeBox(opts) {
-    this.#steps.at(-1).push({type: 'changeBox', ...opts});
+  moveBox(opts) {
+    this.#steps.at(-1).push({type: 'moveBox', ...opts});
     return this;
+  }
+
+  #init() {
+    const nFragments = this.#steps.length - 1;
+    for (let i = 0; i < nFragments; i++) {
+      const span = document.createElement('span');
+      span.className = 'fragment';
+      this.#section.appendChild(span);
+    }
+
+    let current = 0;
+
+    Reveal.on('fragmentshown', e => {
+      if (!this.#section.contains(e.fragment)) return;
+      current++;
+      this.#applyStep(this.#steps[current], 1);
+    });
+
+    Reveal.on('fragmenthidden', e => {
+      if (!this.#section.contains(e.fragment)) return;
+      this.#applyStep(this.#steps[current], -1);
+      current--;
+    });
+
+    Reveal.on('slidechanged', e => {
+      if (e.currentSlide === this.#section) current = 0;
+    });
+  }
+
+  #applyStep(ops, direction) {
+    for (const op of ops) {
+      if (op.type === 'addBox')  this.#applyAddBox(op, direction);
+      if (op.type === 'moveBox') this.#applyMoveBox(op, direction);
+    }
+  }
+
+  #applyAddBox(op, direction) {
+    if (direction === 1) {
+      const rc = rough.svg(this.#svg);
+      const group = document.createElementNS('http://www.w3.org/2000/svg', 'g');
+      group.appendChild(rc.rectangle(op.x, op.y, op.w, op.h, {
+        roughness: 1.3,
+        fill: op.color ?? '#a8c9e8',
+        fillStyle: 'hachure',
+        hachureAngle: -41,
+        hachureGap: 7,
+        fillWeight: 1.5,
+        stroke: SlideDiagram.#STROKE,
+      }));
+      const t = document.createElementNS('http://www.w3.org/2000/svg', 'text');
+      t.setAttribute('x', op.x + op.w / 2);
+      t.setAttribute('y', op.y + op.h / 2);
+      t.setAttribute('text-anchor', 'middle');
+      t.setAttribute('dominant-baseline', 'middle');
+      t.setAttribute('font-family', SlideDiagram.#FONT);
+      t.setAttribute('font-size', '18');
+      t.setAttribute('fill', SlideDiagram.#STROKE);
+      t.textContent = op.text ?? '';
+      group.appendChild(t);
+      this.#svg.appendChild(group);
+      this.#elements[op.name] = {group, drawnX: op.x, drawnY: op.y, x: op.x, y: op.y};
+    } else {
+      const el = this.#elements[op.name];
+      if (el) { el.group.remove(); delete this.#elements[op.name]; }
+    }
+  }
+
+  #applyMoveBox(op, direction) {
+    const el = this.#elements[op.name];
+    if (!el) return;
+
+    if (direction === 1) {
+      const toX = op.x, toY = op.y ?? el.y;
+      op._savedX = el.x;
+      op._savedY = el.y;
+      SlideDiagram.#animate(el.group,
+        el.x - el.drawnX, el.y - el.drawnY,
+        toX  - el.drawnX, toY  - el.drawnY);
+      el.x = toX;
+      el.y = toY;
+    } else {
+      const toX = op._savedX, toY = op._savedY;
+      SlideDiagram.#animate(el.group,
+        el.x - el.drawnX, el.y - el.drawnY,
+        toX  - el.drawnX, toY  - el.drawnY);
+      el.x = toX;
+      el.y = toY;
+    }
+  }
+
+  static #animate(el, fromDx, fromDy, toDx, toDy) {
+    const start = performance.now();
+    const dur = SlideDiagram.#DURATION;
+    function frame(now) {
+      const t = SlideDiagram.#ease(Math.min((now - start) / dur, 1));
+      el.setAttribute('transform', `translate(${fromDx + (toDx - fromDx) * t}, ${fromDy + (toDy - fromDy) * t})`);
+      if (t < 1) requestAnimationFrame(frame);
+    }
+    requestAnimationFrame(frame);
+  }
+
+  static #ease(t) {
+    return t < 0.5 ? 2 * t * t : -1 + (4 - 2 * t) * t;
   }
 
   static #makeSvg(section) {

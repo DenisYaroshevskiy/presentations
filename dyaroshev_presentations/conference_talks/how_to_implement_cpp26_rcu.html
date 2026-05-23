@@ -70,12 +70,11 @@
       </section>
       <section>
         <script>
-          new SlideDiagram({title: "Alternative to a single ref count"});
-        </script>
-      </section>
-      <section>
-        <script>
-          new SlideDiagram({title: "Different title"});
+          const d = new SlideDiagram({title: "Alternative to a single ref count"});
+          d.step();
+          d.addBox({name: 't1', x: 80, y: 180, w: 120, h: 60, text: 'T1'});
+          d.step();
+          d.moveBox({name: 't1', x: 660});
         </script>
       </section>
     </div>
