@@ -16,8 +16,16 @@
   <script type="text/javascript"
     src="https://cdn.jsdelivr.net/gh/DenisYaroshevskiy/unsq_eve@10d97219f305ec3c7aa0b89e712ac739d2d9c2c2/scripts/bench.js"></script>
 
+  <style>
+    @font-face {
+      font-family: 'Excalifont';
+      src: url('https://excalidraw.nyc3.cdn.digitaloceanspaces.com/fonts/Excalifont-Regular.woff2') format('woff2');
+    }
+  </style>
+
   <script src="../scripts/helper_scripts.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/roughjs/bundled/rough.js"></script>
+  <script src="../scripts/diagram_system.js"></script>
 
   <!-- Theme used for syntax highlighted code -->
   <link rel="stylesheet" href="../../plugin/highlight/zenburn.css">
@@ -59,6 +67,15 @@
       <section id="rcu-diagram">
         <h3>alternative to a single ref count</h3>
         <canvas id="rcu-canvas" width="860" height="380"></canvas>
+      </section>
+      <section>
+        <script>
+          const d = new SlideDiagram({title: "Alternative to a single ref count"});
+          d.step();
+          d.addBox({name: 't1', x: 80, y: 180, w: 120, h: 60, text: 'T1'});
+          d.step();
+          d.moveBox({name: 't1', x: 660});
+        </script>
       </section>
     </div>
 
