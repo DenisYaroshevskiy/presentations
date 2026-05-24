@@ -109,6 +109,18 @@
           d.addBox({name: 'config_new', x: 740, y: 55, w: 90, h: 34, text: 'Config', color: C.green});
           d.addBox({name: 'config_old', x: 740, y: 100, w: 90, h: 34, text: 'Config', color: C.gray});
           d.addText({name: 'lbl_old', x: 785, y: 144, text: '(old)', size: 13});
+          d.step(); //======================
+          d.reselect(['cnt1', 'cnt2', 'cnt3', 'cnt_line1', 'cnt_line2']);
+          d.unselect(['cfg', 'cfg_arrow', 'config_new', 'config_old', 'lbl_old']);
+          d.changeBox({name: 'cnt1', text: '4', color: C.gray});
+          d.changeBox({name: 'cnt2', text: '7', color: C.yellow});
+          d.changeBox({name: 'cnt3', text: '8', color: C.gray});
+          d.step(); //======================
+          d.changeBox({name: 'cnt2', text: '9', color: C.green});
+          d.step(); //======================
+          d.unselect(['cnt1', 'cnt2', 'cnt3', 'cnt_line1', 'cnt_line2']);
+          d.reselect(['config_old', 'lbl_old']);
+          d.changeBox({name: 'config_old', text: 'Config', color: C.red});
         </script>
       </section>
       <section>

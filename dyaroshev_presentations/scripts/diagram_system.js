@@ -50,6 +50,11 @@ class SlideDiagram {
     return this;
   }
 
+  changeBox(opts) {
+    this.#steps.at(-1).push({type: 'changeBox', ...opts});
+    return this;
+  }
+
   addArrow(opts) {
     this.#steps.at(-1).push({type: 'addArrow', ...opts});
     return this;
@@ -131,6 +136,7 @@ class SlideDiagram {
       if (op.type === 'unselect')    this.#applyUnselect(elements, op);
       if (op.type === 'hide')        this.#applyHide(elements, op);
       if (op.type === 'reselect')   this.#applyReselect(elements, op);
+      if (op.type === 'changeBox')  this.#applyChangeBox(svg, elements, op);
       if (op.type === 'addLine')     this.#applyAddLine(svg, elements, op);
       if (op.type === 'addText')     this.#applyAddText(svg, elements, op);
     }
@@ -159,7 +165,14 @@ class SlideDiagram {
     t.textContent = op.text ?? '';
     group.appendChild(t);
     svg.appendChild(group);
-    elements[op.name] = {group, drawnX: op.x, drawnY: op.y, x: op.x, y: op.y};
+    elements[op.name] = {group, drawnX: op.x, drawnY: op.y, x: op.x, y: op.y, opts: op};
+  }
+
+  #applyChangeBox(svg, elements, op) {
+    const existing = elements[op.name];
+    if (!existing) return;
+    existing.group.remove();
+    this.#applyAddBox(svg, elements, {...existing.opts, ...op, x: existing.x, y: existing.y});
   }
 
   #applyAddArrow(svg, elements, op) {
