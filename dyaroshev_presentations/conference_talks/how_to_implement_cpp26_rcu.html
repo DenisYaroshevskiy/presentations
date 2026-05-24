@@ -74,8 +74,9 @@
         <script>
           const d = new SlideDiagram({title: "Alternative to a single ref count"});
           d.step();
-          d.addBox({name: 'cfg',    x: 640, y: 55, w: 70,  h: 34, text: 'cfg_'});
-          d.addBox({name: 'config', x: 740, y: 55, w: 90,  h: 34, text: 'Config'});
+          const C = SlideDiagram.COLORS;
+          d.addBox({name: 'cfg',    x: 640, y: 55, w: 70,  h: 34, text: 'cfg_',   color: C.gray});
+          d.addBox({name: 'config', x: 740, y: 55, w: 90,  h: 34, text: 'Config', color: C.yellow});
           d.addArrow({name: 'cfg_arrow', x1: 710, y1: 72, x2: 740, y2: 72});
         </script>
       </section>

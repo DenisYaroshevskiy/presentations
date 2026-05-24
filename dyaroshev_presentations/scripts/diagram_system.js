@@ -14,6 +14,14 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 
 class SlideDiagram {
+  static COLORS = {
+    blue:   '#a8c9e8',
+    yellow: '#f5c518',
+    gray:   '#d0d0d0',
+    green:  '#b8e8b8',
+    red:    '#e8a0a0',
+  };
+
   static #W = 880;
   static #H = 460;
   static #STROKE = '#1e1e1e';
