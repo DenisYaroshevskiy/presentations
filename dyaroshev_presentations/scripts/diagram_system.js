@@ -42,8 +42,13 @@ class SlideDiagram {
     return this;
   }
 
-  moveBox(opts) {
-    this.#steps.at(-1).push({type: 'moveBox', ...opts});
+  addArrow(opts) {
+    this.#steps.at(-1).push({type: 'addArrow', ...opts});
+    return this;
+  }
+
+  animateMove(opts) {
+    this.#steps.at(-1).push({type: 'animateMove', ...opts});
     return this;
   }
 
@@ -76,8 +81,28 @@ class SlideDiagram {
 
   #applyStep(ops, direction) {
     for (const op of ops) {
-      if (op.type === 'addBox')  this.#applyAddBox(op, direction);
-      if (op.type === 'moveBox') this.#applyMoveBox(op, direction);
+      if (op.type === 'addBox')   this.#applyAddBox(op, direction);
+      if (op.type === 'addArrow') this.#applyAddArrow(op, direction);
+      if (op.type === 'animateMove') this.#applyMoveBox(op, direction);
+    }
+  }
+
+  #applyAddArrow(op, direction) {
+    if (direction === 1) {
+      const rc = rough.svg(this.#svg);
+      const {x1, y1, x2, y2} = op;
+      const dx = x2 - x1, dy = y2 - y1, len = Math.sqrt(dx*dx + dy*dy);
+      const ex = x2 - (dx/len)*6, ey = y2 - (dy/len)*6;
+      const a = Math.atan2(dy, dx), h = 10;
+      const group = document.createElementNS('http://www.w3.org/2000/svg', 'g');
+      group.appendChild(rc.line(x1, y1, ex, ey, {stroke: SlideDiagram.#STROKE, strokeWidth: 1.5, roughness: 0.8}));
+      group.appendChild(rc.line(x2, y2, x2 - h*Math.cos(a-0.4), y2 - h*Math.sin(a-0.4), {stroke: SlideDiagram.#STROKE, strokeWidth: 1.5, roughness: 0.3}));
+      group.appendChild(rc.line(x2, y2, x2 - h*Math.cos(a+0.4), y2 - h*Math.sin(a+0.4), {stroke: SlideDiagram.#STROKE, strokeWidth: 1.5, roughness: 0.3}));
+      this.#svg.appendChild(group);
+      this.#elements[op.name] = {group, drawnX: 0, drawnY: 0, x: 0, y: 0};
+    } else {
+      const el = this.#elements[op.name];
+      if (el) { el.group.remove(); delete this.#elements[op.name]; }
     }
   }
 

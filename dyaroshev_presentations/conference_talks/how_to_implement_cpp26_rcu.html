@@ -47,13 +47,15 @@
           <li class="fragment"> motivational example </li>
           <li class="fragment"> trivial buggy implementation </li>
           <li class="fragment"> lowlevel concurrency in C++ </li>
-          <li class="fragment"> improvements </li>
-          <li class="fragment"> retire </li>
-          <li class="fragment"> brief on hazard pointers </li>
+          <li class="fragment"> improvements to RCU </li>
         </ul>
       </section>
       <section>
         <h3>Motivational Example</h3>
+        <iframe width="800px" height="600px" src="https://godbolt.org/e#g:!((g:!((h:codeEditor,i:(filename:'1',fontScale:15,fontUsePx:'0',j:1,lang:c%2B%2B,selection:(endColumn:1,endLineNumber:1,positionColumn:1,positionLineNumber:1,selectionStartColumn:1,selectionStartLineNumber:1,startColumn:1,startLineNumber:1),source:'struct+Config+%7B%7D%3B%0A%0Aclass+ConfigProvider+%7B%0A+++public:%0A++++using+accessor+%3D+/**/%3B%0A%0A++++accessor+access()+const%3B%0A%0A++++void+update(Config+c)%3B%0A%7D%3B'),l:'5',n:'0',o:'C%2B%2B+source+%231',t:'0')),k:53.08815103305301,l:'4',m:100,n:'0',o:'',s:0,t:'0')),version:4"></iframe>
+      </section>
+      <section>
+        <h3>std::shared_ptr + mutex</h3>
         <iframe width="800px" height="600px" src="https://godbolt.org/e#g:!((g:!((g:!((h:codeEditor,i:(filename:'1',fontScale:15,fontUsePx:'0',j:1,lang:c%2B%2B,source:'%23include+%3Cmemory%3E%0A%23include+%3Cmutex%3E%0A%23include+%3Cshared_mutex%3E%0A%0Astruct+Config+%7B%7D%3B%0A%0Aclass+ConfigProvider+%7B%0A+++public:%0A++++using+accessor+%3D+std::shared_ptr%3Cconst+Config%3E%3B%0A%0A++++accessor+access()+const+%7B%0A++++++++std::shared_lock+_%7Bm%7D%3B%0A++++++++return+cfg_%3B%0A++++%7D%0A%0A++++void+update(Config+c)+%7B%0A++++++++auto+shared+%3D+std::make_shared%3Cconst+Config%3E(std::move(c))%3B%0A++++++++%7B%0A++++++++++++std::unique_lock+_%7Bm%7D%3B%0A++++++++++++cfg_.swap(shared)%3B%0A++++++++%7D%0A++++%7D%0A%0A+++private:%0A++++std::shared_ptr%3Cconst+Config%3E+cfg_%3B%0A++++mutable+std::shared_mutex+m%3B%0A%7D%3B'),l:'5',n:'0',o:'C%2B%2B+source+%231',t:'0')),k:53.08815103305301,l:'4',m:93.76299376299376,n:'0',o:'',s:0,t:'0'),(g:!((h:compiler,i:(compiler:clang2210,filters:(b:'0',binary:'1',binaryObject:'1',commentOnly:'0',debugCalls:'1',demangle:'0',directives:'0',execute:'1',intel:'0',libraryCode:'0',trim:'1',verboseDemangling:'0'),flagsViewOpen:'1',fontScale:14,fontUsePx:'0',j:1,lang:c%2B%2B,libs:!((name:eve,ver:trunk)),options:'-O3+-DNDEBUG+--std%3Dc%2B%2B20',overrides:!(),source:1),l:'5',n:'0',o:'+x86-64+clang+22.1.0+(Editor+%231)',t:'0')),header:(),l:'4',m:6.237006237006238,n:'0',o:'',s:0,t:'0')),k:100,l:'3',n:'0',o:'',t:'0')),version:4"></iframe>
       </section>
       <section>
@@ -72,9 +74,9 @@
         <script>
           const d = new SlideDiagram({title: "Alternative to a single ref count"});
           d.step();
-          d.addBox({name: 't1', x: 80, y: 180, w: 120, h: 60, text: 'T1'});
-          d.step();
-          d.moveBox({name: 't1', x: 660});
+          d.addBox({name: 'cfg',    x: 640, y: 55, w: 70,  h: 34, text: 'cfg_'});
+          d.addBox({name: 'config', x: 740, y: 55, w: 90,  h: 34, text: 'Config'});
+          d.addArrow({name: 'cfg_arrow', x1: 710, y1: 72, x2: 740, y2: 72});
         </script>
       </section>
     </div>
