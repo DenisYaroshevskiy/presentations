@@ -78,6 +78,14 @@
           d.addBox({name: 'cfg',    x: 640, y: 55, w: 70,  h: 34, text: 'cfg_',   color: C.gray});
           d.addBox({name: 'config', x: 740, y: 55, w: 90,  h: 34, text: 'Config', color: C.yellow});
           d.addArrow({name: 'cfg_arrow', x1: 710, y1: 72, x2: 740, y2: 72});
+          d.step();
+          d.addCircle({name: 't1', cx: 150, cy: 180, r: 30, text: 'T1', color: C.blue});
+          d.addCircle({name: 't2', cx: 400, cy: 180, r: 30, text: 'T2', color: C.blue});
+          d.addCircle({name: 't3', cx: 650, cy: 180, r: 30, text: 'T3', color: C.blue});
+          d.addBox({name: 'ref_count', x: 345, y: 310, w: 110, h: 34, text: 'ref_count', color: C.green});
+          d.addArrow({name: 'arr_t1', x1: 150, y1: 210, x2: 400, y2: 310});
+          d.addArrow({name: 'arr_t2', x1: 400, y1: 210, x2: 400, y2: 310});
+          d.addArrow({name: 'arr_t3', x1: 650, y1: 210, x2: 400, y2: 310});
         </script>
       </section>
       <section>

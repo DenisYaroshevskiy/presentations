@@ -5,6 +5,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const init = () => {
       for (const cb of _onReady) cb();
       Reveal.sync();
+      Reveal.layout();
     };
     if (Reveal.isReady()) init();
     else Reveal.on('ready', init);
@@ -54,6 +55,11 @@ class SlideDiagram {
     return this;
   }
 
+  addCircle(opts) {
+    this.#steps.at(-1).push({type: 'addCircle', ...opts});
+    return this;
+  }
+
   animateMove(opts) {
     this.#steps.at(-1).push({type: 'animateMove', ...opts});
     return this;
@@ -65,9 +71,8 @@ class SlideDiagram {
       sub.setAttribute('data-transition', 'none');
       this.#section.appendChild(sub);
       this.#subSections.push(sub);
+      this.#renderAt(i, false);
     }
-
-    this.#renderAt(0, false);
 
     Reveal.on('slidechanged', e => {
       const cur  = this.#subSections.indexOf(e.currentSlide);
@@ -96,6 +101,7 @@ class SlideDiagram {
     for (const op of ops) {
       if (op.type === 'addBox')      this.#applyAddBox(svg, elements, op);
       if (op.type === 'addArrow')    this.#applyAddArrow(svg, elements, op);
+      if (op.type === 'addCircle')   this.#applyAddCircle(svg, elements, op);
       if (op.type === 'animateMove') this.#applyAnimateMove(svg, elements, op, animate);
     }
   }
@@ -138,6 +144,32 @@ class SlideDiagram {
     group.appendChild(rc.line(x2, y2, x2 - h*Math.cos(a+0.4), y2 - h*Math.sin(a+0.4), {stroke: SlideDiagram.#STROKE, strokeWidth: 1.5, roughness: 0.3}));
     svg.appendChild(group);
     elements[op.name] = {group, drawnX: 0, drawnY: 0, x: 0, y: 0};
+  }
+
+  #applyAddCircle(svg, elements, op) {
+    const rc = rough.svg(svg);
+    const group = document.createElementNS('http://www.w3.org/2000/svg', 'g');
+    group.appendChild(rc.circle(op.cx, op.cy, op.r * 2, {
+      roughness: 1.3,
+      fill: op.color ?? '#a8c9e8',
+      fillStyle: 'hachure',
+      hachureAngle: -41,
+      hachureGap: 7,
+      fillWeight: 1.5,
+      stroke: SlideDiagram.#STROKE,
+    }));
+    const t = document.createElementNS('http://www.w3.org/2000/svg', 'text');
+    t.setAttribute('x', op.cx);
+    t.setAttribute('y', op.cy);
+    t.setAttribute('text-anchor', 'middle');
+    t.setAttribute('dominant-baseline', 'middle');
+    t.setAttribute('font-family', SlideDiagram.#FONT);
+    t.setAttribute('font-size', '18');
+    t.setAttribute('fill', SlideDiagram.#STROKE);
+    t.textContent = op.text ?? '';
+    group.appendChild(t);
+    svg.appendChild(group);
+    elements[op.name] = {group, drawnX: op.cx, drawnY: op.cy, x: op.cx, y: op.cy};
   }
 
   #applyAnimateMove(svg, elements, op, animate) {
