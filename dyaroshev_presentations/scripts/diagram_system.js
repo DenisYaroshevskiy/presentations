@@ -80,6 +80,11 @@ class SlideDiagram {
     return this;
   }
 
+  addText(opts) {
+    this.#steps.at(-1).push({type: 'addText', ...opts});
+    return this;
+  }
+
   #init() {
     for (let i = 0; i < this.#steps.length; i++) {
       const sub = document.createElement('section');
@@ -121,6 +126,7 @@ class SlideDiagram {
       if (op.type === 'unselect')    this.#applyUnselect(elements, op);
       if (op.type === 'hide')        this.#applyHide(elements, op);
       if (op.type === 'addLine')     this.#applyAddLine(svg, elements, op);
+      if (op.type === 'addText')     this.#applyAddText(svg, elements, op);
     }
   }
 
@@ -212,6 +218,22 @@ class SlideDiagram {
     group.appendChild(rc.line(op.x1, op.y1, op.x2, op.y2, opts));
     svg.appendChild(group);
     elements[op.name] = {group, drawnX: 0, drawnY: 0, x: 0, y: 0};
+  }
+
+  #applyAddText(svg, elements, op) {
+    const group = document.createElementNS('http://www.w3.org/2000/svg', 'g');
+    const t = document.createElementNS('http://www.w3.org/2000/svg', 'text');
+    t.setAttribute('x', op.x);
+    t.setAttribute('y', op.y);
+    t.setAttribute('text-anchor', op.anchor ?? 'middle');
+    t.setAttribute('dominant-baseline', 'middle');
+    t.setAttribute('font-family', SlideDiagram.#FONT);
+    t.setAttribute('font-size', op.size ?? 16);
+    t.setAttribute('fill', op.color ?? SlideDiagram.#STROKE);
+    t.textContent = op.text;
+    group.appendChild(t);
+    svg.appendChild(group);
+    elements[op.name] = {group, drawnX: op.x, drawnY: op.y, x: op.x, y: op.y};
   }
 
   #applyAnimateMove(svg, elements, op, animate) {
