@@ -65,6 +65,21 @@ class SlideDiagram {
     return this;
   }
 
+  unselect(names) {
+    this.#steps.at(-1).push({type: 'unselect', names});
+    return this;
+  }
+
+  hide(names) {
+    this.#steps.at(-1).push({type: 'hide', names});
+    return this;
+  }
+
+  addLine(opts) {
+    this.#steps.at(-1).push({type: 'addLine', ...opts});
+    return this;
+  }
+
   #init() {
     for (let i = 0; i < this.#steps.length; i++) {
       const sub = document.createElement('section');
@@ -103,6 +118,9 @@ class SlideDiagram {
       if (op.type === 'addArrow')    this.#applyAddArrow(svg, elements, op);
       if (op.type === 'addCircle')   this.#applyAddCircle(svg, elements, op);
       if (op.type === 'animateMove') this.#applyAnimateMove(svg, elements, op, animate);
+      if (op.type === 'unselect')    this.#applyUnselect(elements, op);
+      if (op.type === 'hide')        this.#applyHide(elements, op);
+      if (op.type === 'addLine')     this.#applyAddLine(svg, elements, op);
     }
   }
 
@@ -170,6 +188,30 @@ class SlideDiagram {
     group.appendChild(t);
     svg.appendChild(group);
     elements[op.name] = {group, drawnX: op.cx, drawnY: op.cy, x: op.cx, y: op.cy};
+  }
+
+  #applyUnselect(elements, op) {
+    for (const name of op.names) {
+      const el = elements[name];
+      if (el) el.group.style.opacity = '0.3';
+    }
+  }
+
+  #applyHide(elements, op) {
+    for (const name of op.names) {
+      const el = elements[name];
+      if (el) el.group.style.display = 'none';
+    }
+  }
+
+  #applyAddLine(svg, elements, op) {
+    const rc = rough.svg(svg);
+    const group = document.createElementNS('http://www.w3.org/2000/svg', 'g');
+    const opts = {stroke: SlideDiagram.#STROKE, strokeWidth: 1.5, roughness: 0.8};
+    if (op.dashed) opts.strokeLineDash = [8, 6];
+    group.appendChild(rc.line(op.x1, op.y1, op.x2, op.y2, opts));
+    svg.appendChild(group);
+    elements[op.name] = {group, drawnX: 0, drawnY: 0, x: 0, y: 0};
   }
 
   #applyAnimateMove(svg, elements, op, animate) {
