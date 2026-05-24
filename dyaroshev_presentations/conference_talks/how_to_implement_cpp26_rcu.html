@@ -101,6 +101,14 @@
           d.unselect(['t2', 't3', 'cnt2', 'cnt3', 'arr_t2_cnt', 'arr_t3_cnt', 'cnt_line1', 'cnt_line2']);
           d.addText({name: 'lbl_enter', x: 190, y: 290, text: 'enter: +1', anchor: 'start', size: 14});
           d.addText({name: 'lbl_exit',  x: 190, y: 307, text: 'exit: +1',  anchor: 'start', size: 14});
+          d.step(); //======================
+          d.hide(['lbl_enter', 'lbl_exit']);
+          d.unselect(['t1', 'arr_t1_cnt', 'cnt1']);
+          d.reselect(['cfg', 'cfg_arrow']);
+          d.hide(['config']);
+          d.addBox({name: 'config_new', x: 740, y: 55, w: 90, h: 34, text: 'Config', color: C.green});
+          d.addBox({name: 'config_old', x: 740, y: 100, w: 90, h: 34, text: 'Config', color: C.gray});
+          d.addText({name: 'lbl_old', x: 785, y: 144, text: '(old)', size: 13});
         </script>
       </section>
       <section>

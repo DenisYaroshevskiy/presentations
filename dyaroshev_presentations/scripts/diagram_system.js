@@ -75,6 +75,11 @@ class SlideDiagram {
     return this;
   }
 
+  reselect(names) {
+    this.#steps.at(-1).push({type: 'reselect', names});
+    return this;
+  }
+
   addLine(opts) {
     this.#steps.at(-1).push({type: 'addLine', ...opts});
     return this;
@@ -125,6 +130,7 @@ class SlideDiagram {
       if (op.type === 'animateMove') this.#applyAnimateMove(svg, elements, op, animate);
       if (op.type === 'unselect')    this.#applyUnselect(elements, op);
       if (op.type === 'hide')        this.#applyHide(elements, op);
+      if (op.type === 'reselect')   this.#applyReselect(elements, op);
       if (op.type === 'addLine')     this.#applyAddLine(svg, elements, op);
       if (op.type === 'addText')     this.#applyAddText(svg, elements, op);
     }
@@ -207,6 +213,13 @@ class SlideDiagram {
     for (const name of op.names) {
       const el = elements[name];
       if (el) el.group.style.display = 'none';
+    }
+  }
+
+  #applyReselect(elements, op) {
+    for (const name of op.names) {
+      const el = elements[name];
+      if (el) el.group.style.opacity = '1';
     }
   }
 
