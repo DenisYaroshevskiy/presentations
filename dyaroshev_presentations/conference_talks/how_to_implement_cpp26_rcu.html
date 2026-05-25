@@ -52,7 +52,7 @@
       </section>
       <section>
         <h3>Motivational Example</h3>
-        <iframe width="800px" height="600px" src="https://godbolt.org/e#g:!((g:!((h:codeEditor,i:(filename:'1',fontScale:15,fontUsePx:'0',j:1,lang:c%2B%2B,selection:(endColumn:1,endLineNumber:1,positionColumn:1,positionLineNumber:1,selectionStartColumn:1,selectionStartLineNumber:1,startColumn:1,startLineNumber:1),source:'struct+Config+%7B%7D%3B%0A%0Aclass+ConfigProvider+%7B%0A+++public:%0A++++using+accessor+%3D+/**/%3B%0A%0A++++accessor+access()+const%3B%0A%0A++++void+update(Config+c)%3B%0A%7D%3B'),l:'5',n:'0',o:'C%2B%2B+source+%231',t:'0')),k:53.08815103305301,l:'4',m:100,n:'0',o:'',s:0,t:'0')),version:4"></iframe>
+        <iframe width="800px" height="600px" src="https://godbolt.org/e#g:!((g:!((h:codeEditor,i:(filename:'1',fontScale:15,fontUsePx:'0',j:1,lang:c%2B%2B,source:'struct+Config+%7B%7D%3B%0A%0Aclass+ConfigProvider+%7B%0A+++public:%0A++++using+accessor+%3D+/**/%3B%0A%0A++++accessor+access()+const%3B%0A%0A++++void+update(Config+c)%3B%0A%7D%3B'),l:'5',n:'0',o:'C%2B%2B+source+%231',t:'0')),k:53.08815103305301,l:'4',m:100,n:'0',o:'',s:0,t:'0')),version:4"></iframe>
       </section>
       <section>
         <h3>std::shared_ptr + mutex</h3>
@@ -120,9 +120,34 @@
         </script>
       </section>
       <section>
+        <h3> Using RCU </h3>
         <iframe width="800px" height="600px" src="https://godbolt.org/e#g:!((g:!((h:codeEditor,i:(filename:'1',fontScale:15,fontUsePx:'0',j:1,lang:c%2B%2B,source:'%23include+%3Cmutex%3E%0A%23include+%3Crcu%3E%0A%0Astruct+Config+%7B%7D%3B%0A%0Aclass+ConfigProvider+%7B%0A+++public:%0A++++void+access(auto+callback)+const+%7B%0A++++++++std::scoped_lock+_%7Bstd::rcu_default_domain()%7D%3B%0A++++++++callback(cfg_.load(std::memory_order_acquire))%3B%0A++++%7D%0A%0A++++void+update(Config+c)+%7B%0A++++++++const+Config*+old+%3D%0A++++++++++++cfg_.exchange(new+Config(std::move(c)),+std::memory_order_release)%3B%0A++++++++std::rcu_synchronize()%3B++//+NOTE:+slideware%0A++++++++delete+old%3B%0A++++%7D%0A%0A+++private:%0A++++std::atomic%3Cconst+Config*%3E+cfg_%3B%0A%7D%3B%0A'),l:'5',n:'0',o:'C%2B%2B+source+%231',t:'0')),k:100,l:'4',m:100,n:'0',o:'',s:0,t:'0')),version:4"></iframe>
       </section>
-
+      <section>
+        <h2> implementing basic rcu </h2>
+      </section>
+      <section>
+        <h3>Testing using relacy</h3>
+        <ul>
+          <li class="fragment"> <a href="https://github.com/dvyukov/relacy">github</a> </li>
+          <li class="fragment"> Dmitry Vyukov </li>
+        </ul>
+      </section>
+      <section>
+        <h3> RCU smoke test </h3>
+        <iframe width="800px" height="600px" src="https://godbolt.org/e#g:!((g:!((h:codeEditor,i:(filename:'1',fontScale:15,fontUsePx:'0',j:1,lang:c%2B%2B,source:'struct+rcu_smoke_test+:+rl::test_suite%3Crcu_smoke_test,+2%3E+%7B%0A++using+config+%3D+rl::var%3Cint%3E%3B%0A%0A++rl::atomic%3Cconst+config*%3E+cfg%3B%0A%0A++rcu_domain+domain%3B%0A%0A++void+before()+%7B+cfg.store(new+config(1))%3B+%7D%0A%0A++void+thread(unsigned+idx)+%7B%0A++++if+(idx+%3D%3D+0)+%7B++//+updater%0A++++++auto*+old+%3D+cfg.exchange(new+config(2),+rl::memory_order_acq_rel)%3B%0A++++++domain.synchronize()%3B%0A++++++delete+old%3B%0A++++%7D+else+%7B++//+reader%0A++++++rcu_domain::tls+tls%7Bdomain%7D%3B%0A%0A++++++tls.enter()%3B%0A++++++int+read+%3D+(*cfg.load(rl::memory_order_acquire))($)%3B%0A++++++tls.exit()%3B%0A%0A++++++RL_ASSERT(read+%3D%3D+1+%7C%7C+read+%3D%3D+2)%3B%0A++++%7D%0A++%7D%0A%0A++void+after()+%7B%0A++++auto*+last_cfg+%3D+cfg.load(rl::memory_order_acquire)%3B%0A++++RL_ASSERT((*last_cfg)($)+%3D%3D+2)%3B%0A++++delete+last_cfg%3B%0A++%7D%0A%7D%3B'),l:'5',n:'0',o:'C%2B%2B+source+%231',t:'0')),k:100,l:'4',m:100,n:'0',o:'',s:0,t:'0')),version:4"></iframe>
+      </section>
+      <section>
+        <h3> RCU (broken) </h3>
+        <iframe width="800px" height="600px" src="https://godbolt.org/e#g:!((g:!((h:codeEditor,i:(filename:'1',fontScale:15,fontUsePx:'0',j:1,lang:c%2B%2B,source:'struct+rcu_domain+%7B%0A++using+counter_t+%3D+std::uint64_t%3B%0A%0A++struct+tls%3B%0A%0A++void+synchronize()%3B%0A%0A++tools::mutex+readers_mutex%3B%0A++std::vector%3Ctls*%3E+readers%3B%0A%7D%3B%0A%0Astruct+rcu_domain::tls+:+tools::nomove+%7B%0A++tools::atomic%3Ccounter_t%3E+counter%3B%0A++rcu_domain*+domain_%3B%0A%0A++explicit+tls(rcu_domain%26+domain)+:+domain_(%26domain)+%7B%0A++++tools::lock_guard+_%7Bdomain_-%3Ereaders_mutex%7D%3B%0A++++domain_-%3Ereaders.push_back(this)%3B%0A++%7D%0A++~tls()+%7B%0A++++tools::lock_guard+_%7Bdomain_-%3Ereaders_mutex%7D%3B%0A++++std::erase(domain_-%3Ereaders,+this)%3B%0A+++%7D%0A%0A++void+enter()+%7B+counter.fetch_add(1)%3B+%7D%0A++void+exit()+%7B+counter.fetch_add(1)%3B+%7D%0A%7D%3B%0A%0Ainline+void+rcu_domain::synchronize()+%7B%0A++tools::lock_guard+_%7Breaders_mutex%7D%3B%0A%0A++for+(const+tls*+reader+:+readers)+%7B%0A++++counter_t+cur+%3D+reader-%3Ecounter.load()%3B%0A%0A++++if+(cur+%25+2+%3D%3D+0)+continue%3B%0A%0A++++while+(reader-%3Ecounter.load()+%3D%3D+cur)+%7B%0A++++++tools::this_thread_yield()%3B%0A++++%7D%0A++%7D%0A%7D'),l:'5',n:'0',o:'C%2B%2B+source+%231',t:'0')),k:100,l:'4',m:100,n:'0',o:'',s:0,t:'0')),version:4"></iframe>
+      </section>
+      <section>
+        <h3> Bug report</h3>
+        <iframe width="800px" height="600px" src="https://godbolt.org/e#g:!((g:!((h:codeEditor,i:(filename:'1',fontScale:15,fontUsePx:'0',j:1,lang:c%2B%2B,source:'struct+rcu_smoke_test+:+rl::test_suite%3Crcu_smoke_test,+2%3E+%7B%0A++using+config+%3D+rl::var%3Cint%3E%3B%0A%0A++rl::atomic%3Cconst+config*%3E+cfg%3B%0A%0A++rcu_domain+domain%3B%0A%0A++void+before()+%7B+cfg.store(new+config(1))%3B+%7D%0A%0A++void+thread(unsigned+idx)+%7B%0A++++if+(idx+%3D%3D+0)+%7B++//+updater%0A++++++auto*+old+%3D+cfg.exchange(new+config(2),+rl::memory_order_acq_rel)%3B%0A++++++domain.synchronize()%3B%0A++++++delete+old%3B%0A++++%7D+else+%7B++//+reader%0A++++++rcu_domain::tls+tls%7Bdomain%7D%3B%0A%0A++++++tls.enter()%3B%0A++++++int+read+%3D+(*cfg.load(rl::memory_order_acquire))($)%3B++//+%5B16%5D+1:+ACCESS+TO+FREED+MEMORY%0A++++++tls.exit()%3B%0A%0A++++++RL_ASSERT(read+%3D%3D+1+%7C%7C+read+%3D%3D+2)%3B%0A++++%7D%0A++%7D%0A%0A++void+after()+%7B%0A++++auto*+last_cfg+%3D+cfg.load(rl::memory_order_acquire)%3B%0A++++RL_ASSERT((*last_cfg)($)+%3D%3D+2)%3B%0A++++delete+last_cfg%3B%0A++%7D%0A%7D%3B'),l:'5',n:'0',o:'C%2B%2B+source+%231',t:'0')),k:100,l:'4',m:100,n:'0',o:'',s:0,t:'0')),version:4"></iframe>
+      </section>
+      <section>
+        <h2> low level concurrency in c++ </h2>
+      </section>
     </div>
 
     <script src="../../dist/reveal.js"></script>
