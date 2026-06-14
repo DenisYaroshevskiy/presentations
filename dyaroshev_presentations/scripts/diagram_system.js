@@ -28,6 +28,7 @@ class SlideDiagram {
   static #STROKE = '#1e1e1e';
   static #FONT = 'Excalifont, cursive';
   static #DURATION = 500;
+  static #SEED = 1;
 
   #section;
   #title;
@@ -96,19 +97,20 @@ class SlideDiagram {
   }
 
   #init() {
+    const cache = new Map();
     for (let i = 0; i < this.#steps.length; i++) {
       const sub = document.createElement('section');
       sub.setAttribute('data-transition', 'none');
       this.#section.appendChild(sub);
       this.#subSections.push(sub);
       this.#renderAt(i, false);
+      cache.set(i, sub.innerHTML);
     }
 
     Reveal.on('slidechanged', e => {
-      const cur  = this.#subSections.indexOf(e.currentSlide);
+      const cur = this.#subSections.indexOf(e.currentSlide);
       if (cur === -1) return;
-      const prev = this.#subSections.indexOf(e.previousSlide);
-      this.#renderAt(cur, cur > prev && prev !== -1);
+      this.#subSections[cur].innerHTML = cache.get(cur) ?? '';
     });
   }
 
@@ -145,15 +147,20 @@ class SlideDiagram {
   #applyAddBox(svg, elements, op) {
     const rc = rough.svg(svg);
     const group = document.createElementNS('http://www.w3.org/2000/svg', 'g');
-    group.appendChild(rc.rectangle(op.x, op.y, op.w, op.h, {
+    const boxFill = op.color ?? '#a8c9e8';
+    const rectOpts = {
       roughness: 1.3,
-      fill: op.color ?? '#a8c9e8',
-      fillStyle: 'hachure',
+      fill: boxFill,
+      fillStyle: boxFill === 'none' ? 'none' : 'hachure',
       hachureAngle: -41,
       hachureGap: 7,
       fillWeight: 1.5,
       stroke: SlideDiagram.#STROKE,
-    }));
+      seed: SlideDiagram.#SEED,
+    };
+    if (op.cornerRadius != null) rectOpts.cornerRadius = op.cornerRadius;
+    if (op.dashed) rectOpts.strokeLineDash = [8, 6];
+    group.appendChild(rc.rectangle(op.x, op.y, op.w, op.h, rectOpts));
     const t = document.createElementNS('http://www.w3.org/2000/svg', 'text');
     t.setAttribute('x', op.x + op.w / 2);
     t.setAttribute('y', op.y + op.h / 2);
@@ -164,6 +171,7 @@ class SlideDiagram {
     t.setAttribute('fill', SlideDiagram.#STROKE);
     t.textContent = op.text ?? '';
     group.appendChild(t);
+    if (op.opacity != null) group.style.opacity = op.opacity;
     svg.appendChild(group);
     elements[op.name] = {group, drawnX: op.x, drawnY: op.y, x: op.x, y: op.y, opts: op};
   }
@@ -181,10 +189,13 @@ class SlideDiagram {
     const dx = x2 - x1, dy = y2 - y1, len = Math.sqrt(dx*dx + dy*dy);
     const ex = x2 - (dx/len)*6, ey = y2 - (dy/len)*6;
     const a = Math.atan2(dy, dx), h = 10;
+    const sw = op.strokeWidth ?? 1.5;
     const group = document.createElementNS('http://www.w3.org/2000/svg', 'g');
-    group.appendChild(rc.line(x1, y1, ex, ey, {stroke: SlideDiagram.#STROKE, strokeWidth: 1.5, roughness: 0.8}));
-    group.appendChild(rc.line(x2, y2, x2 - h*Math.cos(a-0.4), y2 - h*Math.sin(a-0.4), {stroke: SlideDiagram.#STROKE, strokeWidth: 1.5, roughness: 0.3}));
-    group.appendChild(rc.line(x2, y2, x2 - h*Math.cos(a+0.4), y2 - h*Math.sin(a+0.4), {stroke: SlideDiagram.#STROKE, strokeWidth: 1.5, roughness: 0.3}));
+    const shaftOpts = {stroke: SlideDiagram.#STROKE, strokeWidth: sw, roughness: 0.8, seed: 1};
+    if (op.dashed) shaftOpts.strokeLineDash = [8, 6];
+    group.appendChild(rc.line(x1, y1, ex, ey, shaftOpts));
+    group.appendChild(rc.line(x2, y2, x2 - h*Math.cos(a-0.4), y2 - h*Math.sin(a-0.4), {stroke: SlideDiagram.#STROKE, strokeWidth: sw, roughness: 0.3, seed: SlideDiagram.#SEED + 1}));
+    group.appendChild(rc.line(x2, y2, x2 - h*Math.cos(a+0.4), y2 - h*Math.sin(a+0.4), {stroke: SlideDiagram.#STROKE, strokeWidth: sw, roughness: 0.3, seed: SlideDiagram.#SEED + 2}));
     svg.appendChild(group);
     elements[op.name] = {group, drawnX: 0, drawnY: 0, x: 0, y: 0};
   }
@@ -192,14 +203,16 @@ class SlideDiagram {
   #applyAddCircle(svg, elements, op) {
     const rc = rough.svg(svg);
     const group = document.createElementNS('http://www.w3.org/2000/svg', 'g');
+    const circleFill = op.color ?? '#a8c9e8';
     group.appendChild(rc.circle(op.cx, op.cy, op.r * 2, {
       roughness: 1.3,
-      fill: op.color ?? '#a8c9e8',
-      fillStyle: 'hachure',
+      fill: circleFill,
+      fillStyle: circleFill === 'none' ? 'none' : 'hachure',
       hachureAngle: -41,
       hachureGap: 7,
       fillWeight: 1.5,
       stroke: SlideDiagram.#STROKE,
+      seed: SlideDiagram.#SEED,
     }));
     const t = document.createElementNS('http://www.w3.org/2000/svg', 'text');
     t.setAttribute('x', op.cx);
@@ -239,7 +252,7 @@ class SlideDiagram {
   #applyAddLine(svg, elements, op) {
     const rc = rough.svg(svg);
     const group = document.createElementNS('http://www.w3.org/2000/svg', 'g');
-    const opts = {stroke: SlideDiagram.#STROKE, strokeWidth: 1.5, roughness: 0.8};
+    const opts = {stroke: SlideDiagram.#STROKE, strokeWidth: 1.5, roughness: 0.8, seed: 1};
     if (op.dashed) opts.strokeLineDash = [8, 6];
     group.appendChild(rc.line(op.x1, op.y1, op.x2, op.y2, opts));
     svg.appendChild(group);
@@ -314,6 +327,7 @@ class SlideDiagram {
       roughness: 0.5,
       stroke: SlideDiagram.#STROKE,
       strokeWidth: 1.5,
+      seed: SlideDiagram.#SEED,
     }));
 
     const t = document.createElementNS('http://www.w3.org/2000/svg', 'text');
