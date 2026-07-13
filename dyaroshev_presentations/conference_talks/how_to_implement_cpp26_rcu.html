@@ -3,7 +3,8 @@
 
 <head>
   <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <meta name="viewport"
+    content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 
   <title> How to implement C++26 RCU </title>
 
@@ -42,8 +43,9 @@
         <h2> This talk </h2>
         <ul>
           <li class="fragment"> TODO LINK </li>
-          <li class="fragment"> <a href="https://github.com/paulmckrcu">Paul McKenney</a>, <a
-              href="https://github.com/yfeldblum">Yedidya Feldblum</a> </li>
+          <li class="fragment"> <a href="https://github.com/paulmckrcu">Paul
+              McKenney</a>, <a href="https://github.com/yfeldblum">Yedidya
+              Feldblum</a> </li>
           <li class="fragment"> RCU = read/copy/update </li>
           <li class="fragment"> motivational example </li>
           <li class="fragment"> trivial buggy implementation </li>
@@ -71,59 +73,6 @@
         <iframe width="800px" height="600px"
           src="https://godbolt.org/e#g:!((g:!((g:!((h:codeEditor,i:(filename:'1',fontScale:15,fontUsePx:'0',j:1,lang:c%2B%2B,source:'%23include+%3Catomic%3E%0A%0Astruct+Config+%7B%7D%3B%0A%0Aclass+ConfigProvider+%7B%0A+++public:%0A++++using+accessor+%3D+const+Config*%3B%0A%0A++++accessor+access()+const+%7B%0A++++++++return+cfg_.load(std::memory_order_acquire)%3B%0A++++%7D%0A%0A++++void+update(Config+c)+%7B%0A++++++++Config*+old+%3D+cfg_.exchange(new+Config(std::move(c)),+std::memory_order_acq_rel)%3B%0A++++++++delete+old%3B+//+%3F%3F%3F%0A++++%7D%0A%0A+++private:%0A++++std::atomic%3CConfig*%3E+cfg_+%3D+nullptr%3B%0A%7D%3B'),l:'5',n:'0',o:'C%2B%2B+source+%231',t:'0')),k:53.08815103305301,l:'4',m:93.76299376299376,n:'0',o:'',s:0,t:'0'),(g:!((h:compiler,i:(compiler:clang2210,filters:(b:'0',binary:'1',binaryObject:'1',commentOnly:'0',debugCalls:'1',demangle:'0',directives:'0',execute:'1',intel:'0',libraryCode:'0',trim:'1',verboseDemangling:'0'),flagsViewOpen:'1',fontScale:14,fontUsePx:'0',j:1,lang:c%2B%2B,libs:!((name:eve,ver:trunk)),options:'-O3+-DNDEBUG+--std%3Dc%2B%2B20',overrides:!(),source:1),l:'5',n:'0',o:'+x86-64+clang+22.1.0+(Editor+%231)',t:'0')),header:(),l:'4',m:6.237006237006238,n:'0',o:'',s:0,t:'0')),k:100,l:'3',n:'0',o:'',t:'0')),version:4"></iframe>
       </section>
-      <section>
-        <script>
-          const d = new SlideDiagram({ title: "Alternative to a single ref count" });
-          d.step();
-          const C = SlideDiagram.COLORS;
-          d.addBox({ name: 'cfg', x: 640, y: 55, w: 70, h: 34, text: 'cfg_', color: C.gray });
-          d.addBox({ name: 'config', x: 740, y: 55, w: 90, h: 34, text: 'Config', color: C.yellow });
-          d.addArrow({ name: 'cfg_arrow', x1: 710, y1: 72, x2: 740, y2: 72 });
-          d.step(); //======================
-          d.unselect(['cfg', 'config', 'cfg_arrow']);
-          d.addCircle({ name: 't1', cx: 150, cy: 180, r: 30, text: 'T1', color: C.blue });
-          d.addCircle({ name: 't2', cx: 400, cy: 180, r: 30, text: 'T2', color: C.blue });
-          d.addCircle({ name: 't3', cx: 650, cy: 180, r: 30, text: 'T3', color: C.blue });
-          d.addBox({ name: 'ref_count', x: 345, y: 310, w: 110, h: 34, text: 'ref_count', color: C.green });
-          d.addArrow({ name: 'arr_t1', x1: 150, y1: 210, x2: 400, y2: 310 });
-          d.addArrow({ name: 'arr_t2', x1: 400, y1: 210, x2: 400, y2: 310 });
-          d.addArrow({ name: 'arr_t3', x1: 650, y1: 210, x2: 400, y2: 310 });
-          d.step();
-          d.hide(['ref_count', 'arr_t1', 'arr_t2', 'arr_t3']);
-          d.addLine({ name: 'cnt_line1', x1: 185, y1: 327, x2: 365, y2: 327, dashed: true });
-          d.addLine({ name: 'cnt_line2', x1: 435, y1: 327, x2: 615, y2: 327, dashed: true });
-          d.addBox({ name: 'cnt1', x: 115, y: 310, w: 70, h: 34, text: 'cnt', color: C.green });
-          d.addBox({ name: 'cnt2', x: 365, y: 310, w: 70, h: 34, text: 'cnt', color: C.green });
-          d.addBox({ name: 'cnt3', x: 615, y: 310, w: 70, h: 34, text: 'cnt', color: C.green });
-          d.addArrow({ name: 'arr_t1_cnt', x1: 150, y1: 210, x2: 150, y2: 310 });
-          d.addArrow({ name: 'arr_t2_cnt', x1: 400, y1: 210, x2: 400, y2: 310 });
-          d.addArrow({ name: 'arr_t3_cnt', x1: 650, y1: 210, x2: 650, y2: 310 });
-          d.step();
-          d.unselect(['t2', 't3', 'cnt2', 'cnt3', 'arr_t2_cnt', 'arr_t3_cnt', 'cnt_line1', 'cnt_line2']);
-          d.addText({ name: 'lbl_enter', x: 190, y: 290, text: 'enter: +1', anchor: 'start', size: 14 });
-          d.addText({ name: 'lbl_exit', x: 190, y: 307, text: 'exit: +1', anchor: 'start', size: 14 });
-          d.step(); //======================
-          d.hide(['lbl_enter', 'lbl_exit']);
-          d.unselect(['t1', 'arr_t1_cnt', 'cnt1']);
-          d.reselect(['cfg', 'cfg_arrow']);
-          d.hide(['config']);
-          d.addBox({ name: 'config_new', x: 740, y: 55, w: 90, h: 34, text: 'Config', color: C.green });
-          d.addBox({ name: 'config_old', x: 740, y: 100, w: 90, h: 34, text: 'Config', color: C.gray });
-          d.addText({ name: 'lbl_old', x: 785, y: 144, text: '(old)', size: 13 });
-          d.step(); //======================
-          d.reselect(['cnt1', 'cnt2', 'cnt3', 'cnt_line1', 'cnt_line2']);
-          d.unselect(['cfg', 'cfg_arrow', 'config_new', 'config_old', 'lbl_old']);
-          d.changeBox({ name: 'cnt1', text: '4', color: C.gray });
-          d.changeBox({ name: 'cnt2', text: '7', color: C.yellow });
-          d.changeBox({ name: 'cnt3', text: '8', color: C.gray });
-          d.step(); //======================
-          d.changeBox({ name: 'cnt2', text: '9', color: C.green });
-          d.step(); //======================
-          d.unselect(['cnt1', 'cnt2', 'cnt3', 'cnt_line1', 'cnt_line2']);
-          d.reselect(['config_old', 'lbl_old']);
-          d.changeBox({ name: 'config_old', text: 'Config', color: C.red });
-        </script>
-      </section>
       <section id="rcu/alternative_to_ref_count">
         <script> imagesSVGSlideShow("rcu/alternative_to_ref_count", 10); </script>
       </section>
@@ -138,7 +87,8 @@
       <section>
         <h3>Testing using relacy</h3>
         <ul>
-          <li class="fragment"> <a href="https://github.com/dvyukov/relacy">github</a> </li>
+          <li class="fragment"> <a
+              href="https://github.com/dvyukov/relacy">github</a> </li>
           <li class="fragment"> Dmitry Vyukov </li>
         </ul>
       </section>
@@ -165,11 +115,14 @@
         <ul>
           <li class="fragment"> C++ standard </li>
           <li class="fragment"> Understand hardware first </li>
-          <li class="fragment"> Made up hardware model </li>
+          <li class="fragment"> <a
+              link="http://www.rdrop.com/users/paulmck/scalability/paper/whymb.2010.06.07c.pdf">
+              Paul E. McKenney "Memory Barriers: a Hardware View for Software
+              Hackers"</a> </li>
         </ul>
       </section>
-      <section id="rcu/load_store_basics">
-        <script> imagesSVGSlideShow("rcu/load_store_basics", 23); </script>
+      <section id="rcu/load_store_2">
+        <script> imagesSVGSlideShow("rcu/load_store_2", 19); </script>
       </section>
       <section>
         <h2> What does relaxed do? </h2>
@@ -184,10 +137,14 @@
       <section>
         <h2> What do acquire / release do? </h2>
         <ul>
-          <li class="fragment"> release store waits for previous stores to leave the buffer </li>
-          <li class="fragment"> acquire load disallows the following reads to come from the buffer  </li>
-          <li class="fragment"> nothing in the speicification looks like what I said  </li>
-          <li class="fragment"> [atomics.order] release ... synchronizes with ... acquire ... takes its value </li>
+          <li class="fragment"> release store waits for previous stores to leave
+            the buffer </li>
+          <li class="fragment"> acquire load disallows the following reads to
+            come from the buffer </li>
+          <li class="fragment"> nothing in the speicification looks like what I
+            said </li>
+          <li class="fragment"> [atomics.order] release ... synchronizes with
+            ... acquire ... takes its value </li>
         </ul>
       </section>
       <section>
@@ -201,7 +158,6 @@
     <script src="../../plugin/notes/notes.js"></script>
     <script src="../../plugin/markdown/markdown.js"></script>
     <script src="../../plugin/highlight/highlight.js"></script>
-    <script src="../img/diagram_helpers.js"></script>
     <script>
       Reveal.initialize({
         hash: true,
