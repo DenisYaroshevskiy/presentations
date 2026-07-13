@@ -131,18 +131,14 @@
           <li class="fragment"> while (!done.load(...)) </li>
         </ul>
       </section>
-      <section id="rcu/acq_rel">
-        <script> imagesSVGSlideShow("rcu/acq_rel", 11); </script>
+      <section id="rcu/acq_rel_2">
+        <script> imagesSVGSlideShow("rcu/acq_rel_2", 16); </script>
       </section>
       <section>
         <h2> What do acquire / release do? </h2>
         <ul>
-          <li class="fragment"> release store waits for previous stores to leave
-            the buffer </li>
-          <li class="fragment"> acquire load disallows the following reads to
-            come from the buffer </li>
-          <li class="fragment"> nothing in the speicification looks like what I
-            said </li>
+          <li class="fragment"> release store: stalls to leave the buffer. Ensures invalidation queue order. </li>
+          <li class="fragment"> load acquire: process relevant invalidations </li>
           <li class="fragment"> [atomics.order] release ... synchronizes with
             ... acquire ... takes its value </li>
         </ul>
