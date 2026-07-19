@@ -119,6 +119,11 @@
               link="http://www.rdrop.com/users/paulmck/scalability/paper/whymb.2010.06.07c.pdf">
               Paul E. McKenney "Memory Barriers: a Hardware View for Software
               Hackers"</a> </li>
+          <li class="fragment">
+            <a link="https://www.kernel.org/pub/linux/kernel/people/paulmck/perfbook/perfbook.html">
+              Paul E. McKenney "Is Parallel Programming Hard, And, If So, What Can You Do About It?"
+            </a>
+          </li>
         </ul>
       </section>
       <section id="rcu/load_store_2">
@@ -137,16 +142,68 @@
       <section>
         <h2> What do acquire / release do? </h2>
         <ul>
-          <li class="fragment"> release store: stalls to leave the buffer. Ensures invalidation queue order. </li>
-          <li class="fragment"> load acquire: process relevant invalidations </li>
+          <li class="fragment"> release store: stalls to leave the buffer. </li>
+          <li class="fragment"> load acquire: load then process invalidations </li>
           <li class="fragment"> [atomics.order] release ... synchronizes with
             ... acquire ... takes its value </li>
         </ul>
       </section>
       <section>
-        <h3> RCU test </h3>
-        <iframe width="800px" height="600px"
-          src="https://godbolt.org/e#g:!((g:!((h:codeEditor,i:(filename:'1',fontScale:15,fontUsePx:'0',j:1,lang:c%2B%2B,source:'struct+rcu_smoke_test+:+rl::test_suite%3Crcu_smoke_test,+2%3E+%7B%0A++using+config+%3D+rl::var%3Cint%3E%3B%0A%0A++rl::atomic%3Cconst+config*%3E+cfg%3B%0A%0A++rcu_domain+domain%3B%0A%0A++void+before()+%7B+cfg.store(new+config(1))%3B+%7D%0A%0A++void+thread(unsigned+idx)+%7B%0A++++if+(idx+%3D%3D+0)+%7B++//+updater%0A++++++auto*+old+%3D+cfg.exchange(new+config(2),+rl::memory_order_acq_rel)%3B%0A++++++domain.synchronize()%3B%0A++++++delete+old%3B%0A++++%7D+else+%7B++//+reader%0A++++++rcu_domain::tls+tls%7Bdomain%7D%3B%0A%0A++++++tls.enter()%3B%0A++++++int+read+%3D+(*cfg.load(rl::memory_order_acquire))($)%3B%0A++++++tls.exit()%3B%0A%0A++++++RL_ASSERT(read+%3D%3D+1+%7C%7C+read+%3D%3D+2)%3B%0A++++%7D%0A++%7D%0A%0A++void+after()+%7B%0A++++auto*+last_cfg+%3D+cfg.load(rl::memory_order_acquire)%3B%0A++++RL_ASSERT((*last_cfg)($)+%3D%3D+2)%3B%0A++++delete+last_cfg%3B%0A++%7D%0A%7D%3B'),l:'5',n:'0',o:'C%2B%2B+source+%231',t:'0')),k:100,l:'4',m:100,n:'0',o:'',s:0,t:'0')),version:4"></iframe>
+        <h3> Bug explanation </h3>
+        <pre style="width: 100%; font-size: 0.45em; line-height: 1.2;"><code class="cpp" data-trim data-line-numbers>
+auto* old = cfg.exchange(new config(2), rl::memory_order_acq_rel);
+domain.synchronize();
+delete old;
+        </code></pre>
+      </section>
+      <section>
+        <h3> What is SC?</h3>
+        <ul>
+          <li class="fragment"> sc store is a release store </li>
+          <li class="fragment"> sc load is a load acquire </li>
+          <li class="fragment"> total order on all sc operations</li>
+          <li class="fragment"> sc only matterns for sc </li>
+        </ul>
+      </section>
+      <section>
+        <h3> This would work </h3>
+        <pre style="width: 100%; font-size: 0.45em; line-height: 1.2;"><code class="cpp" data-trim data-line-numbers data-noescape>
+auto* old = cfg.exchange(new config(2)); // sc now
+domain.synchronize();
+delete old;
+        </code></pre>
+      </section>
+      <section>
+        <h3> Flush everything! </h3>
+        <ul>
+          <li class="fragment">  std::atomic_thread_fence(std::memory_order_seq_cst) </li>
+          <li class="fragment">  pairwise </li>
+        </ul>
+      </section>
+      <section>
+        <h3> Using atomic_thread_fence </h3>
+        <iframe width="800px" height="600px" src="https://godbolt.org/e#z:OYLghAFBqRAWIDGB7AJgUwKKoJYBdkAnAGhxAgDMcAbdAOwEMBbdEAcgEY3iLk68Ayoga0QHAKw8%2BeAKoBndAAUAHuwAM3AFZji1BnVCIApACYAQqbPEFtRHhx9y9VAGFk1AK5M6IcQA5iZwAZHDp0ADkvACN0QhAAFkkAB2Q5fAc6N09vXwCUtPs%2BELDIphi4xOt0W0K6ATwGQjwsrx9/KpqM%2Bsa8Yojo2ITJOQamlpz2kZ6%2B0vKhgEprZA9CRFY2EcIPOwBqVY8AfVRkJgZQnaMAdgs1AEEdnY80gx2UD35Yg7wLgGYAER2I1QIBAHlCeAAbPEvkYfjdbkY7g9NttvnhqHJYfDEfcdgA3ZA4VCAgCedEQcEIfBwAC90BB5licTiHgR3HIQUwPHh0Mo9ugGBhCHIDlyecomUjAXhgSA8eg7ERYS50XIAFSwzD8wWxTFw5mXP6ShF3FG7fZHE5nHwgVU7EA7NkYkF0E7IeUXa4sx3IdkghgEJg4Yw/FxvD6EGE/LXhnmEY0PC3HU6hNU7ZPWg7G728pLUYP4R0YiBJq2hUwQ9Nlujze1VlN0A4QCsZ0K1q7wh6s33OkDUZCIADWB2AHkaxKz11bjYAtJrCAKhSKxbyrkb9VKHtODnPowudcKAHRJJ5wA5RBhDiB4OA4OSMje4tfegB%2BqoZns7XadHL7A%2BHo7jjsk5mNuu6YPuS6ityq6GgmXZAiCsQMAoEBgfOi66sQjq3ve8GekadzegSRI7PQcYfh2Fybq8ywRoeFDoHgFIHIKqAQBw2GISALBMEQJIHEQQoHAuejKOgqAPl%2B3Z%2BiAAYnMGXyUouByMeS9I/py6B8YQAlCZ8CgAI4HIgIxSd6z5SiRxK8vglHXNRuIyb28lBogSmQap9BrNePa/rx/GCYQwlGSZZn4bR7xxgxTEsWxHFcTKWk6XpwWfKJDDiZJWKOQ8lkInBj44qE%2BZhPihLEqWDYgnIZIUlSdC0vS7ZelKmlyYGik3p5ak%2Be1AW6UFIXoMZpl4OZRFtX5IL9kOI5jsFwEdpBurQeKz5FVKvCEDsEAoHQIxFuq2pCnWK3Ci10mRRGXyvCsvwAud4GxrEh79oKEDcQNqXCRlWUTSaTk7DgFC7Yg92mOIOwmA9sIAmotb7fYdAeOg2Y0QA7retC7U9movYQb3IB9X3aYF%2BmRn9Entv8cN3YQl3el2PqyTed4eSpJI4NU7EA8z%2BV5XBk24u1rldcpgpeepvmyd9Q0GSNYXjdmhpsIs1DsOI3A%2BGwGjEMg7AuJYliAssqzoBcJg/FwxB4OoauLIOYhqGoujsPE3BMM7rs63rBtsNwHKu3busO8Q8rChkCRAA%3D%3D"></iframe>
+      </section>
+      <section>
+        <h3> P1202: Assymetric fences </h3>
+        <ul>
+          <li class="fragment"> David Goldblatt, <a href="http://wg21.link/p1202"> wg21.link/p1202 </a> </li>
+          <li class="fragment"> asymmetric_thread_fence_light, asymmetric_thread_fence_heavy </li>
+          <li class="fragment"> asm volatile("" : : : "memory") / membarrier</li>
+        </ul>
+      </section>
+      <section>
+       <h3> Correct trivial RCU </h3>
+       <iframe width="800px" height="600px" src="https://godbolt.org/e#z:OYLghAFBqRAWIDGB7AJgUwKKoJYBdkAnAGhxAgDMcAbdAOwEMBbdEAcgEY3iLk68Ayoga0QHAKw8%2BeAKoBndAAUAHuwAM3AFZji1BnVCIApACYAQqbPEFtRHhx9y9VAGFk1AK5M6IAMwAOYmcAGRw6dAA5LwAjdEIQcTViAAdkOXwHOjdPbz9A1PT7PlDwqKZY%2BMTrdFsiugE8BkI8bK8fAOrazIamvBLImLiEpLlG5tbcjtHe/rKK4YBKa2QPQkRWNlHCDzsAajWPAH1UZCYGMN2jAHYLNQBBXd2PdINdlA9%2BOMO8S98AEV2o1QIBAHjCeAAbAAWb5GXy3O5Ge6PLY7H54ahyOEIpEPXYAN2QOFQgIAnnREHBCHwcAAvdAQBbY3G4x4EdxyEFMDx4dDKfboBgYQhyQ7c3nKZnIwF4YEgfHoOxEOEuDFyABUcMwAqFcSx8JZVz%2BUsR91RewOx1O5x8IDVuxAu3ZmJBdFOyAVlxurKdyA5IIYBCYOGMvhc70%2BhFhvm1Ed5hBNj0tJzOYXVuxTNsOJp9fOS1BD%2BCdmIgyetYVMEIz5boCwd1dTdEOEErmbCdeuCMebL9LpA1GQiAA1odgB4miTszc202ALRawiC4Wi8V867Gg3Sx4zw7zmOL3UigB0yWecEO0QYw4geDgODkTM3ePXPoAfmrGV6u93nZz%2B4ORzHCddinMwdz3TAD2XMUeTXI1E27IEQTiBgFAgcCFyXPViCdO8HwQr1jXuH1CWJXZ6HjT9O0uLc3hWSMjwodA8EpQ4hVQCAOBwpCQBYJgiFJQ4iGFQ5Fz0ZR0FQR9vx7f0QEDU4Q2%2BKkl0OJiKXQQ4C2AOA8EZBCX2lUiST5fAqJuGi8VkvsFODRBlKgtT6HWLScB0vTpJ9R44ziRjmNY9jOO42UuXQfjCEE4SvjEhgJKk7FLMeQzEXgp9cTCAtwgJIkSTLRsQTkclKWpOg6QZDtvWlX8AyDJTb0c9SXLgQV8VJfS0qq3s/wHYdR3HQhJ07KC9RgiUXw6vFeEIXYIBQOhRmLDUdWFethpFCqZLoj542%2BN5Vl%2BAE1ognzCCPAchQgHi%2BIEoSBuimpYskzziNonAKBmxB9tMcRdhMA64QBNQ6zm%2Bw6A8dAc1ogB3O9aBmo6tROs7kAuq6wpuqKoxiuKO3%2BAG9sIDavJ/LqQVve8HNU0kcBqDjnqswifWSn1qvk2r7Pq1TGs05qGFa9qcSNNglmodhxG4Hw2A0YhkHYFxLEsQEVjWdBLhMXwuGIPB1GFpYhzENQklFtgoW4JgDaSSXpdlthuE5JJtal3XiAVEVMhAKEgA"></iframe>
+      </section>
+      <section>
+        <h2> Improvements to RCU </h2>
+      </section>
+      <section>
+        <h3> Recursive locking </h3>
+        <pre class="fragment"><code class="cpp" data-trim>
+std::scoped_lock _{std::rcu_default_domain()};
+        </code></pre>
       </section>
     </div>
 
