@@ -238,7 +238,8 @@ config.load(acquire);
         <ul>
           <li class="fragment"> David Goldblatt, <a
               href="http://wg21.link/p1202"> wg21.link/p1202 </a> </li>
-          <li class="fragment"> <code>asm volatile("" : : : "memory")</code> </li>
+          <li class="fragment"> <code>asm volatile("" : : : "memory")</code>
+          </li>
           <li class="fragment"> membarrier </li>
         </ul>
       </section>
@@ -255,6 +256,20 @@ config.load(acquire);
         <pre class="fragment"><code class="cpp" data-trim>
 std::scoped_lock _{std::rcu_default_domain()};
         </code></pre>
+      </section>
+      <section id="rcu/gen_count">
+        <script> imagesSVGSlideShow("rcu/gen_count", 4); </script>
+      </section>
+      <section id="rcu/thread_pool">
+        <script> imagesSVGSlideShow("rcu/thread_pool", 3); </script>
+      </section>
+      <section>
+        <h3> Waiting </h3>
+        <ul>
+          <li class="fragment"> std::this_thread::yield() </li>
+          <li class="fragment"> atomic::wait </li>
+          <li class="fragment"> Meta uses folly </li>
+        </ul>
       </section>
     </div>
 
