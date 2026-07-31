@@ -42,9 +42,10 @@
       <section>
         <h2> This talk </h2>
         <ul>
-          <li class="fragment"> TODO LINK </li>
+          <li class="fragment"> <a href="https://tinyurl.com/dyrcu2026">
+              tinyurl.com/dyrcu2026 </a> </li>
           <li class="fragment"> <a href="https://github.com/paulmckrcu">Paul
-              McKenney</a>, <a href="https://github.com/yfeldblum">Yedidya
+              E McKenney</a>, <a href="https://github.com/yfeldblum">Yedidya
               Feldblum</a> </li>
           <li class="fragment"> RCU = read/copy/update </li>
           <li class="fragment"> motivational example </li>
@@ -293,12 +294,54 @@ std::rcu_retire(old);
         </code></pre>
         </section>
       </section>
+      <section id="rcu/retire">
+        <script> imagesSVGSlideShow("rcu/retire", 12); </script>
+      </section>
       <section>
         <h3> Retire API </h3>
         <ul>
           <li class="fragment"> rcu_obj_base&lt;T, D&gt; </li>
           <li class="fragment"> rcu_retire(T*, D) </li>
           <li class="fragment"> rcu_barrier </li>
+        </ul>
+      </section>
+      <section>
+        <h3> Unaddressed topics </h3>
+        <ul>
+          <li class="fragment"> no background thread </li>
+          <li class="fragment"> retiring from critical section </li>
+          <li class="fragment"> simultaneous rcu_synchronize </li>
+        </ul>
+      </section>
+      <section>
+        <h3> Hazard pointers </h3>
+        <p>Maged M. Michael</p>
+      </section>
+      <section id="rcu/hazard_ptr">
+        <script> imagesSVGSlideShow("rcu/hazard_ptr", 9); </script>
+      </section>
+      <section>
+        <iframe width="800px" height="600px"
+          src="https://godbolt.org/e#g:!((g:!((h:codeEditor,i:(filename:'1',fontScale:15,fontUsePx:'0',j:1,lang:c%2B%2B,source:'%23include+%3Chazard_pointer%3E%0A%0Astruct+Config+:+std::hazard_pointer_obj_base%3CConfig%3E+%7B%7D%3B%0A%0Aclass+ConfigProvider+%7B%0A+public:%0A++struct+Accessor+%7B%0A+++++Config+operator*()+const+%7B+return+cfg_%3B+%7D%0A+++++Config+operator-%3E()+const+%7B+return+cfg_%3B+%7D%0A+++private:%0A++++friend+ConfigProvider%3B%0A%0A++++std::hazard_pointer+h_%3B%0A++++const+Config*+cfg_%3B%0A++%7D%3B%0A%0A++Accessor+access()+const+%7B%0A++++Accessor+res+%7B+%0A++++++.h_+%3D+std::make_hazard_pointer(),%0A++++++.cfg_+%3D+nullptr%3B%0A++++%7D%3B%0A%0A++++res.cfg_+%3D+res.h_.protect(cfg_)%3B%0A++++return+res%3B%0A++%7D%0A%0A++void+update(Config+c)+%7B%0A++++auto*+old+%3D%0A++++++++cfg_.exchange(new+Config(std::move(c)),+std::memory_order_acq_rel)%3B%0A++++if+(old)+old-%3Eretire()%3B%0A++%7D%0A%0A+private:%0A++std::atomic%3Cconst+Config*%3E+cfg_%3B%0A%7D%3B%0A'),l:'5',n:'0',o:'C%2B%2B+source+%231',t:'0')),k:100,l:'4',m:100,n:'0',o:'',s:0,t:'0')),version:4"></iframe>
+      </section>
+      <section>
+        <h3>RCU vs Hazard pointers </h3>
+        <ul>
+          <li> shared_mutex => rcu </li>
+          <li> atomic_shared_ptr => hazard_pointer </li>
+        </ul>
+      </section>
+      <section>
+        <h2> Links </h2>
+        <ul>
+          <li> <a href="https://tinyurl.com/dyrcu2026">
+              tinyurl.com/dyrcu2026 </a> </li>
+          <li> <a href="https://github.com/DenisYaroshevskiy/concurency_experiments"> github.com/DenisYaroshevskiy/concurency_experiments </a></li>
+          <li> <a
+              href="https://www.kernel.org/pub/linux/kernel/people/paulmck/perfbook/perfbook.html">Is
+              Parallel Programming Hard, And, If So, What Can You Do About It?
+            </a> </li>
+          <li> <a href="https://youtu.be/AZs_iMxqAOY?si=u7kh-MPf9tBG-ViE"> SIMD substring in a string </a> </li>
         </ul>
       </section>
     </div>
