@@ -320,20 +320,16 @@ std::rcu_retire(old);
       <section id="rcu/hazard_ptr">
         <script> imagesSVGSlideShow("rcu/hazard_ptr", 8); </script>
       </section>
-      <section data-markdown>
-        <textarea data-template>
-          ## rcu vs hazard_pointer
-          | hazard_pointer        | rcu                    |
-          |-----------------------|------------------------|
-          | atomic_shared_pointer | shared_mutex           |
-          | protect pointer       | protect data structure |
-
-          [Herb Sutter: "Lock-Free Programming (or, Juggling Razor Blades)](https://youtu.be/c1gO9aB9nbs?si=0GnYsSrQ3RsfvA7T)
-        </textarea>
+      <section>
+      <h3> Hazard pointers vs RCU </h3>
+      <ul>
+        <li class="fragment"> pointer / data structure </li>
+        <li class="fragment"> atomic_shared_ptr / shared_mutex </li>
+        <li class="fragment"> <a href="https://youtu.be/c1gO9aB9nbs?si=0GnYsSrQ3RsfvA7T"> Herb Sutter: "Lock-Free Programming (or, Juggling Razor Blades) </a> </li>
+      </ul>
       </section>
       <section>
-        <iframe width="800px" height="600px"
-          src="https://godbolt.org/e#g:!((g:!((h:codeEditor,i:(filename:'1',fontScale:15,fontUsePx:'0',j:1,lang:c%2B%2B,source:'%23include+%3Chazard_pointer%3E%0A%0Astruct+Config+:+std::hazard_pointer_obj_base%3CConfig%3E+%7B%7D%3B%0A%0Aclass+ConfigProvider+%7B%0A+public:%0A++struct+Accessor+%7B%0A+++++Config+operator*()+const+%7B+return+cfg_%3B+%7D%0A+++++Config+operator-%3E()+const+%7B+return+cfg_%3B+%7D%0A+++private:%0A++++friend+ConfigProvider%3B%0A%0A++++std::hazard_pointer+h_%3B%0A++++const+Config*+cfg_%3B%0A++%7D%3B%0A%0A++Accessor+access()+const+%7B%0A++++Accessor+res+%7B+%0A++++++.h_+%3D+std::make_hazard_pointer(),%0A++++++.cfg_+%3D+nullptr%3B%0A++++%7D%3B%0A%0A++++res.cfg_+%3D+res.h_.protect(cfg_)%3B%0A++++return+res%3B%0A++%7D%0A%0A++void+update(Config+c)+%7B%0A++++auto*+old+%3D%0A++++++++cfg_.exchange(new+Config(std::move(c)),+std::memory_order_acq_rel)%3B%0A++++if+(old)+old-%3Eretire()%3B%0A++%7D%0A%0A+private:%0A++std::atomic%3Cconst+Config*%3E+cfg_%3B%0A%7D%3B%0A'),l:'5',n:'0',o:'C%2B%2B+source+%231',t:'0')),k:100,l:'4',m:100,n:'0',o:'',s:0,t:'0')),version:4"></iframe>
+        <iframe width="800px" height="600px" src="https://godbolt.org/e#g:!((g:!((h:codeEditor,i:(filename:'1',fontScale:15,fontUsePx:'0',j:1,lang:c%2B%2B,source:'%23include+%3Chazard_pointer%3E%0A%0Astruct+Config+:+std::hazard_pointer_obj_base%3CConfig%3E+%7B%7D%3B%0A%0Aclass+ConfigProvider+%7B%0A+public:%0A++struct+Accessor+%7B%0A+++++Config+operator*()+const+%7B+return+c_%3B+%7D%0A+++++Config+operator-%3E()+const+%7B+return+c_%3B+%7D%0A+++private:%0A++++friend+ConfigProvider%3B%0A%0A++++std::hazard_pointer+h_%3B%0A++++const+Config*+c_%3B%0A++%7D%3B%0A%0A++Accessor+access()+const+%7B%0A++++Accessor+res+%7B+%0A++++++.h_+%3D+std::make_hazard_pointer(),%0A++++++.c_+%3D+nullptr%3B%0A++++%7D%3B%0A%0A++++res.c_+%3D+res.h_.protect(cfg_)%3B%0A++++return+res%3B%0A++%7D%0A%0A++void+update(Config+c)+%7B%0A++++auto*+old+%3D%0A++++++++cfg_.exchange(new+Config(std::move(c)),+std::memory_order_acq_rel)%3B%0A++++if+(old)+old-%3Eretire()%3B%0A++%7D%0A%0A+private:%0A++std::atomic%3Cconst+Config*%3E+cfg_%3B%0A%7D%3B%0A'),l:'5',n:'0',o:'C%2B%2B+source+%231',t:'0')),k:100,l:'4',m:100,n:'0',o:'',s:0,t:'0')),version:4"></iframe>
       </section>
       <section>
         <h2> Links </h2>
@@ -345,7 +341,7 @@ std::rcu_retire(old);
               href="https://www.kernel.org/pub/linux/kernel/people/paulmck/perfbook/perfbook.html">Is
               Parallel Programming Hard, And, If So, What Can You Do About It?
             </a> </li>
-          <li> <a href="https://youtu.be/AZs_iMxqAOY?si=u7kh-MPf9tBG-ViE"> SIMD substring in a string </a> </li>
+          <li> <a href="https://youtu.be/AZs_iMxqAOY?si=u7kh-MPf9tBG-ViE"> C++Day: SIMD substring in a string </a> </li>
         </ul>
       </section>
     </div>
