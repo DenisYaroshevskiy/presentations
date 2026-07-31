@@ -44,14 +44,20 @@
         <ul>
           <li class="fragment"> <a href="https://tinyurl.com/dyrcu2026">
               tinyurl.com/dyrcu2026 </a> </li>
+          <li class="fragment"> RCU = read/copy/update </li>
           <li class="fragment"> <a href="https://github.com/paulmckrcu">Paul
               E McKenney</a>, <a href="https://github.com/yfeldblum">Yedidya
               Feldblum</a> </li>
-          <li class="fragment"> RCU = read/copy/update </li>
+        </ul>
+      </section>
+      <section>
+        <h2> The plan </h2>
+        <ul>
           <li class="fragment"> motivational example </li>
           <li class="fragment"> trivial buggy implementation </li>
           <li class="fragment"> lowlevel concurrency in C++ </li>
           <li class="fragment"> improvements to RCU </li>
+          <li class="fragment"> hazard pointers </li>
         </ul>
       </section>
       <section>
@@ -141,8 +147,6 @@
           <li class="fragment"> release store: stalls to leave the buffer. </li>
           <li class="fragment"> load acquire: load then process invalidations
           </li>
-          <li class="fragment"> [atomics.order] release ... synchronizes with
-            ... acquire ... takes its value </li>
         </ul>
       </section>
       <section>
@@ -164,7 +168,7 @@ delete old;
       <section>
         <h3> It was not acquire! </h3>
         <pre style="width: 100%; font-size: 0.45em; line-height: 1.2;"><code class="cpp" data-trim data-line-numbers>
-cfg.store(release);    // old = cfg.exchange(new config(2), acq_rel);
+cfg.store(release);  // old = cfg.exchange(new config(2), acq_rel);
 counter.load();      // domain.synchronize();
 delete old;
         </code></pre>
