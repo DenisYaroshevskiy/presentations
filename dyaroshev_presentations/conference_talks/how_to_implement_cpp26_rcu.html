@@ -44,8 +44,7 @@
         <ul>
           <li class="fragment"> <a href="https://tinyurl.com/dyrcu2026">
               tinyurl.com/dyrcu2026 </a> </li>
-          <li class="fragment"> RCU = read/copy/update </li>
-          <li class="fragment"> <a href="https://github.com/paulmckrcu">Paul
+         <li class="fragment"> <a href="https://github.com/paulmckrcu">Paul
               E McKenney</a>, <a href="https://github.com/yfeldblum">Yedidya
               Feldblum</a> </li>
         </ul>
@@ -53,6 +52,7 @@
       <section>
         <h2> The plan </h2>
         <ul>
+          <li class="fragment"> RCU = read/copy/update </li>
           <li class="fragment"> motivational example </li>
           <li class="fragment"> trivial buggy implementation </li>
           <li class="fragment"> lowlevel concurrency in C++ </li>
@@ -269,14 +269,6 @@ std::scoped_lock _{std::rcu_default_domain()};
         <script> imagesSVGSlideShow("rcu/thread_pool", 3); </script>
       </section>
       <section>
-        <h3> Waiting </h3>
-        <ul>
-          <li class="fragment"> std::this_thread::yield </li>
-          <li class="fragment"> atomic::wait/notify </li>
-          <li class="fragment"> folly </li>
-        </ul>
-      </section>
-      <section>
         <h2> Retiring </h2>
       </section>
       <section>
@@ -312,6 +304,7 @@ std::rcu_retire(old);
       <section>
         <h3> Unaddressed topics </h3>
         <ul>
+          <li class="fragment"> better waiting </li>
           <li class="fragment"> no background thread </li>
           <li class="fragment"> retiring from critical section </li>
           <li class="fragment"> simultaneous rcu_synchronize </li>
