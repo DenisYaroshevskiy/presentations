@@ -44,7 +44,7 @@
         <ul>
           <li class="fragment"> <a href="https://tinyurl.com/dyrcu2026">
               tinyurl.com/dyrcu2026 </a> </li>
-         <li class="fragment"> <a href="https://github.com/paulmckrcu">Paul
+          <li class="fragment"> <a href="https://github.com/paulmckrcu">Paul
               E McKenney</a>, <a href="https://github.com/yfeldblum">Yedidya
               Feldblum</a> </li>
         </ul>
@@ -254,6 +254,16 @@ config.load(acquire);
           src="https://godbolt.org/e#z:OYLghAFBqRAWIDGB7AJgUwKKoJYBdkAnAGhxAgDMcAbdAOwEMBbdEAcgEY3iLk68Ayoga0QHAKw8%2BeAKoBndAAUAHuwAM3AFZji1BnVCIApACYAQqbPEFtRHhx9y9VAGFk1AK5M6IAMwAOYmcAGRw6dAA5LwAjdEIQcTViAAdkOXwHOjdPbz9A1PT7PlDwqKZY%2BMTrdFsiugE8BkI8bK8fAOrazIamvBLImLiEpLlG5tbcjtHe/rKK4YBKa2QPQkRWNlHCDzsAajWPAH1UZCYGMN2jAHYLNQBBXd2PdINdlA9%2BOMO8S98AEV2o1QIBAHjCeAAbAAWb5GXy3O5Ge6PLY7H54ahyOEIpEPXYAN2QOFQgIAnnREHBCHwcAAvdAQBbY3G4x4EdxyEFMDx4dDKfboBgYQhyQ7c3nKZnIwF4YEgfHoOxEOEuDFyABUcMwAqFcSx8JZVz%2BUsR91RewOx1O5x8IDVuxAu3ZmJBdFOyAVlxurKdyA5IIYBCYOGMvhc70%2BhFhvm1Ed5hBNj0tJzOYXVuxTNsOJp9fOS1BD%2BCdmIgyetYVMEIz5boCwd1dTdEOEErmbCdeuCMebL9LpA1GQiAA1odgB4miTszc202ALRawiC4Wi8V867Gg3Sx4zw7zmOL3UigB0yWecEO0QYw4geDgODkTM3ePXPoAfmrGV6u93nZz%2B4ORzHCddinMwdz3TAD2XMUeTXI1E27IEQTiBgFAgcCFyXPViCdO8HwQr1jXuH1CWJXZ6HjT9O0uLc3hWSMjwodA8EpQ4hVQCAOBwpCQBYJgiFJQ4iGFQ5Fz0ZR0FQR9vx7f0QEDU4Q2%2BKkl0OJiKXQQ4C2AOA8EZBCX2lUiST5fAqJuGi8VkvsFODRBlKgtT6HWLScB0vTpJ9R44ziRjmNY9jOO42UuXQfjCEE4SvjEhgJKk7FLMeQzEXgp9cTCAtwgJIkSTLRsQTkclKWpOg6QZDtvWlX8AyDJTb0c9SXLgQV8VJfS0qq3s/wHYdR3HQhJ07KC9RgiUXw6vFeEIXYIBQOhRmLDUdWFethpFCqZLoj542%2BN5Vl%2BAE1ognzCCPAchQgHi%2BIEoSBuimpYskzziNonAKBmxB9tMcRdhMA64QBNQ6zm%2Bw6A8dAc1ogB3O9aBmo6tROs7kAuq6wpuqKoxiuKO3%2BAG9sIDavJ/LqQVve8HNU0kcBqDjnqswifWSn1qvk2r7Pq1TGs05qGFa9qcSNNglmodhxG4Hw2A0YhkHYFxLEsQEVjWdBLhMXwuGIPB1GFpYhzENQklFtgoW4JgDaSSXpdlthuE5JJtal3XiAVEVMhAKEgA"></iframe>
       </section>
       <section>
+        <h3> Notes </h3>
+        <ul>
+          <li class="fragment"> The spec is weaker </li>
+          <li class="fragment"> Hyper-threading </li>
+          <li class="fragment"> <a
+              href="https://youtu.be/WtChBezurj8?si=UwDthnRaqvsp0iRP"> Fedor Pikus: C++
+              Concurrency Before the Hardware Reckoning </a> </li>
+        </ul>
+      </section>
+      <section>
         <h2> Improvements to RCU </h2>
       </section>
       <section>
@@ -318,27 +328,34 @@ std::rcu_retire(old);
         <script> imagesSVGSlideShow("rcu/hazard_ptr", 8); </script>
       </section>
       <section>
-      <h3> Hazard pointers vs RCU </h3>
-      <ul>
-        <li class="fragment"> pointer / data structure </li>
-        <li class="fragment"> atomic_shared_ptr / shared_mutex </li>
-        <li class="fragment"> <a href="https://youtu.be/c1gO9aB9nbs?si=0GnYsSrQ3RsfvA7T"> Herb Sutter: "Lock-Free Programming (or, Juggling Razor Blades) </a> </li>
-      </ul>
+        <h3> Hazard pointers vs RCU </h3>
+        <ul>
+          <li class="fragment"> pointer / data structure </li>
+          <li class="fragment"> atomic_shared_ptr / shared_mutex </li>
+          <li class="fragment"> <a
+              href="https://youtu.be/c1gO9aB9nbs?si=0GnYsSrQ3RsfvA7T"> Herb
+              Sutter: "Lock-Free Programming (or, Juggling Razor Blades) </a>
+          </li>
+        </ul>
       </section>
       <section>
-        <iframe width="800px" height="600px" src="https://godbolt.org/e#g:!((g:!((h:codeEditor,i:(filename:'1',fontScale:15,fontUsePx:'0',j:1,lang:c%2B%2B,source:'%23include+%3Chazard_pointer%3E%0A%0Astruct+Config+:+std::hazard_pointer_obj_base%3CConfig%3E+%7B%7D%3B%0A%0Aclass+ConfigProvider+%7B%0A+public:%0A++struct+Accessor+%7B%0A+++++Config+operator*()+const+%7B+return+c_%3B+%7D%0A+++++Config+operator-%3E()+const+%7B+return+c_%3B+%7D%0A+++private:%0A++++friend+ConfigProvider%3B%0A%0A++++std::hazard_pointer+h_%3B%0A++++const+Config*+c_%3B%0A++%7D%3B%0A%0A++Accessor+access()+const+%7B%0A++++Accessor+res+%7B+%0A++++++.h_+%3D+std::make_hazard_pointer(),%0A++++++.c_+%3D+nullptr%3B%0A++++%7D%3B%0A%0A++++res.c_+%3D+res.h_.protect(cfg_)%3B%0A++++return+res%3B%0A++%7D%0A%0A++void+update(Config+c)+%7B%0A++++auto*+old+%3D%0A++++++++cfg_.exchange(new+Config(std::move(c)),+std::memory_order_acq_rel)%3B%0A++++if+(old)+old-%3Eretire()%3B%0A++%7D%0A%0A+private:%0A++std::atomic%3Cconst+Config*%3E+cfg_%3B%0A%7D%3B%0A'),l:'5',n:'0',o:'C%2B%2B+source+%231',t:'0')),k:100,l:'4',m:100,n:'0',o:'',s:0,t:'0')),version:4"></iframe>
+        <iframe width="800px" height="600px"
+          src="https://godbolt.org/e#g:!((g:!((h:codeEditor,i:(filename:'1',fontScale:15,fontUsePx:'0',j:1,lang:c%2B%2B,source:'%23include+%3Chazard_pointer%3E%0A%0Astruct+Config+:+std::hazard_pointer_obj_base%3CConfig%3E+%7B%7D%3B%0A%0Aclass+ConfigProvider+%7B%0A+public:%0A++struct+Accessor+%7B%0A+++++Config+operator*()+const+%7B+return+c_%3B+%7D%0A+++++Config+operator-%3E()+const+%7B+return+c_%3B+%7D%0A+++private:%0A++++friend+ConfigProvider%3B%0A%0A++++std::hazard_pointer+h_%3B%0A++++const+Config*+c_%3B%0A++%7D%3B%0A%0A++Accessor+access()+const+%7B%0A++++Accessor+res+%7B+%0A++++++.h_+%3D+std::make_hazard_pointer(),%0A++++++.c_+%3D+nullptr%3B%0A++++%7D%3B%0A%0A++++res.c_+%3D+res.h_.protect(cfg_)%3B%0A++++return+res%3B%0A++%7D%0A%0A++void+update(Config+c)+%7B%0A++++auto*+old+%3D%0A++++++++cfg_.exchange(new+Config(std::move(c)),+std::memory_order_acq_rel)%3B%0A++++if+(old)+old-%3Eretire()%3B%0A++%7D%0A%0A+private:%0A++std::atomic%3Cconst+Config*%3E+cfg_%3B%0A%7D%3B%0A'),l:'5',n:'0',o:'C%2B%2B+source+%231',t:'0')),k:100,l:'4',m:100,n:'0',o:'',s:0,t:'0')),version:4"></iframe>
       </section>
       <section>
         <h2> Links </h2>
         <ul>
           <li> <a href="https://tinyurl.com/dyrcu2026">
               tinyurl.com/dyrcu2026 </a> </li>
-          <li> <a href="https://github.com/DenisYaroshevskiy/concurency_experiments"> github.com/DenisYaroshevskiy/concurency_experiments </a></li>
+          <li> <a
+              href="https://github.com/DenisYaroshevskiy/concurency_experiments">
+              github.com/DenisYaroshevskiy/concurency_experiments </a></li>
           <li> <a
               href="https://www.kernel.org/pub/linux/kernel/people/paulmck/perfbook/perfbook.html">Is
               Parallel Programming Hard, And, If So, What Can You Do About It?
             </a> </li>
-          <li> <a href="https://youtu.be/AZs_iMxqAOY?si=u7kh-MPf9tBG-ViE"> C++Day: SIMD substring in a string </a> </li>
+          <li> <a href="https://youtu.be/AZs_iMxqAOY?si=u7kh-MPf9tBG-ViE">
+              C++Day: SIMD substring in a string </a> </li>
         </ul>
       </section>
     </div>
