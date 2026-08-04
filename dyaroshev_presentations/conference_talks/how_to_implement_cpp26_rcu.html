@@ -45,7 +45,7 @@
           <li class="fragment"> <a href="https://tinyurl.com/dyrcu2026">
               tinyurl.com/dyrcu2026 </a> </li>
           <li class="fragment"> <a href="https://github.com/paulmckrcu">Paul
-              E McKenney</a>, <a href="https://github.com/yfeldblum">Yedidya
+              E. McKenney</a>, <a href="https://github.com/yfeldblum">Yedidya
               Feldblum</a> </li>
         </ul>
       </section>
@@ -55,7 +55,7 @@
           <li class="fragment"> RCU = read/copy/update </li>
           <li class="fragment"> motivational example </li>
           <li class="fragment"> trivial buggy implementation </li>
-          <li class="fragment"> lowlevel concurrency in C++ </li>
+          <li class="fragment"> low-level concurrency in C++ </li>
           <li class="fragment"> improvements to RCU </li>
           <li class="fragment"> hazard pointers </li>
         </ul>
@@ -144,7 +144,7 @@
       <section>
         <h2> What do acquire / release do? </h2>
         <ul>
-          <li class="fragment"> release store: stalls to leave the buffer. </li>
+          <li class="fragment"> release store: stalls to leave the buffer </li>
           <li class="fragment"> load acquire: load then process invalidations
           </li>
         </ul>
@@ -222,7 +222,7 @@ config.load(acquire);
         </code></pre>
         </section>
         <section>
-          <h3> P1202: Assymetric fences </h3>
+          <h3> P1202: Asymmetric fences </h3>
           <pre style="width: 100%; font-size: 0.45em; line-height: 1.2;"><code class="cpp" data-trim data-line-numbers data-noescape>
 // updater
 cfg.store(release);
@@ -239,13 +239,13 @@ config.load(acquire);
       </section>
       </section>
       <section>
-        <h3> P1202: Assymetric fences </h3>
+        <h3> P1202: Asymmetric fences </h3>
         <ul>
           <li class="fragment"> David Goldblatt, <a
               href="http://wg21.link/p1202"> wg21.link/p1202 </a> </li>
-          <li class="fragment"> <code>asm volatile("" : : : "memory")</code>
+          <li class="fragment"> light: <code>asm volatile("" : : : "memory")</code>
           </li>
-          <li class="fragment"> membarrier </li>
+          <li class="fragment"> heavy: membarrier </li>
         </ul>
       </section>
       <section>
@@ -334,7 +334,7 @@ std::rcu_retire(old);
           <li class="fragment"> atomic_shared_ptr / shared_mutex </li>
           <li class="fragment"> <a
               href="https://youtu.be/c1gO9aB9nbs?si=0GnYsSrQ3RsfvA7T"> Herb
-              Sutter: "Lock-Free Programming (or, Juggling Razor Blades) </a>
+              Sutter: "Lock-Free Programming (or, Juggling Razor Blades)" </a>
           </li>
         </ul>
       </section>
