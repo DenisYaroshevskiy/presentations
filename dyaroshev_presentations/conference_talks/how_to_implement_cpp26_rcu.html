@@ -306,9 +306,9 @@ std::rcu_retire(old);
       <section>
         <h3> Retire API </h3>
         <ul>
-          <li class="fragment"> rcu_obj_base&lt;T, D&gt; </li>
-          <li class="fragment"> rcu_retire(T*, D) </li>
-          <li class="fragment"> rcu_barrier </li>
+          <li class="fragment"> std::rcu_obj_base&lt;T, D&gt; </li>
+          <li class="fragment"> std::rcu_retire(T*, D) </li>
+          <li class="fragment"> std::rcu_barrier </li>
         </ul>
       </section>
       <section>
@@ -330,8 +330,8 @@ std::rcu_retire(old);
       <section>
         <h3> Hazard pointers vs RCU </h3>
         <ul>
-          <li class="fragment"> pointer / data structure </li>
-          <li class="fragment"> atomic_shared_ptr / shared_mutex </li>
+          <li class="fragment"> RequestContext, ConcurrentHashMap, UnboundedQueue </li>
+          <li class="fragment"> ReadMostlySharedPtr  </li>
           <li class="fragment"> <a
               href="https://youtu.be/c1gO9aB9nbs?si=0GnYsSrQ3RsfvA7T"> Herb
               Sutter: "Lock-Free Programming (or, Juggling Razor Blades)" </a>
